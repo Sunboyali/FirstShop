@@ -1,0 +1,213 @@
+﻿
+@{
+    string LogoImg = scope.GetSettingTheme().Logo;
+}
+
+<link href="~/site/css/jquery-confirm.min.css" rel="stylesheet" />
+
+<div class="modal fade login-modal" id="login" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <div class="modal-body">
+                <div class="logo-area">
+                    <img class="logo" src="~/site/img/logo/@LogoImg" alt="BayaTarh">
+                </div>
+                <div class="header-area">
+                    <h4 class="title" id="title_modal">خوشحالیم که سایت ما را انتخاب کردید</h4>
+                    @*<p class="sub-title">اطلاعات زیر را وارد کنید</p>*@
+                </div>
+
+
+                @* Mobile Box *@
+                @*<form>*@
+                @*  *@
+                <div class="form-area" id="Mobile-Form">
+
+                    <div class="form-group">
+                        <input type="number" maxlength="11" autocomplete="off" class="input-field input-mobile" id="login-input-mobile" placeholder="شماره موبایل خود را وارد کنید">
+                        <img id="status_Mobile" class="status__Loading" src="~/site/img/ajax_loader.gif" hidden />
+                    </div>
+
+
+                    <div class="form-group text-center">
+                        <button onclick="return Validate_Mobile()" class="mybtn">ثبت و ادامه</button>
+                    </div>
+
+
+                    <div class="form-group text-center">
+                        <button type="button" class="mybtn-return" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">بازگشت</span></button>
+                    </div>
+
+                </div>
+                @* Register Box *@
+
+
+                <div class="form-area" id="Register-Form" hidden>
+                    <form id="ReisterForm" asp-controller="Account" asp-action="Register">
+                        <div class="form-group">
+                            <h6> >> کد فعال سازی به شماره موبایل شما ارسال شد << </h6>
+                        </div>
+                        <div class="form-group">
+                            <input type="hidden" id="user__mobile" name="mobile_User" maxlength="11" class="input-field user__mobile">
+                        </div>
+                        <div class="form-group">
+                            <input type="password" name="user_Password" class="input-field" maxlength="6" id="Register-NewPassword" placeholder="کلمه عبور جدید خود را وارد نمایید">
+                        </div>
+
+                        <div class="form-group">
+                            <input type="number" class="input-field" maxlength="6" autocomplete="off" id="Register-ActiveCode" placeholder="کد فعالسازی 6 رقمی را وارد کنید">
+                            <img id="status_Register" class="status" src="~/site/img/ajax_loader.gif" hidden />
+                        </div>
+                        <div class="form-group">
+                            <span class="sent-again-span">ارسال مجدد کد فعال سازی بعد از :</span>
+                            <b id="countdown" class="countdown"></b>
+                        </div>
+
+                        <div class="form-group text-center">
+                            <span class="Send_Active" hidden>ارسال مجدد کد</span>
+                        </div>
+
+                        <div class="form-group text-center">
+                            <button type="button" onclick="return Validate_Register()" class="mybtn">ثبت</button>
+                        </div>
+                        <div class="form-group text-center">
+                            <button type="button" onclick="return_Mobile()" class="mybtn-return return-from-mobile" disabled><span>بازگشت</span></button>
+                        </div>
+
+                        <div class="form-footer">
+                            <p class="alert alert-danger">
+                                نکته : رمز عبور جدید برای ورود مجدد به سایت است پس لطفا آن را فراموش نکنید
+                            </p>
+                        </div>
+                    </form>
+                </div>
+
+                @* Login Box *@
+
+                <div class="form-area" id="Login-Form" hidden>
+                    <form id="LoginForm" asp-controller="Account" asp-action="Login" method="POST">
+                        <div class="form-group">
+                            <h6> >> شما قبلا ثبت نام کرده اید  << </h6>
+                        </div>
+                        <div class="form-group">
+                            <input type="hidden" id="mobile_User" name="mobile_User" maxlength="11" class="input-field user_mobile">
+                        </div>
+
+                        <div class="form-group">
+                            <input type="password" name="user_Password" autocomplete="off" class="input-field" id="Login-Password" placeholder="کلمه عبور خود را وارد نمایید">
+                            <img class="status" id="status_Password" src="~/site/img/ajax_loader.gif" hidden />
+                        </div>
+                        <div class="form-group">
+                            <a href="#" class="forgot_password" data-toggle="modal" data-target="#forget"> رمز عبورم را فراموش کرده ام </a>
+                        </div>
+
+                        <div class="form-group text-center">
+                            <button type="button" onclick="return Validate_Login()" class="mybtn">ثبت </button>
+                        </div>
+                        <div class="form-group text-center">
+                            <button type="button" onclick="return_Mobile_Login()" id="return-from-mobile" class="mybtn-return return-from-mobile"><span>بازگشت</span></button>
+                        </div>
+                    </form>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+<div class="modal fade login-modal forget-modal" id="forget" tabindex="-1" role="dialog" aria-labelledby="login" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <div class="modal-body">
+                <div class="logo-area">
+                    <img class="logo" src="~/site/img/logo.png" alt="">
+                </div>
+                <div class="header-area">
+                    <h4 class="title" id="title_modal">
+                        در صورت نادرست بودن شماره موبایل زیر، آن را تغییر دهید
+                    </h4>
+                </div>
+
+
+                @* Mobile Box *@
+                @*<form>*@
+                @*  *@
+                <div class="form-area" id="Mobile-Form-Chpass">
+
+                    <div class="form-group">
+                        <input type="number" maxlength="11" autocomplete="off" class="input-field input-mobile" id="forget-input-mobile" placeholder="شماره موبایل خود را وارد کنید">
+                        <img id="status__Mobile" class="status" src="~/site/img/ajax_loader.gif" hidden />
+                    </div>
+
+
+                    <div class="form-group text-center">
+                        <button onclick="return Validate__Mobile()" class="mybtn">ثبت و ادامه</button>
+                    </div>
+
+                    <div class="form-group text-center">
+                        <button type="button" class="mybtn-return" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">بازگشت</span></button>
+                    </div>
+                    <div class="form-footer">
+                        <p class="alert alert-danger">
+                            نکته : کد فعالسازی جهت تغییر کلمه عبور به شماره موبایل وارد شده در کادر بالا ارسال می گردد
+                        </p>
+                    </div>
+                </div>
+
+                <div class="form-area" id="Change-Pass-Form" hidden>
+                    <form id="ChangePassForm" asp-controller="Account" asp-action="ChangePassword">
+                        <div class="form-group">
+                            <h6> >> کد فعال سازی به شماره موبایل شما ارسال شد << </h6>
+                        </div>
+                        <div class="form-group">
+
+                            <input type="text" name="mobile_User" maxlength="11" class="input-field user__mobile">
+                        </div>
+
+                        <div class="form-group">
+                            <input type="number" class="input-field forget__input" maxlength="6" autocomplete="off" id="Forget__ActiveCode" placeholder="کد فعالسازی 6 رقمی را وارد کنید">
+
+                        </div>
+                        <div class="form-group">
+                            <input type="password" name="user_Password" class="input-field forget__input" maxlength="6" id="New__Password" placeholder="کلمه عبور جدید خود را وارد نمایید">
+                            <img id="status_NewPass" class="status" src="~/site/img/ajax_loader.gif" hidden />
+                        </div>
+                        <div class="form-group">
+                            <span class="sent-again-span">ارسال مجدد کد فعال سازی بعد از :</span>
+                            <b id="countdown" class="countdown"></b>
+                        </div>
+
+                        <div class="form-group text-center">
+                            <span class="Send_Active" hidden>ارسال مجدد کد</span>
+                        </div>
+
+
+                        <div class="form-group text-center">
+                            <button type="button" onclick="return Validate_Ch__Pass()" class="mybtn">ثبت</button>
+                        </div>
+
+
+                        <div class="form-footer">
+                            <p class="alert alert-danger">
+                                نکته : رمز عبور جدید برای ورود مجدد به سایت است پس لطفا آن را فراموش نکنید
+                            </p>
+                        </div>
+                    </form>
+                </div>
+
+
+
+            </div>
+        </div>
+    </div>
+</div>
+<script src="~/site/js/register.js"></script>
+
+
+

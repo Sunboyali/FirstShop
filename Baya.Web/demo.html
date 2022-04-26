@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<!--By Vahid Majidi | Powered By اسکریپت.com-->
+<html>
+<head>
+	<meta charset='utf-8'/>
+	<title>دانلود پلاگین جی کوئری زوم بر روی تصاویر با 3 افکت زیبا + آموزش کامل و ساده</title>
+	<script src='js/jquery.js'></script>
+	<script src='js/jquery.elevatezoom.js'></script>
+</head>
+<body style="font-family:tahoma; text-align:center; font-size:13px; direction:rtl;">
+
+<h3>دانلود پلاگین جی کوئری زوم بر روی تصاویر با 3 افکت زیبا + آموزش کامل و ساده</h3>
+
+<br><br>
+
+<figure>
+    <figcaption>مدل زوم در صفحه ای جدید ( با قابلیت زوم اسکرول )</figcaption>
+    <br>
+        <img class="zoom1" src='images/small/1.jpg' data-zoom-image="images/large/1.jpg"/>
+</figure>
+<br>
+<figure>
+    <figcaption>مدل زوم داخلی ( با قابلیت زوم اسکرول )</figcaption>
+    <br>
+      <img class="zoom2" src='images/small/1.jpg' data-zoom-image="images/large/1.jpg"/>
+</figure>
+<br>
+<figure>
+    <figcaption>مدل زوم با استایل لنز ( با قابلیت زوم اسکرول )</figcaption>
+    <br>
+        <img class="zoom3" src='images/small/1.jpg' data-zoom-image="images/large/1.jpg"/>
+</figure>
+
+<script>
+
+
+$(".zoom1").elevateZoom({
+        zoomWindowFadeIn: 500,
+        zoomWindowFadeOut: 500,
+        lensFadeIn: 500,
+        lensFadeOut: 500,
+        scrollZoom : true
+});
+
+$(".zoom2").elevateZoom({
+        zoomType: "inner",
+        cursor: "crosshair",
+        zoomWindowFadeIn: 500,
+        zoomWindowFadeOut: 500,
+        lensFadeIn: 500,
+        lensFadeOut: 500,
+        scrollZoom : true
+});
+
+$(".zoom3").elevateZoom({
+        zoomType				: "lens",
+        lensShape : "round",
+        lensSize    : 200,
+        zoomWindowFadeIn: 500,
+        zoomWindowFadeOut: 500,
+        lensFadeIn: 500,
+        lensFadeOut: 500,
+        scrollZoom : true
+});
+
+
+</script>
+<br><br><Br>
+</body>
+<!--By Vahid Majidi | Powered By اسکریپت.com-->
+</html>

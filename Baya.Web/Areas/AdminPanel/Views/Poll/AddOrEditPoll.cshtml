@@ -1,0 +1,256 @@
+﻿
+@model Baya.Core.ViewModels.PollViewModel
+@{
+    Layout = null;
+    int countinput = 0;
+}
+<link href="~/persiandatepicker/PersianDatePicker.min.css" rel="stylesheet" />
+
+<style>
+    .datePicker td, th {
+        padding: 0px !important;
+    }
+</style>
+
+<form id="PollForm" method="post">
+    <input type="hidden" asp-for="Id" />
+    <div class="form-group">
+        <div class="form-line">
+            <label class="control-label">سوال نظرسنجی</label>
+
+            <input asp-for="Question" id="Question" maxlength="100" class="form-control"
+                   autocomplete="off" placeholder="سوال نظرسنجی را وارد کنید">
+
+            <span id="charaters-count"></span>
+
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="form-line">
+            <label class="control-label">تاریخ شروع نظرسنجی</label>
+            <input asp-for="StartDate" onclick="PersianDatePicker.Show(this, '@ViewBag.MyDate')" class="form-control col-md-3" placeholder="کلیک کنید" autocomplete="off" />
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="form-line">
+            <label class="control-label">تاریخ اتمام نظرسنجی</label>
+            <input asp-for="EndDate" onclick="PersianDatePicker.Show(this, '@ViewBag.MyDate')" class="form-control col-md-3" placeholder="کلیک کنید" autocomplete="off" />
+        </div>
+    </div>
+    @if (Model.Id == Guid.Empty)
+    {
+        <div class="form-group">
+            <label class="control-label">پاسخ</label>
+            <textarea style="height:185px;" asp-for="Answer" class="form-control" placeholder="پاسخ ها را وارد کنید"></textarea>
+
+        </div>
+    }
+    else
+    {
+        <style>
+            .editanswer {
+                display: none;
+            }
+        </style>
+        <div class="form-group">
+            <div class="form-check m-l-10">
+                <label class="form-check-label">
+                    <label class="control-label">ویرایش پاسخ ها</label>
+                    <input onchange="EditAnswer()" id="edit-answer" class="choose_edit form-check-input" type="checkbox">
+                    <span class="form-check-sign">
+                        <span class="check"></span>
+                    </span><small class="text text-info">(درصورتی که نیاز به ویرایش هر یک از پاسخ های نظرسنجی را دارید گزینه ویرایش پاسخ ها را تیک بزنید)</small>
+                </label>
+
+            </div>
+        </div>
+
+        <div class="form-group editanswer">
+            @foreach (var item in Model.AnswerListEdit)           
+            {
+            <div class="form-group">
+                <label id="lbl_@item.Id" hidden>@item.Answer</label>
+                <input asp-for="@item.Answer" id="@item.Id" onkeyup="Changed_Answer('btn_' + '@item.Id','@item.Id')" class="form-control col-md-10" placeholder="پاسخ نظرسنجی را وارد کنید" autocomplete="off" />
+                <button type="button" id="btn_@item.Id" hidden onclick="return Update_Answer('@item.Id')" class="btn btn-info waves-effect mt-1">ذخیره</button>
+            </div>
+                countinput++;
+            }
+        </div>
+
+
+
+
+
+    }
+
+
+
+    <div class="modal-footer">
+        <button type="button" onclick="return ValidateForm(event)" class="btn btn-info waves-effect">ذخیره</button>
+        <button type="button" class="btn btn-danger waves-effect"
+                data-dismiss="modal">
+            لغو
+        </button>
+    </div>
+</form>
+<script src="~/persiandatepicker/PersianDatePicker.min.js"></script>
+
+
+
+
+<script>
+    function EditAnswer() {
+        event.preventDefault();
+        if ($('#edit-answer').is(":checked"))
+            $(".editanswer").show();
+        else
+            $(".editanswer").hide();
+    }
+
+
+    var Question_Input = document.getElementById('Question');
+    window.onload = InputLengthCheck();
+    function InputLengthCheck() {
+        var Question_Length = Question_Input.value.length;
+        var Question_Chars = 100 - Question_Length;
+        var Question_Count = document.getElementById('charaters-count');
+        Question_Count.innerHTML = "تعداد حروف: " + Question_Chars;
+    }
+    Question_Input.addEventListener('keyup', InputLengthCheck, false);
+    Question_Input.addEventListener('keydown', InputLengthCheck, false);
+
+    function ValidateForm() {
+        event.preventDefault();
+        let Start_Date = $('#StartDate');
+        let End_Date = $('#EndDate');
+        let Answer = $('#Answer');
+        let Max_Length = 100;
+        let Question = Question_Input.value;
+        if (Question == '') {
+            Question_Input.focus();
+            Alert('لطفا سوال نظرسنجی را وارد کنید');
+            return false;
+        } else if (Question.length > Max_Length) {
+            Question_Input.focus();
+            Alert('سوال نظر سنجی نمی تواند بیشتر از 100 کاراکتر باشد');
+            return false;
+        }
+        else if (Start_Date.val() == '') {
+            Start_Date.focus();
+            Alert('تاریخ شروع نظرسنجی را وارد نمایید');
+            return false;
+        } else if (!Format_Date.test(Start_Date.val())) {
+            Start_Date.focus();
+            Alert('فرمت تاریخ شروع نظرسنجی صحیح نمی باشد لطفا از کادر تاریخ راانتخاب کنید');
+            return false;
+        }
+        else if (End_Date.val() == '') {
+            End_Date.focus();
+            Alert('تاریخ اتمام نظرسنجی را وارد نمایید');
+            return false;
+        } else if (!Format_Date.test(End_Date.val())) {
+            End_Date.focus();
+            Alert('فرمت تاریخ اتمام نظرسنجی صحیح نمی باشد لطفااز کادر تاریخ راانتخاب کنید');
+            return false;
+        } else if (Answer.val() == '') {
+            Answer.focus();
+            Alert('پاسخ نظرسنجی را وارد کنید');
+            return false;
+        }
+
+
+        let Form = $("#PollForm")[0];
+        let Form_Data = new FormData(Form);
+        $.ajax({
+            url: '/AdminPanel/Poll/AddAndUpdatePoll',
+            data: Form_Data,
+            contentType: false,
+            processData: false,
+            type: 'POST',
+            success: function (data) {
+                switch (data) {
+                    case 0:
+                        Queshiddention_Input.focus();
+                        Alert('لطفا سوال نظرسنجی را وارد کنید');
+                        return false;
+                    case 1:
+                        Start_Date.focus();
+                        Alert('تاریخ شروع نظرسنجی را وارد نمایید');
+                        return false;
+                    case 2:
+                        End_Date.focus();
+                        Alert('تاریخ اتمام نظرسنجی را وارد نمایید');
+                        return false;
+
+                    case 3:
+                        Answer.focus();
+                        Alert('پاسخ نظرسنجی را وارد کنید');
+                        return false;
+                    case 4:
+                        Alert('پاسخ نظرسنجی نمی تواند کمتر از 2 و بیشتر از 8 پاسخ باشد');
+                        return false;
+
+                    case 5:
+                        Alert('تاریخ اتمام نظرسنجی نمی تواند قبل از تاریخ شروع نظرسنجی باشد');
+                        return false;
+                    default:
+                        window.location.href = data.redirectToUrl;
+                }
+            }
+        });
+    }
+
+    function Changed_Answer(btn,id) {
+        event.preventDefault();
+        let Input_Value = $('input#' + id).val();
+        let Lbl_Value = $('#lbl_' + id).text();
+        if (Input_Value != Lbl_Value) {
+            $('#' + btn).prop("hidden", false);
+        } else {
+            $('#' + btn).prop("hidden", true);
+        }
+
+        
+    }
+    function Update_Answer(answerId) {
+        event.preventDefault();
+        let AnswerPoll = $('#' + answerId);
+        let Answer_Val = AnswerPoll.val();
+        if (Answer_Val == '') {
+            AnswerPoll.focus();
+            Alert('پاسخ نظرسنجی نمی تواند خالی باشد');
+            return false;
+        }
+
+        $.ajax({
+            url: '/AdminPanel/Poll/UpdatePollOption',
+            data: { Id: answerId, polloptiontext: Answer_Val },
+            type: 'POST',
+            success: function (data) {
+                switch (data) {
+                    case 0:
+                        Alert('سوال نظرسنجی موردنظر جهت ویرایش یافت نشد');
+                        return false;
+                    case 1:
+                        AnswerPoll.focus();
+                        Alert('پاسخ نظرسنجی نمی تواند خالی باشد');
+                        return false;
+                    default:
+                        $('#lbl_' + answerId).text(Answer_Val);
+                        $('#btn_' + answerId).prop("hidden", true);
+                        Alert_Success('سوال نظرسنجی شما با موفقیت ویرایش شد');
+                        return false;
+
+                }
+            }
+        });
+       
+    }
+</script>
+
+
+
+
+
+
+

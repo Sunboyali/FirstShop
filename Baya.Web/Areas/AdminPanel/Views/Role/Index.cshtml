@@ -1,0 +1,109 @@
+﻿@model IEnumerable<Baya.DataLayer.Entities.Role>
+
+@{
+    ViewData["Title"] = "نمایش نقش ها";
+    int rowCount = 1;
+}
+
+
+@section Styles {
+    @*<link href="@Url.Content("~/panel/assets/jstree/themes/default/style.css")" rel="stylesheet" type="text/css" />*@
+    <style>
+        body.modal-open {
+            overflow: auto;
+        }
+    </style>
+}
+<div class="card">
+    <div class="header">
+        <h2 class="alert alert-info text-center">
+            <strong>لیست نقش های سایت</strong>
+        </h2>
+        <a onclick="showInPopup('@Url.Action("AddOrEditRole","Role",null,Context.Request.Scheme)','ایجاد نقش جدید')" class="sabt btn bg-teal waves-effect mt-3">ثبت نقش جدید</a>
+
+
+    </div>
+    <div class="body table-responsive-lg table-responsive-md table-responsive-sm table-responsive-xl">
+        <table class="table">
+            <thead>
+                <tr>
+
+                    <th width="40px">ردیف</th>
+
+
+                    <th>
+                        @Html.DisplayNameFor(model => model.RoleName)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.RoleTitle)
+                    </th>
+
+
+
+                    <th>عملیات</th>
+                </tr>
+            </thead>
+            <tbody id="tblrole">
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>@rowCount</td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.RoleName)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.RoleTitle)
+                        </td>
+                        @if (item.RoleName == "User")
+                        {
+                            <td><span>قابل ویرایش نیست</span></td>
+                        }
+                        else
+                        {
+                            <td>
+                                <a onclick="showInPopup('@Url.Action("AddOrEditRole","Role",new {Id = item.RoleId },Context.Request.Scheme)','ویرایش نقش')" class="btn bg-blue btn-circle waves-effect waves-circle waves-float" title="ویرایش"><i class="material-icons">edit</i></a>
+                                <a class="btn bg-pink btn-circle waves-effect waves-circle waves-float" onclick="myDelete('@item.RoleId', '@item.RoleName')" title="حذف"><i class="material-icons">delete_forever</i></a>
+                            </td>
+                        }
+
+                    </tr>
+                    rowCount++;
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+@section Scripts{
+
+    <script>
+        showInPopup = (url, title) => {
+            $.ajax({
+                type: 'GET',
+                url: url,
+                success: function (res) {
+                    $('#adminModal .modal-body').html(res);
+                    $('#adminModal .modal-title').html(title);
+                    $('#adminModal').modal('show');
+                    // to make popup draggable
+                    $('.modal-dialog').draggable({
+                        handle: ".modal-header"
+                    });
+                }
+            })
+        }
+        function myDelete(id, name) {
+            swal({
+                title: "تأیید حذف",
+                text: "آیا از حذف  " + name + " اطمینان دارید؟",
+                icon: "warning",
+                buttons: ['لغو', 'بلی'],
+                dangerMode: true,
+            })
+                .then((willDelete) => {
+                    if (willDelete) {
+                        window.open('/AdminPanel/Role/Delete/' + id, '_parent');
+                    }
+                });
+        }
+    </script>
+}

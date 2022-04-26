@@ -1,0 +1,100 @@
+﻿@model Baya.Core.ViewModels.UserViewModel
+@{
+    Layout = null;
+}
+
+<form id="UserForm" method="post">
+
+    <div class="form-group">
+        <div class="form-line">
+            <input type="number" asp-for="Mobile" id="Mobile" max="11" maxlength="11" class="form-control"
+                   autocomplete="off" placeholder="شماره موبایل را وارد کنید" required>
+        </div>
+    </div>
+    <div class="form-group">        
+        <input asp-for="Password" class="form-control" placeholder="رمز عبور را وارد کنید" autocomplete="off" />        
+    </div>
+    <div class="form-group">
+        <div class="row clearfix">
+            <div class="col-md-5">
+                <label class="">انتخاب نقش</label>
+                <select asp-for="RoleId" class="form-control" asp-items="ViewBag.Roles"></select>
+
+            </div>
+        </div>
+    </div>
+
+
+    <div class="modal-footer">
+        <button type="button" onclick="return ValidateForm(event)" class="btn btn-info waves-effect">ذخیره</button>
+        <button type="button" class="btn btn-danger waves-effect"
+                data-dismiss="modal">
+            لغو
+        </button>
+    </div>
+</form>
+
+
+<script>  
+    function ValidateForm(e) {
+        e.preventDefault();
+        let Max_Length_Mobile = 11;
+        let Min_Length_Pass = 6;
+
+        let Mobile = $('#Mobile').val();
+        let Pass = $('#Password').val();
+        if (Mobile == '') {
+            $('#Mobile').focus();
+            Alert('لطفا شماره موبایل را وارد کنید');
+            return false;
+        } else if (!True_Mobile.test(Mobile) || Mobile.length > Max_Length_Mobile) {
+            $('#Mobile').focus();
+            Alert('فرمت شماره موبایل صحیح نمی باشد');
+            return false;
+        }else if (Pass == '') {
+            $('#Password').focus();
+            Alert('لطفا رمز عبور را وارد کنید');
+            return false;
+        }  else if (Pass.length < Min_Length_Pass) {
+            $('#Password').focus();
+            Alert('رمز عبور نمی تواند کمتر از 6 کاراکتر باشد');
+            return false;
+        }
+        
+
+        let Form = $("#UserForm")[0];
+        let Form_Data = new FormData(Form);
+        $.ajax({
+            url: '/AdminPanel/User/AddNewUser',
+            data: Form_Data,
+            contentType: false,
+            processData: false,
+            type: 'POST',
+            success: function (data) {
+                switch (data) {
+                    case 0:
+                        $('#Mobile').focus();
+                        Alert('لطفا شماره موبایل را وارد کنید');
+                        return false;
+                    case 1:
+                        $('#Password').focus();
+                        Alert('لطفا رمز عبور را وارد کنید');
+                        return false;
+                    case 2:
+                        $('#Mobile').focus();
+                        Alert('این شماره موبایل قبلا در سیستم ثبت شده است');
+                        return false;
+                    default:
+                        window.location.href = data.redirectToUrl;
+                }
+            }
+        });
+    }
+</script>
+
+
+
+
+
+
+

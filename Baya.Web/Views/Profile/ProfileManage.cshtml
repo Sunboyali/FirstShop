@@ -1,0 +1,134 @@
+﻿@model Baya.Core.ViewModels.UpdateProfileViewModel
+@{
+    ViewData["Title"] = "مدیریت پروفایل";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section Styles {
+    <link href="@Url.Content("~/site/css/profile.css")" rel="stylesheet" type="text/css" />
+}
+<div class="main-profile">
+
+
+    <div class="header-profile">
+        <h7 class="alert alert-success d-block text-center">
+            <strong>مدیریت پروفایل - <span class="text-danger">@User.Identity.Name</span></strong>
+        </h7>
+    </div>
+    <div class="body-profile">
+        <div class="container">
+            <div class="row justify-content-md-center">
+                <div class="col-lg-8 col-md-8 offset-lg-2 offset-md-2">
+                    <form asp-controller="Profile" asp-action="ProfileManage" enctype="multipart/form-data">
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+
+                        <div class="form-group">
+                            <label class="control-label">انتخاب تصویر</label>
+                            <input type="file" asp-for="ImageUser" onchange="readURL(this);" class="form-control">
+                            <span class="text text-danger">فرمت های مجاز : jpg , jpeg , png</span>
+                        </div>
+                        <div class="form-group text-right">
+                            <label asp-for="Name" class="control-label"></label>
+                            <input asp-for="Name" class="form-control" placeholder="نام و نام خانوادگی خود را وارد نمایید" autocomplete="off" />
+                            <span asp-validation-for="Name" class="text-danger"></span>
+
+                        </div>
+
+                        <div class="form-group text-right">
+                            <label asp-for="Family" class="control-label"></label>
+                            <input asp-for="Family" class="form-control" placeholder="نام و نام خانوادگی خود را وارد نمایید" autocomplete="off" />
+                            <span asp-validation-for="Family" class="text-danger"></span>
+
+                        </div>
+                        <div class="form-group text-right">
+                            <label asp-for="NationalCode" class="control-label"></label>
+                            <input asp-for="NationalCode" class="form-control" placeholder="کد ملی را وارد نمایید" autocomplete="off" />
+                            <span class="text-info">جهت خرید کالا نیاز به کد ملی شما است (اختیاری)</span>
+                        </div>
+
+
+                        <div class="form-group text-right">
+                            <label asp-for="PostCode" class="control-label"></label>
+                            <input asp-for="PostCode" class="form-control" placeholder="کد پستی را وارد نمایید" autocomplete="off" />
+                            <span class="text-info">جهت خرید کالا نیاز به کد پستی شما است (اختیاری)</span>
+                        </div>
+
+                        <div class="form-group text-right">
+                            <label asp-for="Address" class="control-label"></label>
+                            <textarea asp-for="Address" class="form-control" placeholder="آدرس محل سکونت را وارد نمایید"></textarea>
+
+                            <span class="text-info">جهت خرید کالا نیاز به آدرس دقیق شما است (اختیاری)</span>
+                        </div>
+
+                        <div class="form-group text-right">
+                            <label asp-for="EmailUser" class="control-label"></label>
+                            <input asp-for="EmailUser" class="form-control" placeholder="ایمیل را وارد کنید" autocomplete="off" />
+                            <span class="text-info"> (اختیاری)</span>
+                        </div>
+
+
+
+
+                        <div class="form-group text-right">
+                            <input type="submit" value="ذخیره" class="btn btn-success" />
+                            <a class="btn btn-info" asp-controller="Home" asp-action="Index">صفحه اصلی</a>
+                        </div>
+
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+
+@section Scripts{
+    <script src="~/site/js/sweet.js"></script>
+    <script>
+        function readURL(input) {
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+
+                reader.onload = function (e) {
+                    $('#imgUser')
+                        .attr('src', e.target.result)
+                    //.width(150)
+                    //.height(200);
+                };
+
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+    </script>
+
+    @if (ViewBag.ErrorOne == true)
+    {
+        <script>
+            swal("پیغام", "فرمت تصویر انتخابی مناسب نیست", "warning", {
+                button: "متوجه شدم",
+            });
+        </script>
+    }
+
+    @if (ViewBag.ErrorTwo == true)
+    {
+        <script>
+            swal("پیغام", "فایل انتخابی شما تصویر نیست لطفا یک تصویر انتخاب کنید", "warning", {
+                button: "متوجه شدم",
+            });
+        </script>
+    }
+
+    @if (ViewBag.ErrorThree == true)
+    {
+        <script>
+            swal("پیغام", "اطلاعات شما با موفقیت ثبت شد", "success", {
+                button: "متوجه شدم",
+            });
+        </script>
+    }
+
+}

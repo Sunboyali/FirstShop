@@ -1,0 +1,110 @@
+﻿@{ 
+    string LogoImg = scope.GetSettingTheme().Logo;
+}
+
+<div class="header-top">
+    <div class="container-fluid">
+        <div class="row align-items-center">
+            <div class="col-lg-3 mb-3 text-center">
+                <a href="/" class="site-logo"> <img src="~/site/img/logo/@LogoImg" alt="لوگو فروشگاه" /></a>
+            </div>
+            <div class="col-lg-5 mb-3">
+                <div class="search-header" ng-controller="Search as search">
+
+                    <form id="searchForm" asp-controller="Product" asp-action="SearchProduct" method="get">
+                        <input value="@ViewBag.searchtext" id="searchTerm" name="q" class="search-input" type="text" autocomplete="off" ng-model="search.Search_Id" ng-click="search.ShowResult()" ng-change="search.check_search()" placeholder="نام کالا، برند و یا دسته مورد نظر خود را جستجو کنید…">
+                        <span ng-model="search.Clear_Text_Input" ng-click="search.Clear_Text_Input()" id="del_input_search" class="fas fa-times-circle"></span>
+                    </form>
+
+
+
+                    <div class="search-result">
+                        <ul class="search-result-list mb-0">
+
+                            <li class="span-row">
+                                <i class="far fa-clock"></i>
+                                <span class="story__txt"> تاریخچه جستجوهای شما</span>
+                                <a id="clearStory" class="remove-story-search"><span class="far fa-trash-alt"></span></a>
+                            </li>
+                            <li id="searchStory" class="span-row"></li>
+                            @*<li><a href="#">محصولات</a>/li>*@
+                        </ul>
+                        <div id="popup">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="user-items position-relative text-left col-lg-4">
+                <ul>
+                    @if (User.Identity.IsAuthenticated)
+                    {
+                        string IdUser = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                        <li>
+                            <a href="javascript:void(0);" class="panel-user cart-toggle-btn">
+                                <i class="fa fa-shopping-bag"></i>
+                                @if (scope.CountCartUser(Guid.Parse(IdUser)) == 0)
+                                {
+                                    <span id="items-bag" style="visibility:hidden" class="bag-items-number"></span>
+                                }
+                                else
+                                {
+                                    <span id="items-bag" style="visibility:visible" class="bag-items-number">@scope.CountCartUser(Guid.Parse(IdUser))</span>
+                                }
+
+                            </a>
+                        </li>
+                        <li>
+
+                            <a href="javascript:void(0);" class="panel-user fav-toggle-btn">
+                                <i class="far fa-heart"></i>
+                                @if (scope.CountFavoritesUser(Guid.Parse(IdUser)) == 0)
+                                {
+                                    <span id="items-fav" style="visibility:hidden" class="bag-items-number"></span>
+                                }
+                                else
+                                {
+                                    <span id="items-fav" style="visibility:visible" class="bag-items-number">@scope.CountFavoritesUser(Guid.Parse(IdUser))</span>
+                                }
+
+
+
+                            </a>
+                        </li>
+
+
+
+                        <li>
+                            <a href="javascript:void(0);" class="panel-user user-toggle-btn">
+                                <img src="~/panel/userpanel/avatar/avatar.png" alt="پروفایل" />
+                            </a>
+                        </li>
+                    }
+                    else
+                    {
+
+                        <li>                           
+                            <a href="#" class="sign-in" data-toggle="modal" data-target="#login">
+                                <i class="fas fa-user"></i> وارد شوید
+                            </a>
+                        </li>
+
+
+                    }
+
+                </ul>
+
+
+                <div class="box__info">
+
+                    @if (User.Identity.IsAuthenticated)
+                    {
+                        @await Component.InvokeAsync("ProfileUserComponent")
+                    }
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+
+</div>

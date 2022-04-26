@@ -1,0 +1,221 @@
+﻿@model IEnumerable<Baya.DataLayer.Entities.Poll>
+
+@{
+    ViewData["Title"] = "نمایش نظرسنجی ها";
+    int rowCount = 1;
+}
+
+
+@section Styles {
+    @*<link href="@Url.Content("~/panel/assets/jstree/themes/default/style.css")" rel="stylesheet" type="text/css" />*@
+
+}
+<div class="card">
+    <div class="header">
+        <h2 class="alert alert-info text-center">
+            <strong>لیست نظرسنجی ها</strong>
+        </h2>
+
+        <a onclick="showInPopup('@Url.Action("AddOrEditPoll","Poll",null,Context.Request.Scheme)','ایجاد نظرسنجی جدید')" class="sabt btn bg-teal waves-effect mt-3">ثبت نظرسنجی جدید</a>
+
+        <div id="DataTables_Table_0_filter" class="dataTables_filter">
+
+            <input type="search" id="search" class="form-control form-control-sm" placeholder="جستجو ..." aria-controls="DataTables_Table_0">
+
+        </div>
+    </div>
+    <div class="body table-responsive-lg table-responsive-md table-responsive-sm table-responsive-xl">
+        <table class="table">
+            <thead>
+                <tr>
+
+                    <th width="40px">ردیف</th>
+
+
+                    <th>
+                        سوال نظرسنجی
+                    </th>
+                    <th width="120px">
+                        تاریخ شروع
+                    </th>
+
+                    <th width="120px">
+                        تاریخ اتمام
+                    </th>
+
+
+
+                    <th width="120px">عملیات</th>
+                </tr>
+            </thead>
+            <tbody id="tblpoll">
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>@rowCount</td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Question)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.StartDate)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.EndDate)
+                        </td>
+                        @if (item.Active == true)
+                        {
+                            <td><span class="label bg-success">فعال</span></td>
+                        }
+                        else
+                        {
+
+                            <td><span class="label bg-danger">غیرفعال</span></td>
+
+                        }
+
+                    <td>
+                        <a class="btn bg-purple btn-circle waves-effect waves-circle waves-float" onclick="showInPopup('@Url.Action("ShowResult","Poll",new {Id = item.Id },Context.Request.Scheme)','نمایش نتیجه نظرسنجی')" title="نمایش نتایج"><i class="material-icons">assessment</i></a>
+                        <a class="btn bg-blue btn-circle waves-effect waves-circle waves-float" onclick="showInPopup('@Url.Action("AddOrEditPoll","Poll",new {Id = item.Id },Context.Request.Scheme)','ویرایش نظرسنجی')" title="ویرایش"><i class="material-icons">edit</i></a>
+
+                        @if (item.Active == true)
+                        {
+                            <a class="btn btn-primary btn-circle waves-effect waves-circle waves-float" onclick="ActivatePoll('@item.Id')" title="غیرفعال کردن"><i class="material-icons">visibility_off</i></a>
+                        }
+                        else
+                        {
+                            <a class="btn bg-teal btn-circle waves-effect waves-circle waves-float" onclick="ActivatePoll('@item.Id')" title="فعال کردن"><i class="material-icons">visibility</i></a>
+                        }
+
+                        <a class="btn bg-pink btn-circle waves-effect waves-circle waves-float" onclick="myDelete('@item.Id')" title="حذف"><i class="material-icons">delete_forever</i></a>
+                    </td>
+
+                    </tr>
+                    rowCount++;
+                }
+            </tbody>
+        </table>
+
+        @if (ViewBag.PageCount > 1)
+        {
+            <div class="row text-center">
+
+                <ul class="page-num">
+                    @if ((int)ViewBag.PageID > 1)
+                    {
+                        @* Previous *@
+                        <li>
+                            <a href="?page=@((int)ViewBag.PageID-1)">
+                                <span>قبلی</span>
+                            </a>
+                        </li>
+                    }
+                    @for (int i = 1; i <= (ViewBag.PageCount); i++)
+                    {
+                        <li>
+                            <a class="@(((int)ViewBag.PageID==i)?"activepage":"")" href="?page=@i">
+                                @i
+                                <span class="sr-only"></span>
+                            </a>
+                        </li>
+                    }
+
+
+                    @if ((int)ViewBag.PageID <= (int)ViewBag.PageCount - 1)
+                    {
+                        @* Next *@
+                        <li>
+                            <a href="?page=@((int)ViewBag.PageID+1) ">
+                                <span>بعدی</span>
+                            </a>
+                        </li>
+
+                    }
+                </ul>
+            </div>
+
+        }
+
+
+
+    </div>
+</div>
+
+@section Scripts{
+    <script>
+        $(document).ready(function () {
+            $("#search").on("keyup", function () {
+                var value = $(this).val().toLowerCase();
+                $("#tblpoll tr").filter(function () {
+                    $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+                });
+            });
+        });
+
+
+        showInPopup = (url, title) => {
+            $.ajax({
+                type: 'GET',
+                url: url,
+                success: function (res) {
+                    $('#adminModal .modal-body').html(res);
+                    $('#adminModal .modal-title').html(title);
+                    $('#adminModal').modal('show');
+                    // to make popup draggable
+                    $('.modal-dialog').draggable({
+                        handle: ".modal-header"
+                    });
+                }
+            })
+        }
+
+        function ActivatePoll(id) {
+            swal({
+                title: "تأیید فعالیت",
+                text: "آیا از تغییر فعالیت نظرسنجی اطمینان دارید؟",
+                icon: "warning",
+                buttons: ['لغو', 'بلی'],
+                dangerMode: true,
+            })
+                .then((willDelete) => {
+                    if (willDelete) {
+                        window.open('/AdminPanel/Poll/ActivatePoll/' + id, '_parent');
+                    }
+                });
+        }
+
+
+        function myDelete(id) {
+            swal({
+                title: "تأیید حذف",
+                text: "آیا از حذف کردن نظرسنجی اطمینان دارید؟",
+                icon: "warning",
+                buttons: ['لغو', 'بلی'],
+                dangerMode: true,
+            })
+                .then((willDelete) => {
+                    if (willDelete) {
+                        window.open('/AdminPanel/Poll/Delete/' + id, '_parent');
+                    }
+                });
+        }
+
+
+
+    </script>
+
+
+
+
+
+
+}
+
+
+
+
+
+
+
+
+
+

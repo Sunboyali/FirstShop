@@ -1,0 +1,157 @@
+﻿
+@{
+    ViewData["Title"] = "آدرس و زمان ارسال";
+    Layout = "~/Views/Shared/_ShopingLayout.cshtml";
+}
+<style>
+    #content {
+        margin: 40px 0px;
+        text-align:right;
+    }
+
+   /* .right-div {
+        width: 100%;
+        margin-bottom: 30px;
+    }*/
+        #content .shoping-page {
+            width: 100%;      
+            margin-bottom: 15px;
+        }
+        #content .left-sidebar-page {
+            width: 100%;           
+        }
+    .right-content,.left-content{
+        padding:0px;
+    }
+    .shoping-page, .left-sidebar-page {
+        padding: 10px;
+        width: 100%;
+    }
+    .right-content .shoping-page .address-content {
+        background-color: #fff;
+        border-radius: 5px;
+        border: 1px solid #d9d9d9;
+        padding:16px;
+    }
+        .right-content .shoping-page .address-content .user-address {
+            font-size: 13px;
+            display: block;
+            font-weight: 500;
+            color: #403e3e;
+        }
+
+        .right-content .shoping-page .address-content .transferee-name {
+            font-size: 15px;
+            display: block;
+            font-weight: 500;
+            color: #686666;
+            margin-top:10px;
+        }
+        .right-content .shoping-page .address-content .btn-change-address {
+            background-color: transparent;
+            font-size: 13px;
+            margin-top: 15px;
+            color: #349312;
+        }
+    .right-content .shoping-page .checkoutaddress {
+        background-color: #fff;
+        border-radius: 5px;
+        border: 1px solid #e8e8e8;
+        padding: 16px;
+        position: relative;
+    }
+        .right-content .shoping-page .checkoutaddress .close-checkout{
+            position:absolute;
+            left:30px;
+            top:20px;
+            cursor:pointer;
+        }
+        .right-content .shoping-page .checkoutaddress span.youraddress-title {
+            margin-top: 30px;
+            display: block;
+            border-bottom: 1px solid #d0d0d0;
+            line-height: 30px;
+        }
+    
+</style>
+<div id="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="right-content col-md-9">
+                <section class="shoping-page">
+
+                    <div class="checkoutaddress js-user-address-container">
+                        <i class="close-checkout js-close-checkadd fas fa-times"></i>
+                        <h6 class="address-title">آدرس تحویل سفارش را انتخاب نمایید:</h6>
+                        <span class="youraddress-title">آدرس های شما</span>
+
+                        
+
+
+                    </div>
+                    <div class="address-content js-address-content">
+
+                        <h6 class="address-title">آدرس تحویل سفارش</h6>
+                        <span class="user-address">
+                            تهران، قرچک، قرچک،خ. 12 متری زیبا شهر، نرسیده به م. زیبا شهر، ک. فتح 12، پلاک ۱۸
+                        </span>
+                        <span class="transferee-name"><i class="fa fa-user"></i> علی خوانساری</span>
+                        <button class="btn-change-address">تغییر یا ویرایش آدرس</button>
+
+                    </div>
+                </section>
+            </div>
+        
+     
+            <div class="left-content col-md-3">
+                <aside class="left-sidebar-page">
+                </aside>
+            </div>
+        </div>
+
+
+    </div>
+
+
+
+
+    @*<section class="">
+            <div class="right-div col-lg-9 col-md-9 col-sm-12 col-xs-12">
+                <div class="address-content">
+
+                </div>
+            </div>
+        </section>
+
+        <aside class="">
+            <div class="left-div col-lg-3 col-md-3 col-sm-12 col-xs-12">
+                <div class="leftside-content">
+
+                </div>
+            </div>
+        </aside>*@
+
+</div>
+
+@section ScriptsShop{ 
+<script>
+    const btn_ChangeAddress = $('.btn-change-address');
+    const user_Addresscontainer = $('.js-user-address-container');
+    const address_Content = $('.js-address-content');
+    const close_AddressContainer = $('.js-close-checkadd');
+    
+
+    btn_ChangeAddress.click(function (e) {
+        e.preventDefault();
+        user_Addresscontainer.prop('hidden', false);
+        address_Content.prop('hidden', true);
+    });
+    close_AddressContainer.click(function () {
+        user_Addresscontainer.prop('hidden', true);
+        address_Content.prop('hidden', false);
+        /*address_Content.removeAttr('hidden');*/
+
+    });
+
+</script>
+}

@@ -1,0 +1,304 @@
+﻿@model IEnumerable<Baya.DataLayer.Entities.Product>
+
+@{
+    ViewData["Title"] = "محصولات (بایگانی)";
+    int rowCount = 1;
+}
+
+
+@section Styles {
+    @*<link href="@Url.Content("~/panel/assets/jstree/themes/default/style.css")" rel="stylesheet" type="text/css" />*@
+
+}
+<div class="card">
+    <div class="header">
+        <h2 class="alert alert-info text-center">
+            <strong>لیست محصولات (بایگانی) </strong>
+        </h2>
+
+    </div>
+    @if (Model.Count() == 0)
+    {
+
+
+        <div class="body">
+            <span class="alert alert-danger text-center d-block">محصولی در بایگانی (عدم نمایش) وجود ندارد</span>
+        </div>
+
+    }
+
+    else
+    {
+        <div class="header">
+            <ul class="collapsible">
+                <li>
+                    <div class="collapsible-header">
+                        <i class="material-icons">search</i>بخش جستجو
+                    </div>
+                    @if (ViewBag.Code != null || ViewBag.Name != null)
+                    {
+                        <div class="collapsible-body" style="display :block">
+                            <div class="row clearfix">
+                                <div class="col-md-3">
+                                    <form asp-action="UnShowProduct" method="post">
+                                        <input type="text" value="@ViewBag.Code" name="productcode" autocomplete="off" id="productcode" class="form-control form-control-sm" placeholder=" جستجو کد محصول ...">
+                                    </form>
+                                </div>
+                                <div class="col-md-3">
+                                    <form asp-action="UnShowProduct" method="post">
+                                        <input type="text" value="@ViewBag.Name" name="productname" autocomplete="off" id="productcode" class="form-control form-control-sm" placeholder=" جستجو نام محصول ...">
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="collapsible-body">
+                            <div class="row clearfix">
+                                <div class="col-md-3">
+                                    <form asp-action="UnShowProduct" method="post">
+                                        <input type="text" value="@ViewBag.Code" name="productcode" autocomplete="off" id="productcode" class="form-control form-control-sm" placeholder=" جستجو کد محصول ...">
+                                    </form>
+                                </div>
+                                <div class="col-md-3">
+                                    <form asp-action="UnShowProduct" method="post">
+                                        <input type="text" value="@ViewBag.Name" name="productname" autocomplete="off" id="productcode" class="form-control form-control-sm" placeholder=" جستجو نام محصول ...">
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    }
+
+
+                </li>
+
+            </ul>
+        </div>
+
+
+
+        <div class="body table-responsive-lg table-responsive-md table-responsive-sm table-responsive-xl">
+            <table class="table" id="tblproductlist">
+                <thead>
+                    <tr>
+
+                        <th width="40px">ردیف</th>
+
+                        <th>
+                            تصویر
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.ProductCode)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.ProductName)
+                        </th>
+                        <th>قیمت (ریال)</th>
+
+                        <th>
+                            @Html.DisplayNameFor(model => model.CountProduct)
+                        </th>
+                        <th>
+                            تخفیف (درصد)
+                        </th>
+
+                        <th>قیمت نهایی (ریال)</th>
+                        <th>عملیات</th>
+                    </tr>
+                </thead>
+                <tbody id="tblproduct">
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>@rowCount</td>
+                            <td>
+                                <a onclick="showInPopup('@Url.Action("ShowAndEditGallery","Product",new { id = item.Id},Context.Request.Scheme)','مدیریت گالری محصول')"><img src="~/site/img/product/thumbnail/@item.ProductImg" alt="تصویر محصول" class="rounded" /></a>
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.ProductCode)
+                            </td>
+                            <td>
+                                <a style="cursor:pointer" onclick="showInPopup('@Url.Action("ShowDetail","Product",new { id = item.Id},Context.Request.Scheme)','جزئیات محصول')">@Html.DisplayFor(modelItem => item.ProductName)</a>
+
+                            </td>
+                            <td><span class="label bg-cyan">@item.Price.ToString("#,0")</span></td>
+
+                            <td>
+                                @Html.DisplayFor(modelItem => item.CountProduct)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Off)
+                            </td>
+                            <td><span class="label bg-cyan">@item.FinalPrice.ToString("#,0")</span></td>
+
+                            <td>
+
+                                <a class="btn bg-purple btn-circle waves-effect waves-circle waves-float" onclick="Show('@item.Id')" title="نمایش محصول در سایت"><i class="material-icons">visibility</i></a>
+                                <a class="btn bg-red btn-circle waves-effect waves-circle waves-float" onclick="myDelete('@item.Id')" title="حذف کامل"><i class="material-icons">delete_forever</i></a>
+
+                            </td>
+                        </tr>
+                        rowCount++;
+                    }
+                </tbody>
+            </table>
+            @* Paging By Code *@
+            @if (ViewBag.Code != null || ViewBag.Name != null)
+            {
+                @if (ViewBag.PageCount > 1)
+                {
+                    <div class="row text-center">
+
+                        <ul class="page-num">
+                            @if ((int)ViewBag.PageID > 1)
+                            {
+                                @* Previous *@
+                                <li>
+                                    <a href="?productcode=@ViewBag.Code&productname=@ViewBag.Name&page=@((int)ViewBag.PageID-1)">
+                                        <span>قبلی</span>
+                                    </a>
+                                </li>
+                            }
+                            @for (int i = 1; i <= (ViewBag.PageCount); i++)
+                            {
+                                <li>
+                                    <a class="@(((int)ViewBag.PageID==i)?"activepage":"")" href="?productcode=@ViewBag.Code&productname=@ViewBag.Name&page=@i">
+                                        @i
+                                        <span class="sr-only"></span>
+                                    </a>
+                                </li>
+                            }
+
+
+                            @if ((int)ViewBag.PageID <= (int)ViewBag.PageCount - 1)
+                            {
+                                @* Next *@
+                                <li>
+                                    <a href="?productcode=@ViewBag.Code&productname=@ViewBag.Name&page=@((int)ViewBag.PageID+1) ">
+                                        <span>بعدی</span>
+                                    </a>
+                                </li>
+
+                            }
+                        </ul>
+                    </div>
+
+                }
+            }
+            else
+            {
+                @if (ViewBag.PageCount > 1)
+                {
+                    <div class="row text-center">
+
+                        <ul class="page-num">
+                            @if ((int)ViewBag.PageID > 1)
+                            {
+                                @* Previous *@
+                                <li>
+                                    <a href="?page=@((int)ViewBag.PageID-1)">
+                                        <span>قبلی</span>
+                                    </a>
+                                </li>
+                            }
+                            @for (int i = 1; i <= (ViewBag.PageCount); i++)
+                            {
+                                <li>
+                                    <a class="@(((int)ViewBag.PageID==i)?"activepage":"")" href="?page=@i">
+                                        @i
+                                        <span class="sr-only"></span>
+                                    </a>
+                                </li>
+                            }
+
+
+                            @if ((int)ViewBag.PageID <= (int)ViewBag.PageCount - 1)
+                            {
+                                @* Next *@
+                                <li>
+                                    <a href="?page=@((int)ViewBag.PageID+1) ">
+                                        <span>بعدی</span>
+                                    </a>
+                                </li>
+
+                            }
+                        </ul>
+                    </div>
+
+                }
+            }
+
+
+        </div>
+
+
+
+
+        @section Scripts{
+            <script src="~/panel/adminpanel/js/collapse.js"></script>
+            <script>
+
+                showInPopup = (url, title) => {
+                    $.ajax({
+                        type: 'GET',
+                        url: url,
+                        success: function (res) {
+                            $('#productModal .modal-body').html(res);
+                            $('#productModal .modal-title').html(title);
+                            $('#productModal').modal('show');
+                            // to make popup draggable
+                            $('.modal-dialog').draggable({
+                                handle: ".modal-header"
+                            });
+                        }
+                    })
+                }
+
+                function Show(id) {
+                    swal({
+                        title: "تأیید  نمایش",
+                        text: "آیا از نمایش محصول در سایت اطمینان دارید؟",
+                        icon: "warning",
+                        buttons: ['لغو', 'بلی'],
+                        dangerMode: true,
+                    })
+                        .then((willShow) => {
+                            if (willShow) {
+                                window.open('/AdminPanel/Product/ShowProduct/' + id, '_parent');
+                            }
+                        });
+                }
+
+                function myDelete(id) {
+                    swal({
+                        title: "تأیید حذف",
+                        text: "آیا از حذف کامل محصول اطمینان دارید؟",
+                        icon: "warning",
+                        buttons: ['لغو', 'بلی'],
+                        dangerMode: true,
+                    })
+                        .then((willDelete) => {
+                            if (willDelete) {
+                                window.open('/AdminPanel/Product/Remove/' + id, '_parent');
+                            }
+                        });
+                }
+
+
+            </script>
+
+
+        }
+
+    }
+</div>
+
+
+
+
+
+
+
+
+

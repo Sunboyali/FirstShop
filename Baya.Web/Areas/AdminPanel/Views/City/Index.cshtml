@@ -1,0 +1,116 @@
+﻿@model IEnumerable<Baya.DataLayer.Entities.City>
+
+@{
+    ViewData["Title"] = "نمایش استان ها";
+    int rowCount = 1;
+}
+
+
+@section Styles {
+    @*<link href="@Url.Content("~/panel/assets/jstree/themes/default/style.css")" rel="stylesheet" type="text/css" />*@
+   
+}
+<div class="card">
+    <div class="header">
+        <h2 class="alert alert-info text-center">
+            <strong>لیست استان ها</strong>
+        </h2>
+        <a onclick="showInPopup('@Url.Action("AddOrEditState","City",null,Context.Request.Scheme)','ایجاداستان جدید')" class="sabt mt-3 btn bg-teal waves-effect">ثبت استان جدید</a>
+        <a onclick="showInPopup('@Url.Action("ImportExcelState","City",null,Context.Request.Scheme)','ثبت اکسلی استان ها')" class="sabt mt-3 btn bg-info waves-effect">ثبت اکسلی استان ها</a>
+        <div id="DataTables_Table_0_filter" class="dataTables_filter">
+
+            <input type="search" id="search" class="form-control form-control-sm" placeholder="جستجو ..." aria-controls="DataTables_Table_0">
+
+        </div>
+    </div>
+    <div class="body table-responsive-lg table-responsive-md table-responsive-sm table-responsive-xl">
+        <table class="table">
+            <thead>
+                <tr>
+
+                    <th width="40px">ردیف</th>
+                    <th>
+                        نام استان
+                    </th>
+                    
+                    <th>عملیات</th>
+                </tr>
+            </thead>
+            <tbody id="tblcolor">
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>@rowCount</td>
+                      
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Name)
+                        </td>
+
+                        <td>
+                            <a class="btn bg-indigo btn-circle waves-effect waves-circle waves-float" asp-area="AdminPanel" asp-controller="City" asp-action="Cities" asp-route-Id="@item.Id"  title="شهرها"><i class="material-icons">move_to_inbox</i></a>
+                            <a class="btn bg-blue btn-circle waves-effect waves-circle waves-float" onclick="showInPopup('@Url.Action("AddOrEditState","City",new {Id = item.Id },Context.Request.Scheme)','ویرایش استان')" title="ویرایش"><i class="material-icons">edit</i></a>
+                            <a class="btn bg-pink btn-circle waves-effect waves-circle waves-float" onclick="myDelete('@item.Id','@item.Name')" title="حذف"><i class="material-icons">delete_forever</i></a>
+                        </td>
+
+
+                    </tr>
+                    rowCount++;
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+@section Scripts{
+
+    <script>
+        showInPopup = (url, title) => {
+            $.ajax({
+                type: 'GET',
+                url: url,
+                success: function (res) {
+                    $('#adminModal .modal-body').html(res);
+                    $('#adminModal .modal-title').html(title);
+                    $('#adminModal').modal('show');
+                    // to make popup draggable
+                    $('.modal-dialog').draggable({
+                        handle: ".modal-header"
+                    });
+                }
+            })
+        }
+
+        $(document).ready(function () {
+            $("#search").on("keyup", function () {
+                var value = $(this).val().toLowerCase();
+                $("#tblcolor tr").filter(function () {
+                    $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+                });
+            });
+        });
+
+        function myDelete(id,name) {
+            swal({
+                title: "تأیید حذف",
+                text: "آیا از حذف استان " + name + " اطمینان دارید؟ با حذف استان، تمام شهرهای آن نیز حذف خواهد شد",
+                icon: "warning",
+                buttons: ['لغو', 'بلی'],
+                dangerMode: true,
+            })
+                .then((willDelete) => {
+                    if (willDelete) {
+                        window.open('/AdminPanel/City/DeleteState/' + id, '_parent');
+                    }
+                });
+        }
+    </script>
+}
+
+
+
+
+
+
+
+
+
+

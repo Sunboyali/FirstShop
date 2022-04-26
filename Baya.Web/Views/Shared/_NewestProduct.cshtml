@@ -1,0 +1,180 @@
+﻿@model IEnumerable<Baya.DataLayer.Entities.Product>
+
+<div class="container-fluid">
+
+    <div class="section-products">
+        <div class="row">
+            @foreach (var product in Model)
+            {
+
+                <div class="col-lg-2 col-md-4 col-sm-6 col-xs-6 p-2">
+                    <div class="card pb-30">
+                        <div class="trending-product-card">
+                            <div class="product-card-thumb">
+                                <a href="/Product/@product.Id/@product.ProductName.Replace(" ","-").ToString()">
+                                    <img src="~/site/img/product-img/main/@product.ProductImg" alt="@product.ProductName" />
+                                </a>
+                                @if (product.Off > 0)
+                                {
+                                    <span class="off-pro">@product.Off% تخفیف</span>
+                                }
+
+                            </div>
+                            <div class="product-card-content">
+                                <h3><a href="/Product/@product.Id/@product.ProductName.Replace(" ","-").ToString()">@product.ProductName </a></h3>
+                                <div class="product-price text-center">
+                                    @if (product.Off > 0 && product.Off <= 100)
+                                    {
+                                        decimal p1 = Math.Ceiling((decimal)product.Price * product.Off / 100);
+
+                                        decimal p2 = (decimal)product.Price - p1;
+
+                                        decimal FinalPrice = (Math.Ceiling(p2 / 100) * 100);
+
+
+                                        <del>@product.Price.ToString("#,0") تومان</del><br />
+                                        <span>@FinalPrice.ToString("#,0") تومان</span>
+                                    }
+                                    else
+                                    {
+                                        <span>@product.Price.ToString("#,0") تومان</span>
+                                    }
+                                    @if (product.CountProduct == 0)
+                                    {
+                                        <span class="product-count d-block">موجودی کالا :<b id="count-pro-">عدم موجودی</b></span>
+                                    }
+                                    else
+                                    {
+                                        <span class="product-count d-block">موجودی کالا :<b data-productid="@product.Id" class="count-pro"> @product.CountProduct</b></span>
+                                    }
+
+
+                                </div>
+                            </div>
+                            <div class="product-card-button">
+                                <ul>
+                                    <li>
+                                        @if (User.Identity.IsAuthenticated)
+                                        {
+                                            string IdUser = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                                            if (scope.IsSelectedFavorite(product.Id, Guid.Parse(IdUser)))
+                                            {
+                                                <div class="wishlist-redirect">
+
+                                                    <a id="add-fav" data-addfav="@product.Id" class="selected-fav" onclick="addfavorite('@product.Id')">
+                                                        <i class="far fa-heart"></i>
+                                                    </a>
+                                                    @*<p id="add-fav-tooltip" class="product-tooltip">ثبت شده</p>*@
+
+                                                </div>
+                                            }
+                                            else
+                                            {
+                                                <div class="wishlist-redirect">
+
+                                                    <a id="add-fav" data-addfav="@product.Id" class="add-fav" onclick="addfavorite('@product.Id')">
+                                                        <i class="far fa-heart"></i>
+                                                    </a>
+                                                    <p id="add-fav-tooltip" class="product-tooltip">افزودن علاقه مندی ها</p>
+
+                                                </div>
+                                            }
+
+                                        }
+                                        else
+                                        {
+                                            <div class="wishlist-redirect">
+
+
+                                                <a id="add-fav" data-addfav="@product.Id" class="" onclick="addfavorite('@product.Id')">
+                                                    <i class="far fa-heart"></i>
+                                                </a>
+                                                <p id="add-fav-tooltip" class="product-tooltip">افزودن علاقه مندی ها</p>
+
+
+
+
+                                            </div>
+                                        }
+
+                                    </li>
+                                    <li>
+                                        <div class="wishlist-redirect">
+                                            <a onclick="ShowFastProduct('@product.Id')">
+                                                <i class="fas fa-eye"></i>
+                                            </a>
+                                            <p class="product-tooltip">مشاهده سریع</p>
+                                        </div>
+                                    </li>
+
+                                    <li>
+
+                                        <div class="wishlist-redirect">
+
+                                            @if (product.CountProduct == 0)
+                                            {
+                                                <a id="add-fav">
+                                                    <i class="far fa-bell"></i>
+                                                </a>
+                                                <p id="add-fav-tooltip" class="product-tooltip">رسید خبرم کن</p>
+                                            }
+                                            else
+                                            {
+
+                                                <a class="add-bask" data-productid="@product.Id" onclick="addBasket('@product.Id')">
+                                                    <i class="fas fa-shopping-cart"></i>
+                                                </a>
+                                                <p class="product-tooltip">افزودن به سبد خرید</p>
+                                            }
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+
+            }
+
+
+        </div>
+    </div>
+    @if (Model.Count() > 12)
+    {
+        <div class="row">
+            <div class="section-more text-left">
+                <a class="btn btn-success" href="#">مشاهده بیشتر</a>
+            </div>
+        </div>
+    }
+
+</div>
+
+
+
+
+
+
+
+
+
+<!--<div class="modal fade product-popup" id="productModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalGrid"
+     aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">-->
+                @*<h5 class="modal-title" id="exampleModalGrid">عنوان مودال</h5>*@
+                <!--<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" id="bodyModal">
+
+            </div>
+
+        </div>
+    </div>
+</div>-->
+

@@ -1,0 +1,133 @@
+﻿
+.product-single{
+    padding-top:30px;
+}
+.zoomWindow {
+    border: 2px solid #ccc !important;
+    border-radius: 20px;
+    cursor: auto !important;
+    width: 100% !important;
+    height: 100% !important;
+}
+.product-single b.txt-amazing {
+    font-size: 18px;
+    color: red;
+    font-weight: bold;
+}
+
+.product-info .product-headline h2.title {
+    font-size: 16px;
+    line-height: 30px;
+    cursor: default;
+}
+
+.gallery-item ul li{
+    display:inline-block;
+    position:relative;
+    margin-right:10px;
+}
+
+    .gallery-item ul li a.btn-option {
+        width: 60px;
+        height: 60px;
+        color: #4a4a4a;
+        font-size: 9px;
+        display:block;
+        text-align:center;
+        padding-top:7px;
+    }
+        .gallery-item ul li a.btn-option.isactive{
+            color:red;
+        }
+        .gallery-item ul li a.btn-option:hover {
+            background-color: #245052;
+            border-radius: 5px;
+            color: #fff;
+        }
+       
+
+    .gallery-item ul li i {
+        display: block;
+        font-size: 25px;
+    }
+
+
+
+
+.product-params ul li:first-child{
+    font-weight:bold;
+    font-size:16px;
+    padding:0px;
+}
+.product-params ul li {
+    margin-top: 15px;
+    font-size:14px;
+    padding-right:10px;
+}
+.single-product-info, .product-params {
+    border: 1px solid #dedede;
+    padding: 15px;
+    border-radius: 5px;
+    text-align: right;
+    margin-top: 15px;
+}
+.product-footer button.btn-add-to-cart {
+    background-color: #ef394e;
+    padding:10px 24px;
+    border-radius:5px;
+    color:#fff;
+}
+
+
+.product-feature{
+    width:100%;
+}
+    .product-feature .product-feature-col{
+        text-align:right;
+        padding:5px;
+    }
+
+    .product-feature .product-feature-col a.product-feature-item {
+        color: #9b9b9b;
+        font-size: .7rem;
+        display: block;
+    }
+.product-feature .product-feature-col a.product-feature-item img {
+    width: 40px;
+    height: 40px;
+}
+
+/**************** Start Tab Single Product **************/
+.tabs .tab-box .nav-tabs .nav-item {
+    font-weight: 700;
+    line-height: 1;
+    font-size: 14px;
+    text-transform: uppercase;
+    padding: 8px 18px;
+    color: #666;
+    border: 2px solid transparent;
+    border-radius: 6px;
+}
+    .tabs .tab-box .nav-tabs .nav-item .nav-link {
+        color: #505050;
+    }
+
+    .tabs .tab-box .nav-tabs .nav-item .nav-link.active, .nav-link:hover {
+        color: #f33535 !important;
+        background: transparent !important;
+        border-color: #f33535 !important;
+    }
+
+.tab-content .tab-pane.active .section-tabs-content {
+    -webkit-animation: zoomIn .5s ease;
+    animation: zoomIn .5s ease;
+    -webkit-animation-duration: 1s;
+    animation-duration: 1s;
+    border: 1px solid #e2e2e2;
+    border-radius: 10px;
+}
+.specs-content {
+    height: 100% !important;
+    overflow-y: hidden;
+}
+

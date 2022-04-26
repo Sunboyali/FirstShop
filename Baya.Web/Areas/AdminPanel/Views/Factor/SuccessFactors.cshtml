@@ -1,0 +1,237 @@
+﻿@model IEnumerable<Baya.DataLayer.Entities.Factor>
+
+@{
+    ViewData["Title"] = "نمایش تراکنش های خرید";
+    int rowCount = 1;
+}
+
+
+@section Styles {
+    <link href="@Url.Content("~/persiandatepicker/datepicker.css")" rel="stylesheet" type="text/css" />
+
+}
+<div class="card">
+    <div class="header">
+        <h2 class="alert alert-info text-center">
+            <strong>لیست تراکنش های موفق خرید</strong>
+        </h2>
+        <div class="row clearfix">
+            <div class="col-md-3">
+                <form asp-action="SuccessFactors" method="post">
+                    <input type="search" name="search_mobile" value="@ViewBag.searchString" autocomplete="off" id="search_mobile" class="form-control form-control-sm" placeholder=" جستجو موبایل ...">
+                    <input type="submit" class="btn btn-outline-info" value="جستجو" />
+                </form>
+            </div>
+
+
+
+
+            <div class="col-md-3 col-sm-12">
+                <form asp-action="SuccessFactors" method="post">
+                    <input data-jdp class="form-control" value="@ViewBag.FromDate" id="fromDate" name="fromDate" placeholder="از تاریخ" autocomplete="off" />
+                    <input data-jdp class="form-control" value="@ViewBag.ToDate" id="todate" name="todate" placeholder="تا تاریخ" autocomplete="off" />
+
+                    <input type="submit" class="btn btn-outline-info" value="جستجو" />
+
+                </form>
+            </div>
+
+
+
+
+
+
+        </div>
+
+
+
+
+
+    </div>
+    <div class="body table-responsive-lg table-responsive-md table-responsive-sm table-responsive-xl">
+        <table class="table">
+            <thead>
+                <tr>
+
+                    <th width="40px">ردیف</th>
+
+                    <th>
+                        موبایل کاربر
+                    </th>
+                    <th>
+                        شماره سفارش
+                    </th>
+                    <th>شماره پیگیری</th>
+                    <th>شماره مرجع</th>
+                    <th>
+                        تاریخ و ساعت
+                    </th>
+                    <th>نام درگاه</th>
+                    <th>مبلغ کل (تومان)</th>
+
+
+
+
+
+                    <th>عملیات</th>
+                </tr>
+            </thead>
+            <tbody id="tblrole">
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>@rowCount</td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Order.User.Mobile)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.OrderNumber)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.RefNumber)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.TraceNumber)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Date)  -  @Html.DisplayFor(modelItem => item.Time)
+                        </td>
+                        <td>@Html.DisplayFor(modelItem => item.BankName)</td>
+                        <td>@item.TotalPrice.ToString("#,0")</td>
+
+                        <td>
+                            <a class="btn bg-blue btn-circle waves-effect waves-circle waves-float" asp-area="AdminPanel" asp-controller="Factor" asp-action="DetailFactor" asp-route-id="@item.OrderId" title="جزئیات فاکتور"><i class="material-icons">event_note</i></a>
+                        </td>
+
+
+                    </tr>
+                    rowCount++;
+                }
+            </tbody>
+        </table>
+
+
+        @* Paging Date *@
+        @if (ViewBag.PageCount > 1)
+        {
+            <div class="row text-center">
+
+                <ul class="page-num">
+                    @if ((int)ViewBag.PageID > 1)
+                    {
+                        @* Previous *@
+                        <li>
+                            <a href="?fromDate=@ViewBag.FromDate&todate=@ViewBag.ToDate&page=@((int)ViewBag.PageID-1)">
+                                <span>قبلی</span>
+                            </a>
+                        </li>
+                    }
+                    @for (int i = 1; i <= (ViewBag.PageCount); i++)
+                    {
+                        <li>
+                            <a class="@(((int)ViewBag.PageID==i)?"activepage":"")" href="?fromDate=@ViewBag.FromDate&todate=@ViewBag.ToDate&page=@i">
+                                @i
+                                <span class="sr-only"></span>
+                            </a>
+                        </li>
+                    }
+
+
+                    @if ((int)ViewBag.PageID <= (int)ViewBag.PageCount - 1)
+                    {
+                        @* Next *@
+                        <li>
+                            <a href="?fromDate=@ViewBag.FromDate&todate=@ViewBag.ToDate&page=@((int)ViewBag.PageID+1)">
+                                <span>بعدی</span>
+                            </a>
+                        </li>
+
+                    }
+                </ul>
+            </div>
+
+        }
+
+
+
+        @* Paging Mobile *@
+        @if (ViewBag.searchString != null)
+        {
+            @if (ViewBag.PageCount > 1)
+            {
+                <div class="row text-center">
+
+                    <ul class="page-num">
+                        @if ((int)ViewBag.PageID > 1)
+                        {
+                            @* Previous *@
+                            <li>
+                                <a href="?search_mobile=@ViewBag.searchString&page=@((int)ViewBag.PageID-1)">
+                                    <span>قبلی</span>
+                                </a>
+                            </li>
+                        }
+                        @for (int i = 1; i <= (ViewBag.PageCount); i++)
+                        {
+                            <li>
+                                <a class="@(((int)ViewBag.PageID==i)?"activepage":"")" href="?search_mobile=@ViewBag.searchString&page=@i">
+                                    @i
+                                    <span class="sr-only"></span>
+                                </a>
+                            </li>
+                        }
+
+
+                        @if ((int)ViewBag.PageID <= (int)ViewBag.PageCount - 1)
+                        {
+                            @* Next *@
+                            <li>
+                                <a href="?search_mobile=@ViewBag.searchString&page=@((int)ViewBag.PageID+1)">
+                                    <span>بعدی</span>
+                                </a>
+                            </li>
+
+                        }
+                    </ul>
+                </div>
+
+            }
+        }
+
+    </div>
+</div>
+@section Scripts{
+    <script src="~/persiandatepicker/datepicker.min.js"></script>
+    <script>
+        jalaliDatepicker.startWatch({
+            separatorChar: "/",
+            minDate: "attr",
+            maxDate: "attr",
+            changeMonthRotateYear: true,
+            showTodayBtn: true,
+            showEmptyBtn: true
+        });
+    </script>
+    <script src="~/site/js/sweet.js"></script>
+    @*<script>
+            $(document).ready(function () {
+                $("#search").on("keyup", function () {
+                    var value = $(this).val().toLowerCase();
+                    $("#tblrole tr").filter(function () {
+                        $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+                    });
+                });
+            });
+        </script>*@
+
+}
+
+
+
+
+
+
+
+
+
+

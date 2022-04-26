@@ -1,0 +1,189 @@
+﻿@model IEnumerable<Baya.DataLayer.Entities.SliderImage>
+
+@{
+    ViewData["Title"] = "نمایش اسلایدرها";
+    int rowCount = 1;
+    string nameslider = ViewBag.SliderName;
+    Guid Idslider = ViewBag.Id;
+}
+
+
+@section Styles {
+    @*<link href="@Url.Content("~/panel/assets/jstree/themes/default/style.css")" rel="stylesheet" type="text/css" />*@
+
+}
+<div class="card">
+    <div class="header">
+        <h2 class="alert alert-info text-center">
+            <strong>لیست تصاویر اسلایدر (@nameslider)</strong>
+        </h2>
+        @if (Model.Count() < 10)
+        {
+            <a onclick="showInPopup('@Url.Action("AddOrEditSlide","Slider",new{SliderId = Idslider }, Context.Request.Scheme)','ایجاد اسلاید جدید')" class="sabt btn bg-teal waves-effect mt-3">ثبت اسلاید جدید</a>
+
+        }
+
+
+        <a class="btn btn-info m-r-10 m-t-10" asp-controller="Slider" asp-action="Index">بازگشت</a>
+
+    </div>
+    <div class="body table-responsive-lg table-responsive-md table-responsive-sm table-responsive-xl">
+        <small class="text text-danger">فقط می توانید 10 اسلاید برای اسلایدر خود ایجاد نمایید</small>
+        <table class="table">
+            <thead>
+                <tr>
+
+                    <th width="40px">ردیف</th>
+
+
+                    <th width="300" class="text-center">
+                        تصویر
+                    </th>
+                    <th class="text-center">آدرس لینک</th>
+                    <th class="text-center">ترتیب اسلاید</th>
+
+
+                    <th>عملیات</th>
+                </tr>
+            </thead>
+            <tbody id="tblrole">
+
+                @if (nameslider == "MainSlider")
+                {
+                    @foreach (var slider in Model)
+                    {
+                        <tr>
+                            <td>@rowCount</td>
+                            <td>
+                                <img src="~/site/img/sliders/main-slider/main-upload/@slider.ImageName" width="300" class="responsive-img" alt="@slider.AltImage" />
+                            </td>
+                            @if (slider.Link == null)
+                            {
+                                <td class="text-center"><span class="label bg-red">ندارد</span></td>
+                            }
+                            else
+                            {
+                                <td class="text-center"><span style="font-size:12px;" class="text text-primary">@slider.Link</span></td>
+                            }
+
+                            <td class="text-center"><span class="label bg-teal">@slider.DisplaySlide</span></td>
+                            <td>
+
+                                <a class="btn bg-blue btn-circle waves-effect waves-circle waves-float" onclick="showInPopup('@Url.Action("AddOrEditSlide","Slider",new{Id = slider.Id,SliderId = Idslider }, Context.Request.Scheme)','ویرایش اسلاید')" title="ویرایش"><i class="material-icons">edit</i></a>
+                                <a class="btn bg-pink btn-circle waves-effect waves-circle waves-float" onclick="myDelete('@slider.Id')" title="حذف"><i class="material-icons">delete_forever</i></a>
+                            </td>
+
+                        </tr>
+                        rowCount++;
+                    }
+                }
+                else if (nameslider == "Sidebar1")
+                {
+                    @foreach (var slider in Model)
+                    {
+            <tr>
+                <td>@rowCount</td>
+
+                <td>
+                    <img src="~/site/img/sliders/sidebar-slider/sidebar-upload/@slider.ImageName" alt="@slider.AltImage" />
+                </td>
+                @if (slider.Link == null)
+                {
+                    <td class="text-center"><span class="label bg-red">ندارد</span></td>
+                }
+                else
+                {
+                    <td class="text-center"><span style="font-size:12px;" class="text text-primary">@slider.Link</span></td>
+                }
+                <td class="text-center"><span class="label bg-teal">@slider.DisplaySlide</span></td>
+                <td>
+
+                    <a class="btn bg-blue btn-circle waves-effect waves-circle waves-float" onclick="showInPopup('@Url.Action("AddOrEditSlide","Slider",new{Id = slider.Id,SliderId = Idslider }, Context.Request.Scheme)','ویرایش اسلاید')" title="ویرایش"><i class="material-icons">edit</i></a>
+                    <a class="btn bg-pink btn-circle waves-effect waves-circle waves-float" onclick="myDelete('@slider.Id')" title="حذف"><i class="material-icons">delete_forever</i></a>
+                </td>
+            </tr>
+                        rowCount++;
+                    }
+                }
+                else
+                {
+                    @foreach (var slider in Model)
+                    {
+            <tr>
+                <td>@rowCount</td>
+
+                <td>
+                    <img src="~/site/img/sliders/sidebar-slider/sidebar-upload/@slider.ImageName" alt="@slider.AltImage" />
+                </td>
+                @if (slider.Link == null)
+                {
+                    <td class="text-center"><span class="label bg-red">ندارد</span></td>
+                }
+                else
+                {
+                    <td class="text-center"><span style="font-size:12px;" class="text text-primary">@slider.Link</span></td>
+                }
+                <td class="text-center"><span class="label bg-teal">@slider.DisplaySlide</span></td>
+                <td>
+
+                    <a class="btn bg-blue btn-circle waves-effect waves-circle waves-float" onclick="showInPopup('@Url.Action("AddOrEditSlide","Slider",new{Id = slider.Id,SliderId = Idslider }, Context.Request.Scheme)','ویرایش اسلاید')" title="ویرایش"><i class="material-icons">edit</i></a>
+                    <a class="btn bg-pink btn-circle waves-effect waves-circle waves-float" onclick="myDelete('@slider.Id')" title="حذف"><i class="material-icons">delete_forever</i></a>
+                </td>
+            </tr>
+                        rowCount++;
+                    }
+                }
+
+
+            </tbody>
+        </table>
+    </div>
+</div>
+
+@section Scripts{
+
+
+    <script>
+        showInPopup = (url, title) => {
+            $.ajax({
+                type: 'GET',
+                url: url,
+                success: function (res) {
+                    $('#adminModal .modal-body').html(res);
+                    $('#adminModal .modal-title').html(title);
+                    $('#adminModal').modal('show');
+                    // to make popup draggable
+                    $('.modal-dialog').draggable({
+                        handle: ".modal-header"
+                    });
+                }
+            })
+        }
+
+
+        function myDelete(id) {
+            swal({
+                title: "تأیید حذف",
+                text: "آیا از حذف  اطمینان دارید؟",
+                icon: "warning",
+                buttons: ['لغو', 'بلی'],
+                dangerMode: true,
+            })
+                .then((willDelete) => {
+                    if (willDelete) {
+                        window.open('/AdminPanel/Slider/DeleteImageSlide/' + id, '_parent');
+                    }
+                });
+        }
+    </script>
+}
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,35 @@
+﻿@{
+    Layout = null;
+}
+
+<form asp-controller="City" asp-action="ImportExcelCities" enctype="multipart/form-data" method="post">
+    <div class="form-group">
+        <input type="text" name="Id" value="@ViewBag.Id" />
+        <div class="form-line">
+            <input type="file" id="ExcelFile" accept=".xls,.xlsx, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.ms-excel" name="ExcelFile" class="form-control" />
+            <span class="text text-danger">فرمت های مجاز : xlsx - xls </span>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="submit" id="btn_uploadExcel" onclick="return ValidateForm()" class="btn btn-info waves-effect">ذخیره</button>
+        <button type="button" class="btn btn-danger waves-effect"
+                data-dismiss="modal">
+            لغو
+        </button>
+    </div>
+</form>
+<script>
+    function ValidateForm() {
+        var allowedExtensions = /(\.xlsx|\.xls)$/i;
+        let ExcelFile = $('#ExcelFile').val();
+
+        if (ExcelFile == '') {
+            Alert('لطفا یک فایل اکسلی انتخاب کنید ');
+            return false;
+        } else if (!allowedExtensions.exec(ExcelFile)) {
+            $('#ExcelFile').val('');
+            Alert('فرمت فایل انتخابی شما صحیح نیست');
+            return false;
+        }
+    }
+</script>

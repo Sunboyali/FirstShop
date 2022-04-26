@@ -1,0 +1,61 @@
+﻿@model IEnumerable<Baya.Core.ViewModels.ShowCardViewModel>
+@{
+    string IdUser = User.FindFirstValue(ClaimTypes.NameIdentifier);
+}
+@if (Model.Any())
+{
+    <div class="cartmini__widget">
+        <div class="cartmini__inner">
+            <span id="no-product" style="visibility:hidden" class="d-block text-center alert-info">کالایی در سبد خرید شما وجود ندارد</span>
+
+            <ul id="list-cart">
+
+                @foreach (var item in Model)
+                {
+                    <li class="product-basket" data-OrderDetailId="@item.OrderDetailId">
+                        <div class="cartmini__thumb">
+                            <a href="/Product/@item.ProductId/@item.ProductName.Replace(" ","-").ToString()">
+                                <img src="~/site/img/product-img/thumbnail/@item.ImageName" alt="">
+                            </a>
+                        </div>
+                        <div class="cartmini__content">
+                            <h5><a href="/Product/@item.ProductId/@item.ProductName.Replace(" ","-").ToString()">@item.ProductName</a></h5>
+                            <div class="product-quantity mt-10 mb-10">
+                                @*<span class="cart-minus">-</span>*@
+                                @*<input class="cart-input" type="text" value="1" />*@
+                                @*<span class="cart-plus">+</span>*@
+                            </div>
+                            <div class="product__sm-price-wrapper">
+                                <span>@item.CountProduct <i class="fas fa-times"></i></span>
+                                <span class="product__sm-price">@item.Price.ToString("#,0") </span> تومان<br />
+
+                                <label class="mt-10">جمع : <span class="sup-price text-info">@item.SumPrice.ToString("#,0") تومان</span></label>
+                            </div>
+                        </div>
+                        <a title="حذف" onclick="deletecartpro('@item.OrderDetailId')" class="cartmini__del"><i class="fas fa-times"></i></a>
+                    </li>
+                }
+
+            </ul>
+
+
+        </div>
+        <div class="cartmini__checkout">
+            <div class="cartmini__checkout-title mb-30">
+                <h4>جمع کل:</h4>
+                <span id="total-price"> @Model.Sum(m => m.SumPrice).ToString("#,0") تومان</span>
+            </div>
+            <div class="cartmini__checkout-btn">
+                <a asp-controller="Cart" asp-action="ShowBasket" class="m-btn m-btn-border mb-10 w-100"> <span></span>  مشاهده سبد و پرداخت</a>
+                @*<a href="checkout.html" class="m-btn m-btn-3 w-100"> <span></span> بررسی</a>*@
+            </div>
+        </div>
+    </div>
+}
+else
+{
+    <span class="d-block text-center alert-info">کالایی در سبد خرید شما وجود ندارد</span>
+}
+
+
+

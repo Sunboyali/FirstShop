@@ -1,0 +1,31 @@
+﻿@model Baya.Core.ViewModels.ChangeRoleViewModel
+@{
+    Layout = null;
+}
+
+<form asp-controller="User" asp-action="ChangeRoleUser" method="post">
+    <input type="hidden" asp-for="Id" />
+    <div class="form-group">
+        <div class="row clearfix">
+            <div class="col-md-5">
+                <label class="">انتخاب نقش</label>
+                <select name="roleid" class="form-control" asp-items="ViewBag.Roles"></select>
+
+
+            </div>
+        </div>
+    </div>
+
+
+    <div class="modal-footer">
+        <button type="submit"  class="btn btn-info waves-effect">ذخیره</button>
+        <button type="button" class="btn btn-danger waves-effect"
+                data-dismiss="modal">
+            لغو
+        </button>
+    </div>
+</form>
+
+
+
+

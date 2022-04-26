@@ -1,0 +1,129 @@
+﻿@model Baya.Core.ViewModels.RoleViewModel
+@{
+    Layout = null;
+}
+
+<form id="RoleForm" method="post">
+    <input type="hidden" asp-for="Id" />
+    <div class="form-group">
+        <div class="form-line">
+            <input asp-for="RoleName" id="RoleName" maxlength="20" class="form-control"
+                   autocomplete="off" placeholder="نام لاتین نقش را وارد کنید" required>
+
+            <span id="charaters-count-name"></span>
+
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="form-line">
+            <input asp-for="RoleTitle" id="RoleTitle" maxlength="20" class="form-control"
+                   autocomplete="off" placeholder="نام فارسی نقش را وارد کنید" required>
+            <span id="charaters-count-title"></span>
+        </div>
+    </div>
+
+    <div class="modal-footer">
+        <button type="button" onclick="return ValidateForm(event)" class="btn btn-info waves-effect">ذخیره</button>
+        <button type="button" class="btn btn-danger waves-effect"
+                data-dismiss="modal">
+            لغو
+        </button>
+    </div>
+</form>
+@*<script src="~/panel/adminpanel/panel-assets/role/js/rolevalidation.js"></script>*@
+
+<script>
+    /*var Inputs = document.querySelectorAll('input[type=text]'),i;*/
+//    const allSpan = document.querySelector('price');
+
+//    let sum = 0;
+//    allSpan.forEach(item => {
+//        sum += item.value;
+//    }
+//console.log(sum);
+
+    var Role_Input_Name = document.getElementById('RoleName');
+    var Role_Input_Title = document.getElementById('RoleTitle');
+    window.onload = RoleInputLengthCheck();
+    function RoleInputLengthCheck() {
+        var RoleName_Length = Role_Input_Name.value.length;
+        var RoleTitle_Length = Role_Input_Title.value.length;
+        var RoleName_Chars = 20 - RoleName_Length;
+        var RoleTitle_Chars = 20 - RoleTitle_Length;
+        var RoleName_Count = document.getElementById('charaters-count-name');
+        var RoleTitle_Count = document.getElementById('charaters-count-title');
+        RoleName_Count.innerHTML = "تعداد حروف: " + RoleName_Chars;
+        RoleTitle_Count.innerHTML = "تعداد حروف: " + RoleTitle_Chars;
+    }
+    Role_Input_Name.addEventListener('keyup', RoleInputLengthCheck, false);
+    Role_Input_Name.addEventListener('keydown', RoleInputLengthCheck, false);
+    Role_Input_Title.addEventListener('keyup', RoleInputLengthCheck, false);
+    Role_Input_Title.addEventListener('keydown', RoleInputLengthCheck, false);
+    function ValidateForm(e) {
+        e.preventDefault();
+        let Max_Length = 20;
+        let Role_Name = Role_Input_Name.value;
+        let Role_Title = Role_Input_Title.value;
+        if (Role_Name == '') {
+            Role_Input_Name.focus();
+            Alert('لطفا نام لاتین نقش را وارد کنید');
+            return false;
+        } else if (Role_Title == '') {
+            Role_Input_Title.focus();
+            Alert('لطفا عنوان فارسی نقش را وارد کنید');
+            return false;
+        } else if (!Reg_English.test(Role_Name)) {
+            Role_Input_Name.focus();
+            Alert('لطفا فقط حروف لاتین وارد کنید');
+            return false;
+        } else if (Role_Name.length > Max_Length) {
+            Role_Input_Name.focus();
+            Alert('نام لاتین نقش نمی تواند بیشتر از 20 کاراکتر باشد');
+            return false;
+        }
+        else if (!Reg_Persian.test(Role_Title)) {
+            Role_Input_Title.focus();
+            Alert('لطفا فقط حروف فارسی وارد کنید');
+            return false;
+        } else if (Role_Title.length > Max_Length) {
+            Role_Input_Title.focus();
+            Alert('عنوان نقش نمی تواند بیشتر از 20 کاراکتر باشد');
+            return false;
+        }
+
+        let Form = $("#RoleForm")[0];
+        let Form_Data = new FormData(Form);
+        $.ajax({
+            url: '/AdminPanel/Role/AddAndUpdateRole',
+            data: Form_Data,
+            contentType: false,
+            processData: false,
+            type: 'POST',
+            success: function (data) {
+                switch (data) {
+                    case 0:
+                        Role_Input_Name.focus();
+                        Alert('لطفا نام لاتین نقش را وارد کنید');
+                        return false;
+                    case 1:
+                        Role_Input_Title.focus();
+                        Alert('لطفا عنوان فارسی نقش را وارد کنید');
+                        return false;
+                    case 2:
+                        Role_Input_Name.focus();
+                        Alert('نام نقش وارد شده قبلا ثبت شده است نام دیگری را وارد نمایید');
+                        return false;
+                    default:
+                        window.location.href = data.redirectToUrl;
+                }
+            }
+        });
+    }
+</script>
+
+
+
+
+
+
+

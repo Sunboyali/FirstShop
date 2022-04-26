@@ -1,0 +1,478 @@
+﻿@model IEnumerable<Baya.DataLayer.Entities.Product>
+@{
+    ViewData["Title"] = "جستجوی عبارت" + "-" + ViewBag.searchtext;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@section Styles {
+    <link href="@Url.Content("~/site/css/jquery-ui.min.css")" rel="stylesheet" type="text/css" />
+}
+<style>
+    .sidebar_box {
+        width: 100%;
+        height: auto;
+        float: right;
+        padding: 5px;
+        text-align: right;
+    }
+
+        .sidebar_box .right-sidebar .search-filter {
+            border: 1px solid #ddd;
+            margin-bottom: 30px;
+            border-radius: 5px;
+            padding: 5px;
+        }
+
+            .sidebar_box .right-sidebar .search-filter .title {
+                display: block;
+                color: #fff;
+                border-bottom: 3px solid #ea3a3c;
+                padding: 0 20px;
+                line-height: 35px;
+                text-transform: uppercase;
+                font-size: 14px;
+                font-weight: 700;
+                background: #444444;
+                margin-bottom: 20px;
+                border-radius: 5px;
+            }
+
+
+    .ca_search_filters input {
+        background: none;
+        border: none;
+        height: inherit;
+        color: #666;
+        font-size: 12px;
+        width: 120px;
+        
+    }
+    /*main search*/
+    .listing__header ul.listing__sort_options li.sortby {
+        float: right;
+        font-size: 13px;
+        font-weight: 700;
+        line-height: 35px;
+        margin-left: 15px;
+        color: #00bba9;
+        cursor: default;
+    }
+
+    .listing__header ul.listing__sort_options li.list__option {
+        float: right;
+        margin-left: 10px;
+        background-color: white;
+        font-size: 13px;
+        padding: 5px 10px;
+        cursor: pointer
+    }
+
+    .listing__header ul.listing__sort_options li.activeli {
+        background-color: #117c19;
+        color: white;
+        padding: 5px 10px;
+        border-radius: 4px;
+    }
+
+    .main_search_box {
+        float: left;
+        width: 100%;
+    }
+</style>
+
+<div class="container-fluid">
+
+    <div class="row mt-20">
+        <div class="col-lg-3">
+            <div class="sidebar_box">
+                <aside class="right-sidebar">
+                    <div class="search-filter">
+                        <h6 class="title">جستجو های مرتبط</h6>
+
+                        <ul>
+                        </ul>
+                    </div>
+                    <div class="search-filter">
+                        <h6 class="title">جستجو براساس قیمت</h6>
+
+                        <div class="categorie_filter">
+                            <div class="ca_search_filters p-3">
+                                <label for="amountFrom"> از قیمت:</label>
+                                <input disabled type="text" name="text" id="Fromamount" />
+                                @*<input type="range" name="rangeInput" step="1000" min="0" max="900000000" value="0" onchange="updateTextInput(this.value);">*@
+
+
+                                <br />
+
+
+
+
+
+                                <label for="amount"> تا قیمت :</label>
+                                <input disabled type="text" name="text" id="Toamount" />
+
+                                <div id="slider-range"></div>
+                            </div>
+                        </div>
+                    </div>
+                </aside>
+            </div>
+        </div>
+        <div class="col-lg-9">
+            @if (Model.Count() != 0)
+            {
+                <div class="row">
+                    <div class="listing__header">
+                        <input type="hidden" id="searchtext" name="searchtext" value="@ViewBag.searchtext" />
+                        <input type="hidden" id="searchsort" name="searchsort" value="@ViewBag.Sort" />
+                        <ul class="listing__sort_options">
+                            <li class="sortby"><span>نمایش کالا بر اساس :</span></li>
+                            <li data-Id="1" class="list__option"><span>پرفروش ترین</span></li>
+                            <li data-Id="2" class="list__option"><span>پربازدیدترین</span></li>
+                            <li data-Id="3" class="list__option"><span>جدیدترین</span></li>
+                            <li data-Id="4" class="list__option"><span>ارزان ترین</span></li>
+                            <li data-Id="5" class="list__option"><span>گران ترین</span></li>
+                        </ul>
+                    </div>
+                </div>
+
+            }
+
+
+            <div class="main_search_box">
+
+                @if (Model.Count() == 0)
+                {
+                    <span class="alert alert-danger d-block text-center">
+                        کالایی با عبارت مورد نظر شما یافت نشد
+                    </span>
+                }
+                else
+                {
+                    @foreach (var product in Model)
+                    {
+
+                        <div class="col-lg-2 col-md-4 col-sm-6 col-xs-6 p-2">
+                            <div class="card pb-30">
+                                <div class="trending-product-card">
+                                    <div class="product-card-thumb">
+                                        <a href="/Product/@product.Id/@product.ProductName.Replace(" ","-").ToString()">
+                                            <img src="~/site/img/product-img/main/@product.ProductImg" alt="@product.ProductName" />
+                                        </a>
+                                        @if (product.Off > 0)
+                                        {
+                                            <span class="off-pro">@product.Off% تخفیف</span>
+                                        }
+
+                                    </div>
+                                    <div class="product-card-content">
+                                        <h3><a href="/Product/@product.Id/@product.ProductName.Replace(" ","-").ToString()">@product.ProductName </a></h3>
+                                        <div class="product-price text-center">
+                                            @if (product.Off > 0 && product.Off <= 100)
+                                            {
+                                                decimal p1 = Math.Ceiling((decimal)product.Price * product.Off / 100);
+
+                                                decimal p2 = (decimal)product.Price - p1;
+
+                                                decimal FinalPrice = (Math.Ceiling(p2 / 100) * 100);
+
+
+                                                <del>@product.Price.ToString("#,0") تومان</del><br />
+                                                <span>@FinalPrice.ToString("#,0") تومان</span>
+                                            }
+                                            else
+                                            {
+                                                <span>@product.Price.ToString("#,0") تومان</span>
+                                            }
+                                            @if (product.CountProduct == 0)
+                                            {
+                                                <span class="product-count d-block">موجودی کالا :<b id="count-pro-">عدم موجودی</b></span>
+                                            }
+                                            else
+                                            {
+                                                <span class="product-count d-block">موجودی کالا :<b data-productid="@product.Id" class="count-pro"> @product.CountProduct</b></span>
+                                            }
+
+
+                                        </div>
+                                    </div>
+                                    <div class="product-card-button">
+                                        <ul>
+                                            <li>
+                                                @if (User.Identity.IsAuthenticated)
+                                                {
+                                                    string IdUser = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                                                    if (scope.IsSelectedFavorite(product.Id, Guid.Parse(IdUser)))
+                                                    {
+                                                        <div class="wishlist-redirect">
+
+                                                            <a id="add-fav" data-addfav="@product.Id" class="selected-fav" onclick="addfavorite('@product.Id')">
+                                                                <i class="far fa-heart"></i>
+                                                            </a>
+                                                            @*<p id="add-fav-tooltip" class="product-tooltip">ثبت شده</p>*@
+
+                                                        </div>
+                                                    }
+                                                    else
+                                                    {
+                                                        <div class="wishlist-redirect">
+
+                                                            <a id="add-fav" data-addfav="@product.Id" class="add-fav" onclick="addfavorite('@product.Id')">
+                                                                <i class="far fa-heart"></i>
+                                                            </a>
+                                                            <p id="add-fav-tooltip" class="product-tooltip">افزودن علاقه مندی ها</p>
+
+                                                        </div>
+                                                    }
+
+                                                }
+                                                else
+                                                {
+                                                    <div class="wishlist-redirect">
+
+
+                                                        <a id="add-fav" data-addfav="@product.Id" class="" onclick="addfavorite('@product.Id')">
+                                                            <i class="far fa-heart"></i>
+                                                        </a>
+                                                        <p id="add-fav-tooltip" class="product-tooltip">افزودن علاقه مندی ها</p>
+
+
+
+
+                                                    </div>
+                                                }
+
+                                            </li>
+                                            <li>
+                                                <div class="wishlist-redirect">
+                                                    <a onclick="ShowFastProduct('@product.Id')">
+                                                        <i class="fas fa-eye"></i>
+                                                    </a>
+                                                    <p class="product-tooltip">مشاهده سریع</p>
+                                                </div>
+                                            </li>
+
+                                            <li>
+
+                                                <div class="wishlist-redirect">
+
+                                                    @if (product.CountProduct == 0)
+                                                    {
+                                                        <a id="add-fav">
+                                                            <i class="far fa-bell"></i>
+                                                        </a>
+                                                        <p id="add-fav-tooltip" class="product-tooltip">رسید خبرم کن</p>
+                                                    }
+                                                    else
+                                                    {
+
+                                                        <a class="add-bask" data-productid="@product.Id" onclick="addBasket('@product.Id')">
+                                                            <i class="fas fa-shopping-cart"></i>
+                                                        </a>
+                                                        <p class="product-tooltip">افزودن به سبد خرید</p>
+                                                    }
+                                                </div>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+
+                    }
+
+
+
+
+
+                }
+            </div>
+
+
+            @if (ViewBag.Sort != null)
+            {
+                @if (ViewBag.PageCount > 1)
+                {
+                    <div class="container">
+                        <div class="row">
+                            <div class="pagination-product-search">
+
+                                <ul class="page-num">
+                                    @if ((int)ViewBag.PageID > 1)
+                                    {
+                                        @* Previous *@
+                                        <li>
+                                            <a href="?q=@ViewBag.searchtext&sort=@ViewBag.Sort&page=@((int)ViewBag.PageID-1)">
+                                                <span>قبلی</span>
+                                            </a>
+                                        </li>
+                                    }
+                                    @for (int i = 1; i <= (ViewBag.PageCount); i++)
+                                    {
+                                        <li>
+                                            <a class="@(((int)ViewBag.PageID==i)?"active":"")" href="?q=@ViewBag.searchtext&sort=@ViewBag.Sort&page=@i">
+                                                @i
+                                                <span class="sr-only"></span>
+                                            </a>
+                                        </li>
+                                    }
+
+
+                                    @if ((int)ViewBag.PageID <= (int)ViewBag.PageCount - 1)
+                                    {
+                                        @* Next *@
+                                        <li>
+                                            <a href="?q=@ViewBag.searchtext&sort=@ViewBag.Sort&page=@((int)ViewBag.PageID+1) ">
+                                                <span>بعدی</span>
+                                            </a>
+                                        </li>
+
+                                    }
+                                </ul>
+
+
+
+                            </div>
+                        </div>
+                    </div>
+
+                }
+            }
+            else
+            {
+                @if (ViewBag.PageCount > 1)
+                {
+                    <div class="container">
+                        <div class="row">
+                            <div class="pagination-product-search">
+
+                                <ul class="page-num">
+                                    @if ((int)ViewBag.PageID > 1)
+                                    {
+                                        @* Previous *@
+                                        <li>
+                                            <a href="?q=@ViewBag.searchtext&page=@((int)ViewBag.PageID-1)">
+                                                <span>قبلی</span>
+                                            </a>
+                                        </li>
+                                    }
+                                    @for (int i = 1; i <= (ViewBag.PageCount); i++)
+                                    {
+                                        <li>
+                                            <a class="@(((int)ViewBag.PageID==i)?"active":"")" href="?q=@ViewBag.searchtext&page=@i">
+                                                @i
+                                                <span class="sr-only"></span>
+                                            </a>
+                                        </li>
+                                    }
+
+
+                                    @if ((int)ViewBag.PageID <= (int)ViewBag.PageCount - 1)
+                                    {
+                                        @* Next *@
+                                        <li>
+                                            <a href="?q=@ViewBag.searchtext&page=@((int)ViewBag.PageID+1) ">
+                                                <span>بعدی</span>
+                                            </a>
+                                        </li>
+
+                                    }
+                                </ul>
+
+
+
+                            </div>
+                        </div>
+                    </div>
+
+                }
+            }
+
+        </div>
+    </div>
+
+</div>
+
+<div class="modal fade product-popup" id="productModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalGrid"
+     aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                @*<h5 class="modal-title" id="exampleModalGrid">عنوان مودال</h5>*@
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" id="bodyModal">
+
+            </div>
+
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+
+    <script src="~/site/js/jquery-ui.min.js"></script>
+
+    <script>
+        $('.list__option').click(function (e) {
+            e.preventDefault();
+            let Data_Id = $(this).attr("data-Id");
+            let searchtext = $('#searchtext').val();
+            setContent($(this));
+            localStorage.setItem('active-li', Data_Id);
+            $.ajax({
+                url: "/Product/GetTextSearch",
+                type: 'Get',
+                data: { "q": searchtext, "sort": Data_Id },
+                success: function (response) {
+                    window.location.href = response.redirectToUrl;
+
+                }
+            });
+        });
+
+
+
+        // set content on load
+        localStorage.getItem('active-li') && setContent($('.list__option[data-Id="' + localStorage.getItem('active-li') + '"]'));
+
+        if ($('#searchsort').val() == "") {
+            $('.list__option').removeClass('activeli');
+        }
+
+        function setContent($el) {
+            $('.list__option').removeClass('activeli');
+            $el.addClass('activeli');
+        }
+
+
+
+        /*----------------------------
+      slider-range here
+------------------------------ */
+        function numberWithCommas(x) {
+            return x.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
+        }
+
+        
+
+        $("#slider-range").slider({
+            range: false,
+            min: 0,
+            max: 900000000,
+            values: [0, 900000000],
+            slide: function (event, ui) {
+   
+                $("#Fromamount").val(numberWithCommas(ui.values[0]) + " " + "تومان ");
+                $("#Toamount").val(numberWithCommas(ui.values[1]) + " " + "تومان ");
+            }
+        });
+        //$("#amount").val("$" + $("#slider-range").slider("values", 0) +
+        //    " - $" + $("#slider-range").slider("values", 1));
+      
+
+    </script>
+}

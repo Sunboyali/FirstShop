@@ -1,0 +1,583 @@
+﻿@model Baya.Core.ViewModels.AddAddressInfoViewModel
+@{
+    ViewData["Title"] = "ثبت آدرس";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section Styles {
+    <link href="@Url.Content("~/panel/adminpanel/css/select.css")" rel="stylesheet" type="text/css" />
+    <style>
+        .address__page {
+            width: 548px;
+            margin: 24px auto 0;
+            background: #fff;
+            padding: 24px 24px 30px;
+            border: 1px solid #eee;
+            border-radius: 8px;
+        }
+
+        .b-address__subtitle {
+            font-size: 12px;
+            font-size: .857rem;
+            line-height: 1.83;
+            color: #62666d;
+        }
+
+        .select2-container {
+            width: 100% !important;
+        }
+
+        .d-address-user {
+            padding: 9px 12px;
+            border-radius: 8px;
+            background-color: #fff;
+            border: 1px solid #e0e0e2;
+            font-size: 13px;
+            line-height: 24px;
+            width: 100%;
+            color: #030a16;
+        }
+
+        .d-form__check-box-sign {
+            border-radius: 3px;
+            border: 2px solid #424750;
+            margin-left: 16px;
+            display: inline-block;
+            width: 18px;
+            height: 18px;
+            position: relative;
+            -webkit-transition: all .3s ease;
+            transition: all .3s ease;
+            font-size: 1rem;
+            color: #030a16;
+            cursor: pointer;
+        }
+
+        .ui-checkbox-label {
+            display: -webkit-inline-box;
+            display: -ms-inline-flexbox;
+            display: inline-flex;
+            -webkit-box-align: center;
+            -ms-flex-align: center;
+            align-items: center;
+            font-size: 14px;
+            font-size: 1rem;
+            line-height: 1.571;
+            color: #464646;
+            cursor: pointer;
+            margin-right: 25px;
+        }
+
+        .form-check-label span {
+            display: block;
+            position: absolute;
+            right: -1px;
+            top: -1px;
+            transition-duration: .2s;
+            padding-right: 10px;
+        }
+
+        .d-form__check-box-input:checked + .form-check-sign .check:before {
+            color: #fff;
+            box-shadow: 0 0 0 10px, 10px -10px 0 10px, 32px 0 0 20px, 0 32px 0 20px, -5px 5px 0 10px, 20px -12px 0 11px;
+            animation: checkboxOn .3s forwards;
+        }
+
+        .d-form__check-box-input:checked + .form-check-sign:before {
+            animation: rippleOn .5s;
+        }
+
+        .form-check-sign .check {
+            position: absolute;
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 1px solid rgba(0, 0, 0, 0.54);
+            overflow: hidden;
+            z-index: 1;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+
+            .form-check-sign .check:before {
+                position: absolute;
+                content: "";
+                transform: rotate( 45deg);
+                display: block;
+                margin-top: -3px;
+                margin-right: 10px;
+                width: 0;
+                color: #fff;
+                height: 0;
+                box-shadow: 0 0 0 0, 0 0 0 0, 0 0 0 0, 0 0 0 0, 0 0 0 0, 0 0 0 0, 0 0 0 0 inset;
+                animation: checkboxOff .3s forwards;
+            }
+
+        .d-form__check-box-input:checked + .form-check-sign .check {
+            background: #9c27b0;
+        }
+
+        .disabled {
+            opacity: .5;
+            cursor: default !important;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+            pointer-events: none;
+            background-color: #ddd;
+        }
+
+        .b-btn-contained-red-md {
+            padding: 9px 16px;
+            direction: rtl;
+            font-size: 13px;
+            line-height: 1.571;
+            font-weight: 700;
+            background-color: #ef394e;
+            color: #fff;
+            border: 1px solid #ef394e;
+            border-radius: 5px;
+        }
+    </style>
+
+}
+
+<div class="row">
+    <div class="address__page text-right">
+        <div class="b-address__title js-address-modal-title">جزئیات آدرس</div>
+        <div class="b-address__subtitle js-address-modal-subtitle">لطفا جزئیات آدرس و گیرنده سفارش را وارد کنید.</div>
+        <form id="add-edit-address-form" method="post">
+            <div class="c-address__modal-content" id="address-modal-form">
+                <div class="c-address__form">
+                    <div class="form-group">
+                        <div class="col-6 float-right">
+                            <label class="control-label">استان</label>
+                            <select id="select-state" class="select-state js-select-state" asp-items="ViewBag.States">
+                                <option value="0">انتخاب کنید</option>
+                            </select>
+                        </div>
+                        <div class="col-6 float-right">
+                            <label class="control-label">شهر</label>
+                            <select disabled id="select-city" class="select-city js-select-city"></select>
+                        </div>
+
+
+                        <div class="col-md-12 mt-3">
+                            <label class="control-label">نشانی پستی *</label>
+                            <input type="text" asp-for="Address" class="d-address-user js-address-user" placeholder="آدرس دقیق شما ..." />
+                        </div>
+                        <div class="col-md-3 mt-3 float-right">
+                            <label class="control-label">پلاک *</label>
+                            <input type="text" asp-for="Pelak" class="d-address-user js-address-pelak" />
+                            <span class="text text-danger" asp-validation-for="Pelak"></span>
+                        </div>
+                        <div class="col-md-3 mt-3 float-right">
+                            <label class="control-label">واحد</label>
+                            <input type="text" asp-for="Vahed" class="d-address-user" />
+                        </div>
+                        <div class="col-md-6 mt-3 float-right">
+                            <label class="control-label">کدپستی *</label>
+                            <input type="text" asp-for="PostCode" maxlength="10" class="d-address-user js-post-code" />
+                            <small class="text text-info"> کدپستی باید ۱۰ رقم و بدون خط تیره باشد</small>
+                        </div>
+
+                        <div class="form-group col-md-12 mt-3">
+                            <label class="d-form__check-box" id="d-form__check-box">
+                                <input hidden class="d-form__check-box-input js-recipient-is-me" type="checkbox" autocomplete="off" />
+                                <span class="form-check-sign">
+                                    <span class="check"></span>
+                                </span>
+                                <span class="ui-checkbox-label">
+                                    گیرنده سفارش خودم هستم
+                                </span>
+                            </label>
+                        </div>
+
+                        <div class="col-md-6 mt-3 float-right">
+                            <label class="control-label">نام گیرنده *</label>
+                            <input type="text" maxlength="15" class="d-address-user js-input-field js-transfereename" />
+
+                        </div>
+
+                        <div class="col-md-6 mt-3 float-right">
+                            <label class="control-label">نام خانوادگی گیرنده *</label>
+                            <input type="text" maxlength="20" class="d-address-user js-input-field js-transfereefamily" />
+                        </div>
+
+                        <div class="col-md-12 mt-3 float-right">
+                            <label class="control-label">شماره موبایل *</label>
+                            <input maxlength="11" class="d-address-user js-input-field js-usermobile" />
+                            <small class="text text-info"> مثال :091212345678</small>
+                        </div>
+
+                        @*<div class="col-md-6 mt-3 float-right">
+                                <label class="control-label">شماره ثابت </label>
+                                <input type="text" class="d-address-user js-input-field" name="name" />
+                                <small class="text text-info">مثال :88776655-021</small>
+                            </div>*@
+
+                    </div>
+                    <div class="form-group">
+                        <button type="submit" class="b-btn b-btn-contained-red-md js-submit-btn">تایید و ثبت آدرس</button>
+                    </div>
+
+
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+
+
+@section Scripts{
+
+    <script src="~/panel/adminpanel/js/select.js"></script>
+
+    <script>
+
+
+        $(document).ready(function () {
+            $('.select-state').select2({
+                dir: "rtl"
+
+            });
+
+            $('.select-city').select2({
+                dir: "rtl"
+
+            });
+            function FillCity() {
+                $("#select-city").empty();
+                if ($("#select-state").val() == "0") {
+                    $('#select-city').prop('disabled', true);
+                } else {
+                    $('#select-city').prop('disabled', false);
+
+                    $.getJSON("/Cart/GetCities/" + $("#select-state :selected").val(),
+                        function (data) {
+                            $.each(data,
+                                function () {
+                                    $('#select-city').append('<option value= ' + this.value + '>' + this.text + '</option>');
+                                })
+                        }
+
+                    )
+                }
+
+                $('.js-usermobile').val('');
+                $('.js-transfereename').val('');
+                $('.js-transfereefamily').val('');
+                $('.js-input-field').prop('disabled', false);
+            };
+            $("#select-state").change(function () {
+                FillCity();
+            });
+
+
+            $('.js-recipient-is-me').change(function () {
+                if (this.checked) {
+                    $('.js-input-field').addClass('disabled');
+                    $('.js-input-field').prop('disabled', true);
+
+                    $.ajax({
+                        type: "GET",
+                        url: '/Cart/GetUserInfo',
+                    }).done(function (data) {
+                        $('.js-usermobile').val(data[0]);
+                        $('.js-transfereename').val(data[1]);
+                        $('.js-transfereefamily').val(data[2]);
+                    });
+
+
+                } else {
+                    $('.js-input-field').prop('disabled', false);
+                    $('.js-input-field').removeClass('disabled');
+                    $('.js-usermobile').val('');
+                    $('.js-transfereename').val('');
+                    $('.js-transfereefamily').val('');
+
+                }
+            });
+            FillCity();
+
+            $('#add-edit-address-form').submit(function (event) {
+                event.preventDefault();
+                let Sate_Choose = $('.js-select-state').val();
+                let StateTextSelected = $('.js-select-state option:selected').text();
+                let City_Choose = $('.js-select-city').val();
+                let CityTextSelected = $('.js-select-city option:selected').text();
+                let AddressUser = $('.js-address-user');
+                let PelakUser = $('.js-address-pelak');
+                let PostCode = $('.js-post-code');
+                let TransfereeName = $('.js-transfereename');
+                let TransfereeFamily = $('.js-transfereefamily');
+                let UserMobile = $('.js-usermobile');
+                const True_Mobile = /^09\d{9}/;
+
+
+                //if (Sate_Choose == '0' || Sate_Choose == null || Sate_Choose == undefined) {
+                //    Alert('لطفا استان محل سکونت تحویل گیرنده را انتخاب کنید');
+                //    return;
+                //} else if (City_Choose == '0' || City_Choose == null || City_Choose == undefined) {
+                //    Alert('لطفا شهر محل سکونت تحویل گیرنده را انتخاب کنید');
+                //    return;
+                //} else if (AddressUser.val() == null || AddressUser.val() == '') {
+                //    AddressUser.focus();
+                //    Alert('لطفا آدرس دقیق تحویل گیرنده را وارد نمایید');
+                //    return;
+                //} else if (PelakUser.val() == null || PelakUser.val() == '') {
+                //    PelakUser.focus();
+                //    Alert('لطفا پلاک منزل تحویل گیرنده را با دقت  وارد نمایید');
+                //    return;
+                //} else if (PostCode.val() == null || PostCode.val() == '') {
+                //    PostCode.focus();
+                //    Alert('لطفا کد پستی 10 رقمی خود را بدون خط تیره وارد کنید');
+                //    return;
+                //} else if (PostCode.val().length > 10 || PostCode.val().length < 10) {
+                //    PostCode.focus();
+                //    Alert('کد پستی باید 10 کاراکتر عددی باشد');
+                //    return;
+                //}
+                //else if (!Just_Number.test(PostCode.val())) {
+                //    PostCode.focus();
+                //    Alert('کد پستی باید فقط مقدار عددی وارد کنید');
+                //    return;
+                //}
+                //else if (TransfereeName.val() == null || TransfereeName.val() == '') {
+                //    TransfereeName.focus();
+                //    Alert('لطفا نام تحویل گیرنده را دقیق وارد کنید');
+                //    return;
+                //}
+                //else if (!Reg_Persian.test(TransfereeName.val())) {
+                //    TransfereeName.focus();
+                //    Alert('لطفا فقط حروف فارسی وارد کنید');
+                //    return;
+                //}
+                //else if (TransfereeName.val().length > 15) {
+                //    TransfereeName.focus();
+                //    Alert('نام تحویل گیرنده نمی تواند بیشتر از 15 کاراکتر باشد');
+                //    return;
+                //}
+
+                //else if (TransfereeFamily.val() == null || TransfereeFamily.val() == '') {
+                //    TransfereeFamily.focus();
+                //    Alert('لطفا نام خانوادگی تحویل گیرنده را دقیق وارد کنید');
+                //    return;
+                //}
+                //else if (!Reg_Persian.test(TransfereeFamily.val())) {
+                //    TransfereeFamily.focus();
+                //    Alert('لطفا فقط حروف فارسی وارد کنید');
+                //    return;
+                //}
+                //else if (TransfereeFamily.val().length > 20) {
+                //    TransfereeFamily.focus();
+                //    Alert('نام خانوادگی تحویل گیرنده نمی تواند بیشتر از 20 کاراکتر باشد');
+                //    return;
+                //}
+
+                //else if (UserMobile.val() == null || UserMobile.val() == '') {
+                //    UserMobile.focus();
+                //    Alert('لطفا شماره موبایل تحویل گیرنده را دقیق وارد کنید');
+                //    return;
+                //}
+                //else if (UserMobile.val().length > 11 || UserMobile.val().length < 11) {
+                //    TransfereeFamily.focus();
+                //    Alert('شماره موبایل باید 11 کاراکتر عددی باشد');
+                //    return;
+                //}
+                //else if (!True_Mobile.test(UserMobile.val())) {
+                //    UserMobile.focus();
+                //    Alert('فرمت شماره موبایل وارد شده صحیح نیست');
+                //    return;
+                //}
+
+                let Form = $("#add-edit-address-form")[0];
+                let Form_Data = new FormData(Form);
+                Form_Data.append("State", StateTextSelected);
+                Form_Data.append("City", CityTextSelected);
+                Form_Data.append("Name", TransfereeName.val());
+                Form_Data.append("Family", TransfereeFamily.val());
+                Form_Data.append("Mobile", UserMobile.val());
+                $.ajax({
+                    url: '/Cart/AddAddresses',
+                    data: Form_Data,
+                    contentType: false,
+                    processData: false,
+                    type: 'POST',
+                    success: function (data) {
+
+                        switch (data) {
+                            case 0:
+                                Alert('لطفا استان محل سکونت تحویل گیرنده را انتخاب کنید');
+                                return;
+                            case 1:
+                                Alert('لطفا شهر محل سکونت تحویل گیرنده را انتخاب کنید');
+                                return;
+
+                            case 2:
+                                AddressUser.focus();
+                                Alert('لطفا آدرس دقیق تحویل گیرنده را وارد نمایید');
+                                return;
+                            case 3:
+                                PelakUser.focus();
+                                Alert('لطفا پلاک منزل تحویل گیرنده را با دقت  وارد نمایید');
+                                return;
+                            case 4:
+                                PostCode.focus();
+                                Alert('کد پستی باید فقط مقدار عددی وارد کنید');
+                                return;
+                            case 5:
+
+                                TransfereeName.focus();
+                                Alert('لطفا نام تحویل گیرنده را دقیق وارد کنید');
+                                return;
+                            case 6:
+                                TransfereeFamily.focus();
+                                Alert('لطفا نام خانوادگی تحویل گیرنده را دقیق وارد کنید');
+                                return;
+                            case 7:
+                                UserMobile.focus();
+                                Alert('لطفا شماره موبایل تحویل گیرنده را دقیق وارد کنید');
+                                return;
+                            case 8:
+                                PostCode.focus();
+                                Alert('کد پستی باید 10 کاراکتر عددی باشد');
+                                return;
+                            case 9:
+                                PostCode.focus();
+                                Alert('کد پستی باید فقط مقدار عددی وارد کنید');
+                                return;
+                            case 10:
+                                TransfereeName.focus();
+                                Alert('نام تحویل گیرنده نمی تواند بیشتر از 15 کاراکتر باشد');
+                                return;
+                            case 11:
+                                TransfereeName.focus();
+                                Alert('لطفا فقط حروف فارسی وارد کنید');
+                                return;
+                            case 12:
+                                TransfereeFamily.focus();
+                                Alert('نام خانوادگی تحویل گیرنده نمی تواند بیشتر از 20 کاراکتر باشد');
+                                return;
+                            case 13:
+                                TransfereeFamily.focus();
+                                Alert('لطفا فقط حروف فارسی وارد کنید');
+                                return;
+                            case 14:
+                                TransfereeFamily.focus();
+                                Alert('شماره موبایل باید 11 کاراکتر عددی باشد');
+                                return;
+                            case 15:
+                                UserMobile.focus();
+                                Alert('فرمت شماره موبایل وارد شده صحیح نیست');
+                                return;
+                            default:
+                                window.location.href = data.redirectToUrl;
+                        }
+                    }
+                });
+
+
+
+
+
+            });
+
+
+
+        });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    </script>
+
+
+
+
+    @*<script src="~/site/js/mapp.min.js"></script>
+        <script src="~/site/js/mapp.env.js"></script>
+        <script>
+            $(document).ready(function () {
+                var app = new Mapp({
+                    element: '#app',
+                    presets: {
+                        latlng: {
+                            lat: 35.70192,
+                            lng: 51.36658,
+                        },
+                        zoom: 6,
+                    },
+                    apiKey: 'eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImp0aSI6IjNiMzE2NjZjODc5YTNkZmY2NWVkYWNhMDJkZmZlOWM1ZGMzMjc5ZDBkMWNlMWZhMzNlODc0MjkzZWQ1ZjI2ZmQ3M2M0ZTk2ZDNjMzVmMzM2In0.eyJhdWQiOiIxNTAyNyIsImp0aSI6IjNiMzE2NjZjODc5YTNkZmY2NWVkYWNhMDJkZmZlOWM1ZGMzMjc5ZDBkMWNlMWZhMzNlODc0MjkzZWQ1ZjI2ZmQ3M2M0ZTk2ZDNjMzVmMzM2IiwiaWF0IjoxNjI3ODExMjA4LCJuYmYiOjE2Mjc4MTEyMDgsImV4cCI6MTYzMDQwMzIwOCwic3ViIjoiIiwic2NvcGVzIjpbImJhc2ljIl19.nQLyshOcEBWaop7D-clULJaHnc7-8-rc0P4uUMHYeT9y8LByeBkGLRX1TR6DUirsMU4UkZaaYbxj82J4psz7EJ82I6q87958xButvDiV5qtfLmGnIyq28BCrFqAhBzprLhb_xLVecPms8LsDF9ggGDM-Z_qr3Lhy_wt5k_E2euXVH5FHgFKVyAcoPw19NrMWFEtk-uhdWGvxShCl1oYlfzz-_jgjoC7IknrWWVhVTy2b1CKZ-F24RB2MA_nPbgVdJwVOM401PrIpOy0xJGQMpcRZ1JAFsmQkxyPxffRNtXe3wG04uf-1jH1zWwTICFziFiNd3X6E_sQ5REonTFMmiQ'
+                });
+                app.addLayers();
+                app.map.on('click', function (e) {
+                    app.addMarker({
+                        name: 'AddressMarker',
+                        latlng: {
+                            lat: e.latlng.lat,
+                            lng: e.latlng.lng,
+                        },
+                        icon: app.icons.red,
+                        popup: {
+                            title: {
+                                i18n: 'MarkerTitle',
+                            },
+                            description: {
+                                i18n: 'MarkerDescription'
+                            },
+                            class: 'marker-class',
+                            open: true,
+                        },
+                        pan: false,
+                        draggable: true,
+                        history: false,
+                        on: {
+                            click: function () {
+
+                            },
+                            contextmenu: function () {
+
+                            },
+                        },
+                    });
+
+                    app.showReverseGeocode({
+                        state: {
+                            latlng: {
+                                lat: e.latlng.lat,
+                                lng: e.latlng.lng,
+                            },
+                            zoom: 15,
+                        },
+                    });
+
+                    app.addSearch({
+                        counts: {
+                            geocode: 10,
+                            poi: 10,
+                        },
+                        history: true,
+                    });
+                    app.setSearch({
+                        value: "poi",
+                    });
+                    console.log(app.getSearch());
+                });
+            });
+        </script>*@
+}

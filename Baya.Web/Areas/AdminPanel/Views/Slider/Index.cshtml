@@ -1,0 +1,110 @@
+﻿@model IEnumerable<Baya.DataLayer.Entities.Slider>
+
+@{
+    ViewData["Title"] = "نمایش اسلایدرها";
+    int rowCount = 1;
+}
+
+
+@section Styles {
+    @*<link href="@Url.Content("~/panel/assets/jstree/themes/default/style.css")" rel="stylesheet" type="text/css" />*@
+ 
+}
+<div class="card">
+    <div class="header">
+        <h2 class="alert alert-info text-center">
+            <strong>لیست اسلایدر سایت</strong>
+        </h2>     
+
+    
+    </div>
+    <div class="body table-responsive-lg table-responsive-md table-responsive-sm table-responsive-xl">
+        <table class="table">
+            <thead>
+                <tr>
+
+                    <th width="40px">ردیف</th>
+
+
+                    <th>
+                        نام اسلایدر
+                    </th>
+                    <th>
+                        تعداد اسلاید
+                    </th>
+                    <th>
+                       وضعیت
+                    </th>
+                    <th>عملیات</th>
+                </tr>
+            </thead>
+            <tbody id="tblrole">
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>@rowCount</td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Name)
+                        </td>
+                        <td>
+                            @item.SliderImages.Count(s => s.SliderId == item.Id)
+                        </td>
+                      
+                        @if (item.IsActive == true)
+                        {
+                            <td><span class="label bg-success">فعال</span></td>
+                        }
+                        else
+                        {
+                           <td><span class="label bg-danger">غیرفعال</span></td>
+                        }
+                    <td>
+                        <a class="btn bg-deep-purple btn-circle waves-effect waves-circle waves-float" asp-area="AdminPanel" asp-controller="Slider" asp-action="SlideImages" asp-route-id="@item.Id" title="تصاویر اسلایدر"><i class="material-icons">local_pharmacy</i></a>
+
+
+                        @if (item.IsActive == true)
+                        {
+                            <a class="btn bg-pink btn-circle waves-effect waves-circle waves-float" onclick="Activate('@item.Id')" title="غیرفعال کردن"><i class="material-icons">visibility_off</i></a>
+                        }
+                        else
+                        {
+                            <a class="btn bg-light-green btn-circle waves-effect waves-circle waves-float" onclick="Activate('@item.Id')" title="فعال کردن"><i class="material-icons">visibility</i></a>
+                        }
+
+                    </td>
+                    </tr>
+                    rowCount++;
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+@section Scripts{
+   
+    <script>
+        function Activate(id) {
+            swal({
+                title: "تأیید وضعیت",
+                text: "آیا از تغییر وضعیت  اطمینان دارید؟",
+                icon: "warning",
+                buttons: ['لغو', 'بلی'],
+                dangerMode: true,
+            })
+                .then((willDelete) => {
+                    if (willDelete) {
+                        window.open('/AdminPanel/Slider/Activate/' + id, '_parent');
+                    }
+                });
+        }
+    </script>
+}
+
+
+
+
+
+
+
+
+
+

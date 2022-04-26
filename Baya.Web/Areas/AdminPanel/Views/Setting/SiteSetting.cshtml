@@ -1,0 +1,100 @@
+﻿@model Baya.Core.ViewModels.SiteSettingViewModel
+
+@{
+    ViewData["Title"] = "تنظیمات اصلی سایت";
+}
+
+@section Styles {
+
+}
+<div class="card" ng-controller="SiteSetting as ss">
+    <div class="header">
+        <h2 class="alert alert-success text-center">
+            <strong>تنظیمات اصلی سایت</strong>
+        </h2>
+    </div>
+    <div class="body">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12 col-md-12 offset-lg-1 offset-md-1">
+                    <form asp-controller="Setting" asp-action="SiteSetting">
+
+                        <div class="form-group">
+                            <label asp-for="Name" class="control-label"></label>
+                            <input asp-for="Name" class="form-control" placeholder="نام سایت را وارد نمایید" />
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="About" class="control-label"></label>
+                            <input asp-for="About" class="form-control" placeholder="درباره ما را وارد کنید" />
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="Terms" class="control-label"></label>
+                            <textarea asp-for="Terms" class="form-control" placeholder="قوانین خود را وارد کنید"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="Desc" class="control-label"></label>
+                            <textarea asp-for="Desc" class="form-control" placeholder="توضیحات درباره فروشگاه را وارد کنید"></textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label asp-for="Tel" class="control-label"></label>
+                            <input asp-for="Tel" class="form-control" placeholder="شماره تماس را وارد نمایید" />
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="Fax" class="control-label"></label>
+                            <input asp-for="Fax" class="form-control" placeholder="شماره فکس را وارد نمایید" />
+                        </div>
+
+
+
+
+
+
+
+
+                        <div class="form-group">
+                            <input type="submit" value="ذخیره" class="btn bg-indigo waves-effect" />
+                        </div>
+                        <div>
+                            <a class="btn btn-info" asp-controller="Dashboard" asp-action="Index">برگشت</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+@section Scripts{
+    <script src="~/panel/adminpanel/js/angular.min.js"></script>
+    <script src="~/site/js/sweet.js"></script>
+    <script src="~/ckeditor/ckeditor.js"></script>
+    <script src="~/ckeditor/adapters/jquery.js"></script>
+    <script>
+        $(function () {
+            $('#Terms').ckeditor();
+        });
+        $(function () {
+            $('#Desc').ckeditor();
+        });
+    </script>
+
+
+    @*<script>
+        var app = angular.module('app', []);
+        app.controller('NewProduct', function ($scope) {
+
+
+        });
+    </script>*@
+
+    @if (ViewBag.IsSuccess == true)
+    {
+        <script>
+            swal("پیغام", "اطلاعات با موفقیت ثبت شد", "success", {
+                button: "متوجه شدم",
+            });
+        </script>
+    }
+}

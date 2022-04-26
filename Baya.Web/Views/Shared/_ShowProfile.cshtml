@@ -1,0 +1,81 @@
+﻿@model Baya.Core.ViewModels.UserProfileViewModel
+@*<div class="usercartmini__area">
+        <div class="usercartmini__wrapper">
+            <div class="cartmini__title">
+                <h4>پروفایل کاربر</h4>
+            </div>
+            <div class="cartmini__close">
+                <button type="button" class="cartmini__close-btn"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="cartmini__widget">
+                <div class="cartmini__inner p-lg-3">
+                    <div class="text-center">
+                        <img class="img-profile" src="~/panel/userpanel/avatar/@Model.ImageUser" width="80" height="80" alt="پروفایل" />
+                    </div>
+                    <div class="line mt-15"></div>
+
+                    <div class="user-profile-info text-right p-2">
+                        <div class="text-center">
+                            <label class="">تاریخ ثبت نام : </label><span> @Model.Date </span>
+                            <label class="mr-15">ساعت ثبت نام : </label><span> @Model.Time </span>
+                        </div>
+
+                        <div class="mt-15">
+                            <label class="">نام کاربری : </label>
+                            @if (Model.Name == null)
+                            {
+                                <span> هنوز ثبت نشده </span>
+                            }
+                            else
+                            {
+                                <span> @Model.Name </span>
+                            }
+
+
+
+                        </div>
+
+                        <div class="mt-15">
+                            <label class="">شماره موبایل : </label><span> @User.Identity.Name </span>
+
+                        </div>
+
+                        <div class="mt-15">
+                            <label class="">موجودی کیف پول شما : </label><span> @Model.Wallet </span>
+
+                        </div>
+
+                    </div>
+
+                </div>
+                <div class="cartmini__checkout">
+
+                    <div class="cartmini__checkout-btn">
+                        <a href="/Profile" class="m-btn m-btn-border mb-10 w-100"> <span></span> مدیریت پروفایل</a>
+                        <a href="/LogOut" class="m-btn m-btn-border mb-10 w-100"> <span></span> خروج</a>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>*@
+
+<div class="btn-close">
+    <img title="بستن" alt="close" id="img-close" src="~/site/img/icon/btn-icons/close.png" />
+</div>
+
+<div class="user-info-div text-center">
+    <img class="img-profile" src="~/panel/userpanel/avatar/@Model.ImageUser" width="80" height="80" alt="پروفایل" />
+    <div class="line mt-4 mb-4"></div>
+</div>
+<div class="user-info-div">
+    <label>شماره موبایل :</label><span>@User.Identity.Name</span>
+</div>
+<div class="user-info-div">
+    <label>موجودی کیف پول :</label><span>@Model.Wallet.ToString("#,0") تومان</span>
+</div>
+
+<div class="box-btn-profile">
+    <a href="/Profile" class="btn btn-success">مدیریت پروفایل</a>
+    <a href="/LogOut" class="btn btn-danger">خروج</a>
+</div>

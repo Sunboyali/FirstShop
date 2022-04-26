@@ -1,0 +1,65 @@
+﻿@model Baya.DataLayer.Entities.Brand
+@{ Layout = null; }
+
+<form id="brand-Form" asp-action="AddOrEdit">
+    <input type="hidden" asp-for="Id" />
+    <div class="form-group">
+        <div class="form-line">
+            <input asp-for="BrandName" id="brandname" maxlength="15" class="form-control" autocomplete="off" placeholder="نام برند را وارد کنید">
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="row clearfix">
+            <div class="col-md-5">
+                <label class="">انتخاب دسته</label>
+                <select class="form-control" id="maincat" asp-for="CategoryId"  asp-items="ViewBag.MainCategory">
+                    
+                </select>
+
+
+            </div>
+        </div>
+    </div>
+
+
+    <div class="modal-footer">
+        <button type="button" onclick="return Vlidate_Form()" class="btn btn-info waves-effect">ذخیره</button>
+        <button type="button" class="btn btn-danger waves-effect"
+                data-dismiss="modal">
+            لغو
+        </button>
+    </div>
+</form>
+
+<script>
+
+   
+
+
+    //$(document).ready(function () {
+        
+
+    //});
+    var Brand_Input_Name = document.getElementById('brandname');
+    var Category = document.getElementById('maincat');
+    var Reg_Persian = /^[\u0600-\u06FF\s]+$/;
+    function Vlidate_Form() {
+
+        let Brand_Name = Brand_Input_Name.value;
+        /*let Main_Cat = Category.value;*/
+        if (Brand_Name == '') {
+            Alert('لطفا نام برند را وارد نمایید');
+            return false;
+        } else if (Brand_Name.length > 15) {
+            Alert('نام برند نمی تواند بیشتر از 15 کاراکتر باشد');
+            return false;
+        } else if (!Reg_Persian.test(Brand_Name)) {
+            Alert('لطفا فقط حروف فارسی وارد کنید');
+            return false;
+        } 
+        $('#brand-Form').submit();
+
+    }
+    
+   
+</script>

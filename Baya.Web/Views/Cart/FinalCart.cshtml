@@ -1,0 +1,371 @@
+﻿
+@{
+    Layout = null;
+}
+<style>
+    .satar {
+        color: red;
+        font-size: 12px;
+    }
+</style>
+
+@*<form id="InfoUserForm" method="post">
+    <div class="form-group">
+
+        <div class="form-group text-center">
+            <span class="text-info text-success">پر کردن فیلد های ستاره دار الزمایست</span>
+        </div>
+
+        <div class="text-right">
+            <div class="form-group">
+                <label class="control-label ">
+                    نام :
+                    @if (Model.Name != null)
+                    {
+                        <span id="sp_Name"></span>
+                    }
+                    <b class="satar">*</b>
+                </label>
+                
+                <button type="button"  id="btn-change" class="mt-1 btn btn-info btn-sm">تغییر</button>
+                <div id="edit__boxname" hidden>
+                    <input  asp-for="Name" maxlength="15" class="form-control"
+                           autocomplete="off" onkeyup="Change_Name(this.value)" placeholder="نام خود را وارد کنید" required>
+                    <button type="button" id="btn-name" class="mt-1 btn btn-info btn-sm">ویرایش</button>
+                    <button type="button" id="btn-laghv" class="mt-1 btn btn-danger btn-sm">لغو</button>
+                </div>
+
+
+            </div>
+            <div class="col-md-6">
+                <label class="control-label">نام خانوادگی <b class="satar">*</b></label>
+                <input asp-for="Family" maxlength="30" class="form-control"
+                       autocomplete="off" placeholder="نام خانوادگی خود را وارد کنید" required>
+
+            </div>
+
+            <div class="col-md-6 mt-1">
+                <label class="control-label">کد ملی <b class="satar">*</b></label>
+                <input asp-for="NationalCode" maxlength="10" class="form-control"
+                       autocomplete="off" placeholder="کد ملی خود را وارد کنید" required>
+
+            </div>
+
+
+            <div class="col-md-6 mt-1">
+                <label class="control-label">کد پستی <b class="satar">*</b></label>
+                <input asp-for="PostCode" maxlength="10" class="form-control"
+                       autocomplete="off" placeholder="کد پستی خود را وارد کنید" required>
+
+            </div>
+            <div class="col-md-6 mt-1">
+                <label class="control-label">شماره تماس ثابت (با پیش شماره استان )<b class="satar">*</b></label>
+                <input asp-for="HomeTel" maxlength="30" class="form-control"
+                       autocomplete="off" placeholder="شماره تماس ثابت خود را وارد کنید" required>
+
+                <span id="charaters-count"></span>
+            </div>
+            <div class="col-md-6 mt-1">
+                <label class="control-label">ایمیل</label><small class="text-right text-info">(در صورت وارد کردن ایمیل یک نسخه تراکنش خرید به ایمیل شما ارسال می شود)</small>
+                <input asp-for="EmailUser" maxlength="50" class="form-control"
+                       autocomplete="off" placeholder="ایمیل خود را وارد کنید" required>
+            </div>
+
+            <div class="col-md-6 mt-1">
+                <label class="">انتخاب استان</label>
+                <select class="form-control" asp-for="State" id="states" asp-items="ViewBag.States">
+                    <option value="0">انتخاب استان</option>
+                </select>
+            </div>
+
+            <div class="col-md-6 mt-1" id="choose_city" hidden>
+                <label class="">انتخاب شهر</label>
+                <select class="form-control" id="cities" asp-for="City" asp-items="ViewBag.Cities">
+                </select>
+            </div>
+
+
+        </div>
+        <div class="col-md-12 mt-1">
+            <label class="control-label">آدرس<b class="satar">*</b></label>
+            <textarea asp-for="Address" class="form-control"
+                      placeholder="آدرس دقیق خود را وارد کنید"></textarea>
+        </div>
+
+
+    </div>
+    <div class="form-group col-md-12 d-block">
+        <div class="modal-footer">
+            <button type="button" onclick="return ValidateForm()" class="btn btn-info">پرداخت نهایی</button>
+            <button type="button" class="btn btn-danger waves-effect"
+                    data-dismiss="modal">
+                لغو
+            </button>
+        </div>
+    </div>
+
+</form>*@
+
+
+
+<script>
+    document.getElementById("btn-change").addEventListener("click", Change);
+    document.getElementById("btn-laghv").addEventListener("click", LaghvName);
+    let EditNameBox = $('#edit__boxname');
+    let Name = $('#Name');
+    let Name_Spn = $('#sp_Name').html('@Model.Name');
+    let Btn_EditName = $("#btn-name");
+    let Btn_Laghv = $("#btn-laghv");
+    /*let LastUpdate = "";*/
+    function Change() {
+        $(this).attr("hidden", true);
+        EditNameBox.prop("hidden", false);
+    }
+    function LaghvName() {
+        $('#btn-change').attr("hidden", false);
+        EditNameBox.prop("hidden", true);
+    }
+
+
+
+
+    function Change_Name(val) {
+        Name_Spn.html() = "vqh";
+        alert(Name_Spn.text());
+        if (val == '') {
+            Btn_EditName.attr('disabled', 'enable');
+        } else {
+
+            Btn_EditName.removeAttr('disabled');
+        }
+
+
+
+
+
+        //if (val == '') {
+        //    Btn_EditName.attr('disabled', 'enable');
+        //} else {
+        //    Btn_EditName.removeAttr('disabled');
+        //    if (LastUpdate != "") {
+        //        if (Name.val() == LastUpdate || Name.val() == '') {
+        //            Btn_EditName.attr('disabled', 'enable');
+        //        }
+        //    } else {
+        //        if (Name.val() == Name_Lbl || Name.val() == '') {
+        //            Btn_EditName.attr('disabled', 'enable');
+        //        }
+        //    }
+
+        //}
+    }
+
+
+
+
+
+
+
+
+
+    //function ChangeName() {
+    //    Btn_Laghv.prop("hidden", false);
+    //    Name.prop("hidden", false);
+
+    //    if (LastUpdate == "") {
+    //        if (Name.val() == Name_Lbl) {
+    //            Btn_EditName.attr('disabled', 'enable');
+    //        }
+    //    } else {
+    //        if (Name.val() == LastUpdate) {
+    //            Btn_EditName.attr('disabled', 'enable');
+    //        }
+    //    }
+    //    if (Name.val().length > 15) {
+    //        Name.focus();
+    //        Alert('نام نمی تواند بیشتر از 15 کاراکتر باشد');
+    //        return false;
+    //    } else if (!Reg_Persian.test(Name.val())) {
+    //        Name.focus();
+    //        Alert('نام خود را فقط با حروف فارسی وارد کنید');
+    //        return false;
+    //    }
+    //    $.post("/Cart/ChangeName/", { name: Name.val() }, function (data) {
+    //        if (data == 0) {
+    //            $('#sp_Name').html(Name.val());
+    //            LastUpdate = Name.val();
+    //            LaghvName();
+    //            Alert_Success('نام شما با موفقیت بروزرسانی شد');
+
+    //            return false;
+
+
+    //        }
+
+    //    });
+
+    //}
+
+
+
+
+
+
+
+
+
+
+
+
+    if ($("#states").val() == "0") {
+        $("#choose_city").prop("hidden", true);
+    } else {
+        $("#choose_city").prop("hidden", false);
+    }
+
+    $("#states").change(function () {
+        $("#cities").empty();
+        if ($("#states").val() == "0") {
+            $("#choose_city").prop("hidden", true);
+        } else {
+            $("#choose_city").prop("hidden", false);
+
+            $.getJSON("/Cart/GetCities/" + $("#states :selected").val(),
+                function (data) {
+                    $.each(data,
+                        function () {
+                            $("#cities").append('<option value= ' + this.value + '>' + this.text + '</option>');
+                        })
+                }
+
+            )
+        }
+    });
+
+    function ValidateForm() {
+        let Name = $('#Name');
+        let Family = $('#Family');
+        let NationalCode = $('#NationalCode');
+        let PostCode = $('#PostCode');
+        let HomeTel = $('#HomeTel');
+        let EmailUser = $('#EmailUser');
+        let Address = $('#Address');
+        let States = $('#states');
+        let Cities = $('#cities');
+
+
+
+        if (Family.val() == '') {
+            Family.focus();
+            Alert('لطفا نام خانوادگی خود را وارد کنید');
+            return false;
+        } else if (Family.val().length > 30) {
+            Family.focus();
+            Alert('نام خانوادگی نمی تواند بیشتر از 30 کاراکتر باشد');
+            return false;
+        } else if (!Reg_Persian.test(Family.val())) {
+            Family.focus();
+            Alert('نام خانوادگی خود را فقط با حروف فارسی وارد کنید');
+            return false;
+        }
+
+
+
+        if (NationalCode.val() == '') {
+            NationalCode.focus();
+            Alert('لطفا کد ملی خود را وارد کنید');
+            return false;
+        } else if (NationalCode.val().length > 10 || NationalCode.val().length < 10) {
+            NationalCode.focus();
+            Alert('کد ملی حتما باید 10 کاراکتر باشد');
+            return false;
+        } else if (!Just_Number.test(NationalCode.val())) {
+            NationalCode.focus();
+            Alert('برای کد ملی فقط باید عدد وارد کنید');
+            return false;
+        }
+
+
+        if (PostCode.val() == '') {
+            PostCode.focus();
+            Alert('لطفا کد پستی خود را وارد کنید');
+            return false;
+        } else if (PostCode.val().length > 10 || PostCode.val().length < 10) {
+            PostCode.focus();
+            Alert('کد پستی حتما باید 10 کاراکتر باشد');
+            return false;
+        } else if (!Just_Number.test(PostCode.val())) {
+            PostCode.focus();
+            Alert('برای کد پستی فقط باید عدد وارد کنید');
+            return false;
+        }
+
+
+        if (HomeTel.val() == '') {
+            HomeTel.focus();
+            Alert('لطفا حداقل یک  شماره ثابت وارد کنید');
+            return false;
+        }
+        if (EmailUser.val() != '' && !TrueEmail.test(EmailUser.val())) {
+            EmailUser.focus();
+            Alert('لطفا ایمیل را به درستی وارد کنید اگر ایمیل ندارید فیلد ایمیل را خالی بگذارید');
+            return false;
+        }
+        if (States.val() == "0" || States.val() == null) {
+            Alert('لطفا شهر و استان محل سکونت خود را انتخاب کنید');
+            return false;
+        }
+        if (Address.val() == '') {
+            Address.focus();
+            Alert('لطفا آدرس دقیق خود را وارد کنید محصول به این آدرس ارسال می گردد');
+            return false;
+        }
+
+
+        let Form = $("#InfoUserForm")[0];
+        let Form_Data = new FormData(Form);
+        Form_Data.append("State", $("#states option:selected").text());
+        Form_Data.append("City", $("#cities option:selected").text());
+
+        $.ajax({
+            url: '/Cart/FinalUserCart',
+            data: Form_Data,
+            contentType: false,
+            processData: false,
+            type: 'POST',
+            success: function (data) {
+
+                switch (data) {
+                    case 0:
+                        NationalCode.focus();
+                        Alert('فرمت کد ملی وارد شده صحیح نمی باشد');
+                        return false;
+                    //case 1:
+                    //    Alert('لطفا توضیحات محصول را وارد کنید');
+                    //    return false;
+                    //case 2:
+                    //    Alert('لطفا ویژگی های محصول را وارد کنید ');
+                    //    return false;
+                    //case 3:
+                    //    Alert('لطفا یک تصویر برای کالای خود انتخاب کنید ');
+                    //    return false;
+                    //case 4:
+                    //    Alert('فرمت تصویر انتخابی شما صحیح نیست ');
+                    //    return false;
+                    //case 5:
+                    //    Alert('فایل انتخابی شما تصویر نیست لطفا فقط تصویر با فرمت های ذکر شده انتخاب کنید');
+                    //    return false;
+                    //case 6:
+                    //    Alert('محصول با این نام قبلا در سیستم ثبت شده است');
+                    //    return false;
+                    //case 7:
+                    //    Alert('تصاویر گالری نمی تواند کمتر از 4 تصویر باشد');
+                    //    return false;
+                    //default:
+                    //    window.location.href = data.redirectToUrl;
+                }
+            }
+        });
+
+    }
+</script>

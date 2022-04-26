@@ -1,0 +1,359 @@
+﻿@model Baya.DataLayer.Entities.Product
+@{
+    ViewData["Title"] = Model.ProductName;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@section Styles {
+    <link href="@Url.Content("~/site/css/single-product.css")" rel="stylesheet" type="text/css" />
+    <link href="@Url.Content("~/site/css/single-responsive.css")" rel="stylesheet" type="text/css" />
+
+}
+<article class="product-single  mb-1">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-4 d-block">
+                <section class="product-gallery">
+                    @if (Model.Amazing == true)
+                    {
+                        <div class="d-block text-right mb-5">
+                            <b class="txt-amazing">محصول شگفت انگیز</b>
+                        </div>
+                    }
+
+                    <div class="product-sync-init mb-20">
+
+                        <div class="gallery-item text-center">
+                            <ul>
+
+                                <li>
+                                    <a href="#" class="btn-option">
+                                        <i class="far fa-heart"></i>
+                                        <span>علاقه مندی ها</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#" class="btn-option">
+                                        <i class="fas fa-share-alt"></i>
+                                        <span>اشتراک گذاری</span>
+                                    </a>
+                                </li>
+
+
+                            </ul>
+                        </div>
+                        <div class="single-product">
+
+                            <img id="img-product-zoom" class="zoomproduct" src="~/site/img/product-img/main/@Model.ProductImg" alt="@Model.ProductName">
+
+                            <div></div>
+
+                        </div>
+
+
+                    </div>
+                </section>
+
+            </div>
+
+
+            <div class="col-lg-8 mt-5 mt-md-0">
+
+                <section class="product-info">
+
+                    <div class="product-headline text-right d-block pr-3">
+                        <h2 class="title mb-20">
+                            @Model.ProductName
+                        </h2>
+                    </div>
+
+
+
+                    <div class="product-config-wrapper">
+                        <div class="product-directory"></div>  @*مسیر دسته بندی کالا*@
+
+                        <div class="col=lg-6 col-md-6 col-xs-12">
+                            <div class="product-params">
+                                <ul>
+                                    <li>ویژگی های محصول</li>
+                                    <li>
+                                        <span>سیستم عامل: </span>
+                                        <span>Android</span>
+                                    </li>
+                                    <li>
+                                        <span>شبکه های ارتباطی: </span>
+                                        <span>2G، 3G، 4G</span>
+                                    </li>
+                                    <li>
+                                        <span>مقدار RAM: </span>
+                                        <span> 8 گیگابایت</span>
+                                    </li>
+                                    <li>
+                                        <span>ویژگی‌های خاص: </span>
+                                        <span>
+                                            مقاوم در برابر آب
+                                            دارای بدنه مقاوم
+                                            فبلت
+                                            مجهز به حس‌گر اثرانگشت
+                                            مناسب عکاسی سلفی
+                                            مناسب بازی
+                                            دارای قلم
+                                        </span>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="col=lg-6 col-md-6 col-xs-12">
+                            <div class="single-product-info">
+
+                                <div class="product-body mb-40 mt-2">
+                                    <div class="mt-2 d-block">
+                                        <label>کد محصول : </label><span class="text text-success mr-1">@Model.ProductCode</span>
+                                    </div>
+
+
+                                    @if (Model.Off > 0 && Model.Off <= 100)
+                                    {
+                                        decimal p1 = Math.Ceiling((decimal)Model.Price * Model.Off / 100);
+
+                                        decimal p2 = (decimal)Model.Price - p1;
+
+                                        decimal FinalPrice = (Math.Ceiling(p2 / 100) * 100);
+
+
+                                        <div class="mt-2 d-block">
+                                            <label>تخفیف : </label><span class="text text-success mr-1">@Model.Off % تخفیف</span>
+                                        </div>
+
+                                        <div class="mt-2 d-block">
+                                            <label>قیمت محصول  : </label><del class="text text-danger mr-1">@Model.Price.ToString("#,0") تومان</del>
+                                        </div>
+
+                                        <div class="mt-2 d-block">
+                                            <label>قیمت محصول با تخفیف : </label><span class="text text-success mr-1">@FinalPrice.ToString("#,0") تومان</span>
+                                        </div>
+
+
+                                    }
+                                    else
+                                    {
+                                        <div class="mt-2 d-block">
+                                            <label>تخفیف : </label><span class="text text-success mr-1">ندارد</span>
+                                        </div>
+                                        <div class="d-block">
+                                            <label>قیمت محصول : </label><span class="text text-success mr-1">@Model.Price.ToString("#,0") تومان</span>
+                                        </div>
+
+
+                                    }
+                                    @if (Model.CountProduct == 0)
+                                    {
+                                        <div class="mt-2 d-block">
+                                            <label>موجودی  : </label><span class="text text-danger mr-1">عدم موجودی</span>
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <div class="mt-2 d-block">
+                                            <label>موجودی  : </label><span class="text text-success mr-1">@Model.CountProduct</span>
+                                        </div>
+                                    }
+
+
+                                    <div class="mt-2 d-block">
+                                        <label>بازدید  : </label><span class="text text-success mr-1">@Model.ProductDetail.VisitCount</span>
+                                    </div>
+
+
+                                </div>
+                                <div class="product-footer mt-4">
+                                    @if (Model.CountProduct > 0)
+                                    {
+                                        <div class="add-to-cart d-block text-center">
+                                            <form asp-controller="Product" asp-action="AddToCart">
+                                                <input type="hidden" name="id" value="@Model.Id" />
+                                                <button type="submit" class="btn-add-to-cart">
+                                                    <span class="mr-2"><i class="fas fa-shopping-cart"></i></span>
+                                                    افزودن به سبد خرید
+                                                </button>
+                                            </form>
+                                           
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <div class="no-exist-count d-block text-center">
+                                            <a href="#" class="btn btn-info rounded-5">
+                                                <span class="mr-2"><i class="far fa-bell"></i></span>
+                                                موجود شد به من اطلاع بده
+                                            </a>
+                                        </div>
+                                    }
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+
+
+
+
+                </section>
+            </div>
+
+            <div class="product-feature mt-3 mb-5">
+
+                <div class="container">
+                    <div class="row align-content-center ">
+                        <div class="product-feature-col col-lg-2 col-md-3 col-xs-6 mr-lg-4">
+                            <a href="#" class="product-feature-item">
+                                <img src="~/site/img/product/single-product/icons/delivery.svg">
+                                <span>
+                                    امکان تحویل اکسپرس
+                                </span>
+
+                            </a>
+                        </div>
+
+                        <div class="product-feature-col col-lg-2 col-md-3 col-xs-6 mr-lg-4">
+                            <a href="#" class="product-feature-item">
+                                <img src="/site/img/product/single-product/icons/contact-us.svg">
+
+                                <span>
+                                    ۷ روز هفته
+                                    ۲۴ ساعته
+                                </span>
+                            </a>
+                        </div>
+                        <div class="product-feature-col col-lg-2 col-md-3 col-xs-6 mr-lg-4">
+                            <a href="#" class="product-feature-item">
+                                <img src="/site/img/product/single-product/icons/payment-terms.svg">
+                                <span>
+                                    امکان
+                                    پرداخت در محل
+                                </span>
+                            </a>
+                        </div>
+                        <div class="product-feature-col col-lg-2 col-md-3 col-xs-6 mr-lg-4">
+                            <a href="#" class="product-feature-item">
+                                <img src="/site/img/product/single-product/icons/return-policy.svg">
+                                هفت روز ضمانت بازگشت کالا
+                            </a>
+                        </div>
+                        <div class="product-feature-col col-lg-2 col-md-3 d-none d-lg-block mr-lg-4">
+                            <a href="#" class="product-feature-item">
+                                <img src="/site/img/product/single-product/icons/origin-guarantee.svg">
+                                <span>
+                                    ضمانت
+                                    اصل بودن کالا
+                                </span>
+                            </a>
+                        </div>
+
+                    </div>
+                </div>
+
+
+
+
+            </div>
+
+
+
+
+
+        </div>
+    </div>
+</article>
+
+<section>
+    <div class="container-fluid">
+        <div class="row col-12 justify-content-center">
+            <div class="tabs">
+                <div class="tab-box">
+                    <ul class="tab nav nav-tabs" id="myTab" role="tablist">
+                        <li class="nav-item pl-sm-1 pr-sm-1">
+                            <a class="nav-link active" id="Review-tab" data-toggle="tab" href="#Desc" role="tab"
+                               aria-controls="Review" aria-selected="true">
+                                <i class="fab fa-wpforms"></i>
+                                توضیحات
+                            </a>
+                        </li>
+                        <li class="nav-item pl-sm-1 pr-sm-1">
+                            <a class="nav-link" id="User-comments-tab" data-toggle="tab" href="#User-comments"
+                               role="tab" aria-controls="User-comments" aria-selected="false">
+                                <i class="fas fa-comment-dots"></i>
+                                نظرات کاربران
+                            </a>
+                        </li>
+                        <li class="nav-item pl-sm-1 pr-sm-1">
+                            <a class="nav-link" id="question-and-answer" data-toggle="tab"
+                               href="#question-and-answer" role="tab" aria-controls="question-and-answer"
+                               aria-selected="false">
+                                <i class="far fa-question-circle"></i>
+                                پرسش و پاسخ
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <!--tab-nav end -->
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-12 p-0">
+                        <div class="tab-content mb-3" id="pills-tabContent">
+
+                            <!-- first tab-pane -->
+                            <div class="tab-pane fade show active" id="Desc" role="tabpanel"
+                                 aria-labelledby="pills-home-tab">
+                                <div class="container">
+                                    <div class="section-tabs-content text-right p-3">
+                                        @Html.Raw(Model.ProductDetail.Description)
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <!-- second tab-pane -->
+                            <div class="tab-pane fade show active" id="User-comments" role="tabpanel"
+                                 aria-labelledby="pills-home-tab">
+
+                            </div>
+
+                            <!-- third tab-pane -->
+                            <div class="tab-pane fade show active" id="question-and-answer" role="tabpanel"
+                                 aria-labelledby="pills-home-tab">
+
+                            </div>
+
+
+                        </div>
+                    </div>
+                </div>
+                
+            </div>
+
+
+
+        </div>
+    </div>
+
+</section>
+
+@section Scripts{
+
+    <script src="~/site/js/jquery.ez-plus.js"></script>
+    <script>
+        $("#img-product-zoom").ezPlus({
+            zoomType: "inner",
+            containLensZoom: true,
+            cursor: "crosshair",
+            responsive: true,
+            zoomWindowFadeIn: 500,
+            zoomWindowFadeOut: 500
+        });
+
+    </script>
+
+}

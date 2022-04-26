@@ -1,0 +1,52 @@
+﻿<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - بایا وب</title>
+    <link rel="icon" href="~/panel/adminpanel/img/favicon.ico" type="image/x-icon">
+
+
+    <link href="~/site/css/bootstrap.min.css" rel="stylesheet" />
+    @*<link href="~/site/css/rtl.css" rel="stylesheet" />*@
+    <link href="~/site/css/fonticon.css" rel="stylesheet" />
+    <link href="~/site/css/shopingpage.css" rel="stylesheet" />
+    @RenderSection("Styles", false)
+
+
+
+</head>
+<body>
+    <style>
+
+        .sh-header {
+            height: 110px;
+            box-shadow: 0px 0px 10px #7b7b7b;
+            position: relative;
+        }
+
+        #main {
+            background-color: #e6f2f4;
+            width: 100%;
+            float: right;
+        }
+    </style>
+    <header class="sh-header">
+        <div class="container">
+            <div class="row">
+
+            </div>
+        </div>
+
+    </header>
+
+
+    <div id="main">
+        @RenderBody()
+    </div>
+
+    <script src="~/site/js/jquery.min.js"></script>
+    @RenderSection("ScriptsShop", required: false)
+
+</body>
+</html>

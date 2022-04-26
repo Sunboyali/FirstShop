@@ -1,0 +1,50 @@
+﻿@model IEnumerable<Baya.Core.ViewModels.UserFavoriteViewModel>
+
+@{
+    string IdUser = User.FindFirstValue(ClaimTypes.NameIdentifier);
+}
+<div class="favcartmini__widget">
+
+    <div class="user-fav-info text-right p-3">
+
+        <span id="no-fav" style="visibility:hidden" class="d-block text-center alert-info">کالایی در لیست علاقه مندی شما وجود ندارد</span>
+        @if (Model.Any())
+        {
+            <ul id="list-fav">
+                @foreach (var item in Model)
+                {
+
+                    <li data-favorite-li="@item.Id" class="fav-basket d-block mb-10 text-center">
+                        <div class="d-block img-fav">
+                            <a href="/Product/@item.ProductId/@item.ProductName.Replace(" ","-").ToString()"><img src="~/site/img/product-img/thumbnail/@item.ProductImage" alt="@item.ProductName" /> </a>
+                        </div>
+                        <div class="d-block">
+                            <span>کد کالا : @item.ProductCode</span>
+                        </div>
+                        <div class="d-block">
+                            <a href="/Product/@item.ProductId/@item.ProductName.Replace(" ","-").ToString()">@item.ProductName</a>
+                        </div>
+                        <div class="d-block">
+                            <span>@item.ProductPrice.ToString("#,0") تومان</span>
+                        </div>
+
+                        <a onclick="deletefavorite('@item.Id')" title="حذف" class="cartmini__del"><i class="fas fa-times"></i></a>
+
+
+                    </li>
+                    @*<div class="line mt-15"></div>*@
+                }
+
+            </ul>
+
+
+        }
+        else
+        {
+            <span class="d-block text-center alert-info">کالایی در لیست علاقه مندی شما وجود ندارد</span>
+        }
+
+    </div>
+
+
+</div>

@@ -1,0 +1,145 @@
+﻿@model IEnumerable<Baya.DataLayer.Entities.Category>
+<nav class="main-menu">
+    <div class="container-main">
+        <ul class="list-menu">
+            <li class="item-list-menu megamenu">
+                <a href="#" class="list-category"> فروشگاه ها</a>
+            </li>
+            <li class="item-list-menu megamenu nav-overlay">
+                <a href="#" class="list-category">محصولات<i class="fa fa-angle-down"></i></a>
+                <div class="sub-menu">
+
+                    @foreach (var item1 in Model.Where(c => c.ParentId == null))
+                    {
+                        <div class="list-item-children">
+                            <a href="#" class="list-item-children-category">
+                                <img src="~/site/img/category/icon/@item1.CategoryImg">
+                                @item1.CategoryName
+                            </a>
+                            <div class="megamenu-level-3">
+                                <h6 class="list-category-megamenu">همه دسته بندی های :  <span> @item1.CategoryName</span></h6>
+                                <div class="level-three-menu">
+                                    <ul class="mega-menu-sublist">
+                                        @foreach (var item2 in Model.Where(c => c.ParentId == item1.Id))
+                                        {
+                                            <li class="mb-1">
+                                                <a class="mega-menu-sublist-title" href="#">
+                                                    @item2.CategoryName
+                                                    <i class="fa fa-angle-left"></i>
+                                                </a>
+                                                <ul class="mega-menu-sublist-two">
+                                                    @foreach (var item3 in Model.Where(c => c.ParentId == item2.Id))
+                                                    {
+                                                        <li>
+                                                            <a href="#" class="megamenu-category">@item3.CategoryName </a>
+                                                        </li>
+                                                    }
+
+
+                                                </ul>
+                                            </li>
+                                        }
+
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </li>
+            <li class="item-list-menu megamenu">
+                <a href="#" class="list-category">ثبت فروشگاه</a>
+            </li>
+            <li class="item-list-menu megamenu">
+                <a href="#" class="list-category">دیجی اسمارت من</a>
+            </li>
+            <li class="item-list-menu megamenu">
+                <a href="#" class="list-category">مقالات</a>
+            </li>
+            <li class="item-list-menu megamenu">
+                <a href="#" class="list-category">درباره ما</a>
+            </li>
+            <li class="item-list-menu megamenu">
+                <a href="#" class="list-category">تماس با ما</a>
+            </li>
+        </ul>
+
+    </div>
+    <div class="nav-btn nav-slider">
+        <span class="linee1"></span>
+        <span class="linee2"></span>
+        <span class="linee3"></span>
+    </div>
+</nav>
+<!--    menu-responsiver----------------------->
+<nav class="sidebar">
+    <div class="nav-header">
+        <!--              <img class="pic-header" src="images/header-pic.jpg" alt="">-->
+        <div class="header-cover"></div>
+        <div class="logo-wrap">
+            <a class="logo-icon" href="#"><img alt="logo-icon" src="~/site/img/logo.png" width="40"></a>
+        </div>
+    </div>
+    <ul class="nav-categories ul-base">
+        <li><a href="#">فروشگاه</a></li>
+        <li>
+            @*<a href="#collapseOne" class="collapsed" data-bs-toggle="collapse" data-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne"><i class="fa fa-angle-down"></i>محصولات</a>*@
+            <a class="main-coll collapsed" data-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">
+                <i class="fa fa-angle-down"></i>محصولات
+            </a>
+            <div class="collapse" id="collapseExample">
+                <ul>
+                    @foreach (var res_item_1 in Model.Where(c => c.ParentId == null))
+                    {
+                        <li class="has-sub">
+                            <a href="#" class="category-level-2">
+
+                                <img width="30" src="~/site/img/category/icon/@res_item_1.CategoryImg" alt="" />
+
+                                @res_item_1.CategoryName
+                                @if (scope.HaveAnySubCategory(res_item_1.Id))
+                                {
+                                    <i class="fas fa-plus"></i>
+                                }
+
+                            </a>
+                            <ul>
+                                @foreach (var res_item_2 in Model.Where(c => c.ParentId == res_item_1.Id))
+                                {
+                                    <li class="has-sub-second">
+                                        <a href="#" class="category-level-3">
+                                            @res_item_2.CategoryName
+                                            @if (scope.HaveAnySubCategory(res_item_2.Id))
+                                            {
+                                                <i class="fas fa-plus"></i>
+                                            }
+                                        </a>
+                                        <ul class="category-box-third">
+                                            @foreach (var res_item_3 in Model.Where(c => c.ParentId == res_item_2.Id))
+                                            {
+                                                <li><a href="#" class="category-level-4">@res_item_3.CategoryName</a></li>
+                                            }
+
+
+                                        </ul>
+                                    </li>
+                                }
+
+
+
+                            </ul>
+                        </li>
+                    }
+
+
+                </ul>
+            </div>
+        </li>
+        <li><a href="#">ثبت فروشگاه</a></li>
+        <li><a href="#">مقالات</a></li>
+        <li><a href="#">درباره ما</a></li>
+        <li><a href="#">تماس با ما</a></li>
+    </ul>
+</nav>
+<div class="overlay"></div>
+

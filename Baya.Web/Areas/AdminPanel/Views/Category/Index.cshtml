@@ -1,0 +1,242 @@
+﻿@model IEnumerable<Baya.DataLayer.Entities.Category>
+
+@{
+    ViewData["Title"] = "نمایش دسته بندی ها";
+}
+@section Styles {
+    @*<link href="@Url.Content("~/panel/adminpanel/jstree/themes/default/style.css")" rel="stylesheet" type="text/css" />*@
+
+}
+<div class="card">
+    <div class="header">
+        <h2 class="alert alert-info text-center">
+            <strong>لیست دسته بندی ها</strong>
+        </h2>
+        <a onclick="showInPopup('@Url.Action("AddAndEditMainCategory","Category",null,Context.Request.Scheme)','ایجاد دسته اصلی جدید')" class="m-t-5 btn bg-teal waves-effect">
+            ثبت دسته اصلی جدید <i class="float-left  m-l-5 material-icons">loupe</i>
+        </a>
+
+    </div>
+    <div class="body">
+        <div class="row clearfix">
+            <style>
+                .btn-circle {
+                    padding: 8px !important;
+                }
+
+                .btn-catgory-main {
+                    position: absolute;
+                    top: 1px;
+                }
+
+                span#addfsub_button {
+                    left: 100px !important;
+                }
+
+                span#edit_button {
+                    left: 50px !important;
+                }
+
+                span#delete_button {
+                    left: 0px !important;
+                }
+
+                .h_sscategory {
+                    background-color: #e91e63 !important;
+                }
+
+                    .h_sscategory a {
+                        font-size: 14px;
+                        padding: 3px 15px !important;
+                    }
+
+                    .h_sscategory a, i {
+                        color: #fff !important;
+                    }
+            </style>
+
+            <div class="col-md-10 center-block offset-md-2 col-xs-12">
+
+                <div class="card">
+                    <div class="panel-group" id="accordion_category" role="tablist" aria-multiselectable="true">
+
+
+                        @foreach (var item in Model.Where(c => c.ParentId == null))
+                        {
+                            <div class="panel panel-col-cyan">
+                                <div class="panel-heading" role="tab" id="heading_maincat">
+                                    <h4 class="panel-title position-relative">
+                                        <a class="collapsed" role="button" data-toggle="collapse"
+                                           data-parent="#accordion_category" href="#collapse_@item.Id"
+                                           aria-expanded="false" aria-controls="collapse_@item.Id">
+                                            <i class="material-icons">cloud_download</i>@item.CategoryName
+                                            <span class="badge bg-purple">@scope.CountSubCategory(item.Id)</span>
+                                        </a>
+
+                                        <span id="addfsub_button" onclick="showInPopup('@Url.Action("AddAndEditFirstSub","Category",new {id=item.Id , parentid = item.ParentId},Context.Request.Scheme)', 'افزودن زیر دسته برای @item.CategoryName')" class="btn-catgory-main m-r-10 btn bg-teal btn-circle waves-effect waves-circle waves-float" title="ایجاد زیر دسته اول">
+                                            <i class="material-icons">filter_1</i>
+                                        </span>
+                                        <span id="edit_button" onclick="showInPopup('@Url.Action("AddAndEditMainCategory","Category",new {id=item.Id},Context.Request.Scheme)','ویرایش دسته اصلی')" class="btn-catgory-main m-r-10 btn bg-blue btn-circle waves-effect waves-circle waves-float" title="ویرایش دسته بندی">
+                                            <i class="material-icons">edit</i>
+                                        </span>
+                                        @if (!scope.HaveSubCategory(item.Id))
+                                        {
+                                            <span id="delete_button" onclick="myDelete('@item.Id','@item.CategoryName')" class="btn-catgory-main m-r-10 btn bg-red btn-circle waves-effect waves-circle waves-float" title="حذف دسته بندی">
+                                                <i class="material-icons">delete_forever</i>
+                                            </span>
+                                        }
+
+                                    </h4>
+                                </div>
+
+
+                                @if (scope.HaveSubCategory(item.Id))
+                                {
+                                    <div id="collapse_@item.Id" class="panel-collapse collapse" role="tabpanel"
+                                         aria-labelledby="heading_maincat">
+
+                                        <div class="panel-body">
+
+                                            @foreach (var item2 in Model.Where(c => c.ParentId == item.Id))
+                                            {
+                                                <div class="panel panel-col-orange">
+                                                    <div class="panel-heading" role="tab" id="heading_fscat">
+                                                        <h4 class="panel-title position-relative">
+                                                            <a class="collapsed" role="button" data-toggle="collapse"
+                                                               data-parent="#accordion_category" href="#collapse_@item2.Id"
+                                                               aria-expanded="false" aria-controls="collapse_@item2.Id">
+                                                                <i class="material-icons">filter_1</i> @item2.CategoryName
+                                                                <span class="badge bg-purple">@scope.CountSubCategory(item2.Id)</span>
+                                                            </a>
+                                                            <span id="addfsub_button" onclick="showInPopup('@Url.Action("AddOrEditSecondSub","Category",new {id=item2.Id ,level = 1},Context.Request.Scheme)', 'افزودن زیر دسته برای @item2.CategoryName')" class="btn-catgory-main m-r-10 btn bg-teal btn-circle waves-effect waves-circle waves-float" title="ایجاد زیر دسته اول">
+                                                                <i class="material-icons">filter_2</i>
+                                                            </span>
+                                                            <span id="edit_button" onclick="showInPopup('@Url.Action("AddAndEditFirstSub","Category",new {id=item2.Id, parentid = item2.ParentId},Context.Request.Scheme)','ویرایش زیر دسته اول')" class="btn-catgory-main m-r-10 btn bg-blue btn-circle waves-effect waves-circle waves-float" title="ویرایش دسته بندی">
+                                                                <i class="material-icons">edit</i>
+                                                            </span>
+                                                            @if (!scope.HaveSubCategory(item2.Id))
+                                                            {
+                                                                <span id="delete_button" onclick="myDelete('@item2.Id','@item2.CategoryName')" class="btn-catgory-main m-r-10 btn bg-red btn-circle waves-effect waves-circle waves-float" title="حذف دسته بندی">
+                                                                    <i class="material-icons">delete_forever</i>
+                                                                </span>
+                                                            }
+                                                        </h4>
+                                                    </div>
+                                                    @if (scope.HaveSubCategory(item2.Id))
+                                                    {
+                                                        <div id="collapse_@item2.Id" class="panel-collapse collapse" role="tabpanel"
+                                                             aria-labelledby="heading_fscat">
+                                                            <div class="panel-body">
+                                                                @foreach (var item3 in Model.Where(c => c.ParentId == item2.Id))
+                                                                {
+                                                                    <div class="panel panel-col-pink">
+                                                                        <div class="panel-heading" role="tab" id="heading_sscat">
+                                                                            <h4 class="h_sscategory position-relative">
+                                                                                <a>
+                                                                                    <i class="material-icons">filter_2</i> @item3.CategoryName
+                                                                                </a>
+                                                                                <span id="edit_button" onclick="showInPopup('@Url.Action("AddOrEditSecondSub","Category",new {id=item3.Id,mainid=item.Id,firstid=item2.Id,level = 2},Context.Request.Scheme)','ویرایش زیر دسته دوم')" class="btn-catgory-main m-r-10 btn bg-blue btn-circle waves-effect waves-circle waves-float" title="ویرایش دسته بندی">
+                                                                                    <i class="material-icons">edit</i>
+                                                                                </span>
+
+                                                                                <span id="delete_button" onclick="myDelete('@item3.Id','@item3.CategoryName')" class="btn-catgory-main m-r-10 btn bg-red btn-circle waves-effect waves-circle waves-float" title="حذف دسته بندی">
+                                                                                    <i class="material-icons">delete_forever</i>
+                                                                                </span>
+
+                                                                            </h4>
+                                                                        </div>
+
+
+                                                                    </div>
+                                                                }
+
+                                                            </div>
+                                                        </div>
+                                                    }
+
+
+
+                                                </div>
+                                            }
+
+
+
+
+                                        </div>
+
+                                    </div>
+                                }
+                            </div>
+                        }
+
+
+
+
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+@section Scripts{
+
+    @*<script src="~/panel/adminpanel/js/category.js"></script>*@
+    <script>
+        showInPopup = (url, title) => {
+            $.ajax({
+                type: 'GET',
+                url: url,
+                success: function (res) {
+                    $('#adminModal .modal-body').html(res);
+                    $('#adminModal .modal-title').html(title);
+                    $('#adminModal').modal('show');
+                    // to make popup draggable
+                    $('.modal-dialog').draggable({
+                        handle: ".modal-header"
+                    });
+                }
+            })
+        }
+
+        function myDelete(id,name) {
+            swal({
+                title: "تأیید حذف",
+                text: "آیا از حذف  دسته " + name + " اطمینان دارید؟",
+                icon: "warning",
+                buttons: ['لغو', 'بلی'],
+                dangerMode: true,
+            })
+                .then((willDelete) => {
+                    if (willDelete) {
+                        window.open('/AdminPanel/Category/Delete/' + id, '_parent');
+                    }
+                });
+        }
+
+       @*$('#jstree')
+    .jstree({
+        'core': {
+            'multiple': false,
+            "themes": {
+                "variant": "large"
+            },
+            'data':@Html.Raw(ViewBag.Json)
+        },
+        "plugins": ["html_data", "wholerow", "ui", "json_data"],
+
+    });
+
+        $('#createsub_button').on("click", function () {
+
+            var id = $('#jstree').jstree("get_selected");
+            window.location.href = '/Admin/CreateFirstSubCategory/' + id;
+
+        });*@
+    </script>
+}

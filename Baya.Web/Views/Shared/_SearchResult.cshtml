@@ -1,0 +1,112 @@
+﻿@model Baya.Core.ViewModels.SearchListModelViewModel
+@{ 
+    var parent = Model.ProductListSearchByCategory.Where(c => c.ParentId == null).ToList();
+}
+
+    @*<div class="slide__product_search">
+        <ul class="slide_items">
+            @foreach (var slide in Model.Take(10))
+            {
+                <li>
+                    <a href="#">
+                        <div class="img_product_search">
+                            <img src="~/site/img/product-img/main/thumbnail/@slide.ProductImg" alt="@slide.ProductName" />
+                        </div>
+                        <div class="title_product_search">
+                            <span>@slide.ProductName</span>
+                        </div>
+                    </a>
+                </li>
+            }
+
+            
+
+        </ul>
+        @if (Model.Count() > 2)
+        {
+            <div class="button-prev">
+                <i class="fas fa-arrow-alt-circle-right"></i>
+            </div>
+            <div class="button-next">
+                <i class="fas fa-arrow-alt-circle-left"></i>
+            </div>
+        }
+
+
+    </div>*@
+
+
+
+<style>
+   
+</style>
+
+
+<div class="category_search_result">
+    <ul class="js-product-suggestions-list">
+
+        <li>
+            <a href="#">
+                <i class="fas fa-search"></i>
+                <span>جستجوی </span>
+                <span id="txt__searched"  class="category_name_search"></span>
+            </a>
+        </li>
+        <li class="line_li"></li>
+
+
+        @foreach (var category in parent)
+        {
+            <li>
+                <a href="#">
+                    <i class="far fa-object-group"></i>
+
+                    <span>همه کالا ها دسته بندی</span>
+
+
+                    <span class="category_name_search">@category.CategoryName</span>
+                </a>
+            </li>          
+
+        }
+
+
+
+
+
+    </ul>
+
+    <ul class="js-results-list">
+
+        @foreach (var item in Model.ProductListSearch)
+        {
+            <li>
+                <a href="/Product/@item.Id/@item.ProductName.Replace(" ","-").ToString()" style="color: #cc5e00;">
+                    <i class="fas fa-search"></i>
+                    <span>@item.ProductName </span>
+                </a>
+            </li>
+        }
+
+
+    </ul>
+</div>
+
+
+
+<script>
+    $('#txt__searched').click(function () {
+        var txtspan = $(this).text();
+        $.ajax({
+
+            url: "/Product/GetTextSearch",
+            type: 'Get',
+            data: { "q": txtspan },
+            success: function (response) {
+                window.location.href = response.redirectToUrl;
+            }
+        });
+    });
+</script>
+
+@*<script src="~/site/js/slider.js"></script>*@

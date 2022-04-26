@@ -1,0 +1,125 @@
+﻿@model Baya.Core.ViewModels.ColorViewModel
+@{
+    Layout = null;
+}
+<link href="~/panel/adminpanel/css/bootstrap-colorpicker.min.css" rel="stylesheet" />
+<form id="ColorForm" method="post">
+    <input type="hidden" asp-for="Id" />
+    <div class="form-group">
+        <div class="form-line">
+            <input asp-for="ColorName" id="ColorName" maxlength="20" class="form-control"
+                   autocomplete="off" placeholder="نام رنگ را وارد کنید" required>
+
+            <span id="charaters-count"></span>
+
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="form-line">
+            <div id="cpchoose" class="input-group">
+                @if (Model.Id == Guid.Empty)
+                {
+                    <input type="text" asp-for="ColorCode" class="form-control input-lg"  />
+                    <span class="input-group-append">
+                        <span class="input-group-text colorpicker-input-addon"><i></i></span>
+                    </span>
+                }
+                else
+                {
+                    <input type="text" asp-for="ColorCode" class="form-control input-lg" />
+                    <span class="input-group-append">
+                        <span class="input-group-text colorpicker-input-addon"><i></i></span>
+                    </span>
+                }
+
+               
+            </div>
+        </div>
+    </div>
+
+
+
+
+    <div class="modal-footer">
+        <button type="button" onclick="return ValidateForm()" class="btn btn-info waves-effect">ذخیره</button>
+        <button type="button" class="btn btn-danger waves-effect"
+                data-dismiss="modal">
+            لغو
+        </button>
+    </div>
+</form>
+
+
+<script src="~/panel/adminpanel/js/bootstrap-colorpicker.js"></script>
+
+<script>
+    $('#cpchoose').colorpicker({
+        /*format: 'auto'*/
+    });
+
+
+
+    var Color_Input_Name = document.getElementById('ColorName');
+    window.onload = ColorInputLengthCheck();
+    function ColorInputLengthCheck() {
+
+
+        var ColorName_Length = Color_Input_Name.value.length;
+        var Color_Chars = 20 - ColorName_Length;
+        var ColorName_Count = document.getElementById('charaters-count');
+        ColorName_Count.innerHTML = "تعداد حروف: " + Color_Chars;
+    }
+    Color_Input_Name.addEventListener('keyup', ColorInputLengthCheck, false);
+    Color_Input_Name.addEventListener('keydown', ColorInputLengthCheck, false);
+    function ValidateForm() {
+        let Max_Length = 20;
+        let Color_Name = Color_Input_Name.value;
+        if (Color_Name == '') {
+            Color_Input_Name.focus();
+            Alert('لطفا نام رنگ را وارد کنید');
+            return false;
+        } else if (Color_Name.length > Max_Length) {
+            Color_Input_Name.focus();
+            Alert('نام رنگ نمی تواند بیشتر از 20 کاراکتر باشد');
+            return false;
+        }
+        else if (!Reg_Persian.test(Color_Name)) {
+            Color_Input_Name.focus();
+            Alert('لطفا فقط حروف فارسی وارد کنید');
+            return false;
+        }
+
+        let Form = $("#ColorForm")[0];
+        let Form_Data = new FormData(Form);
+        $.ajax({
+            url: '/AdminPanel/Color/AddAndUpdateColor',
+            data: Form_Data,
+            contentType: false,
+            processData: false,
+            type: 'POST',
+            success: function (data) {
+                switch (data) {
+                    case 0:
+                        Color_Input_Name.focus();
+                        Alert('لطفا نام رنگ را وارد کنید');
+                        return false;
+                    case 1:
+                        Alert('لطفا یک کد رنگ انتخاب کنید');
+                        return false;
+                    case 2:
+                        Color_Input_Name.focus();
+                        Alert('این نام رنگ قبلا در سیستم ثبت شده است نام دیگری را وارد کنید');
+                        return false;
+                    case 3:
+                        Alert('این کد رنگ قبلا در سیستم ثبت شده است کد دیگری را انتخاب کنید');
+                        return false;
+                    default:
+                        window.location.href = data.redirectToUrl;
+                }
+            }
+        });
+    }
+
+
+
+</script>

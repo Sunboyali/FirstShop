@@ -1,0 +1,9 @@
+Baya.Core/bin
+Baya.Core/obj
+Baya.Data/bin
+Baya.Data/obj
+Baya.Web/bin
+Baya.Web/obj
+Baya.Web/.vs
+Baya.Web/Startup.cs
+Baya.Web/Baya.Web.sln

@@ -1,0 +1,90 @@
+﻿@model Baya.Core.ViewModels.AllModelsThemeViewModel
+@{
+    ViewData["Title"] = "تنظیمات قالب سایت";
+}
+
+<div class="card">
+    <div class="header">
+        <h2 class="alert alert-info text-center">
+            <strong>تنظیمات قالب</strong>
+        </h2>
+
+        <div class="body">
+            <div class="form-group">
+                @* Logo Image *@
+            <div class="form-group">
+                <img id="imglogo" src="~/site/img/logo/@Model.LogoModel.ImageLogoName" alt="تصویری پیدا نشد" width="140" height="40" class="img-responsive" style="margin: auto" />
+            </div>
+            <form id="LogoForm" method="post">
+                <input type="hidden" asp-for="LogoModel.Id"  />
+                <div class="form-group">
+                    <input type="file" asp-for="LogoModel.ImageLogoName" onchange="readURL(this);" class="form-control">
+                    <span class="text text-danger">فرمت های مجاز : jpg , jpeg , png</span>
+                </div>
+                <div class="form-group">
+                    <button id="btn__updatelogo" type="button" hidden onclick="return UpdateLogo()" class="btn btn-info waves-effect">ذخیره</button>
+                </div>
+            </form>
+           
+        </div>
+
+
+    </div>
+
+</div>
+</div>
+
+
+<script>
+    function readURL(input) {
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+
+            reader.onload = function (e) {
+                $('#imglogo')
+                    .attr('src', e.target.result)
+            };
+
+            if (input != '') {
+                $('#btn__updatelogo').prop('hidden', false);
+            }
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+    function UpdateLogo() {
+        event.preventDefault();
+        let LogoImage = $('#LogoModel_ImageLogoName');
+        let Id_Logo = $('#LogoModel_Id');
+
+        let Form = $("#LogoForm")[0];
+        let Form_Data = new FormData(Form);
+        Form_Data.append("LogoImage", LogoImage[0].files[0]);
+        Form_Data.append("Id", Id_Logo.val());
+        $.ajax({
+            url: '/AdminPanel/Theme/UpdateLogo',
+            data: Form_Data,
+            contentType: false,
+            processData: false,
+            type: 'POST',
+            success: function (data) {
+                switch (data) {
+                    case 0:
+                        Alert('لطفا یک تصویر انتخاب کنید ');
+                        return false;
+                    case 1:
+                        Alert('فرمت تصویر انتخابی شما صحیح نیست ');
+                        return false;
+                    case 2:
+                        Alert('فایل انتخابی شما تصویر نیست لطفا فقط تصویر با فرمت های ذکر شده انتخاب کنید');
+                        return false;
+                    default:
+                        LogoImage.val('');
+                        $('#btn__updatelogo').prop('hidden', true);
+                        Alert_Success('تصویر لوگو با موفقیت بروزرسانی شد');
+                        return false;
+                }
+            }
+        });
+
+    }
+</script>

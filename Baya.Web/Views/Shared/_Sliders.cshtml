@@ -1,0 +1,167 @@
+﻿@model Baya.Core.ViewModels.SliderBannerViewModel
+@{ 
+    var banners = ViewBag.Banners;
+}
+
+<section class="row slider_section mb-60 mt-20">
+
+
+    <div class="col-lg-8 px-md-3 p-0">
+        @if (Model.SliderImageModel.Any(s => s.Slider.Name == "MainSlider" && s.Slider.IsActive == true))
+        {
+            <div class="swiper-container swiper-introIndex1">
+
+                <div class="swiper-wrapper">
+                    @if (Model.SliderImageModel.Where(s => s.Slider.Name == "MainSlider").Count() > 0)
+                    {
+                        @foreach (var main in Model.SliderImageModel.Where(s => s.Slider.Name == "MainSlider"))
+                        {
+                            <div class="swiper-slide">
+                                <a href="@main.Link" title="@main.TitleImage"><img alt="@main.AltImage" src="~/site/img/sliders/main-slider/main-upload/@main.ImageName" /></a>
+                            </div>
+                        }
+                    }
+                    else
+                    {
+                        <div class="swiper-slide">
+                            <a href="#"><img src="~/site/img/sliders/main-slider/default/1.jpg" /></a>
+
+                        </div>
+                        <div class="swiper-slide">
+                            <a href="#"><img src="~/site/img/sliders/main-slider/default/2.jpg" /></a>
+
+                        </div>
+
+                    }
+
+
+
+
+
+
+
+
+                </div>
+                <!-- Add Pagination -->
+                <div class="swiper-pagination"></div>
+                <!-- Add Arrows -->
+                <div class="swiper-button-next"></div>
+                <div class="swiper-button-prev"></div>
+
+            </div>
+        }
+        else
+        {
+            var mainbanner = Model.BannerImageModel.Single(b => b.Name == "MainBanner");
+            <div class="baner-main-slide">
+                <a href="@mainbanner.Link"><img alt="@mainbanner.AltImage" title="@mainbanner.TitleImage" width="847" height="424" src="~/site/img/banner/main/@mainbanner.ImageName" /></a>
+
+            </div>
+        }
+    </div>
+
+    <div class="col-lg-4 m-0 p-0 mt-3 mt-lg-0">
+
+        <div class="col-12 p-0">
+            @if (Model.SliderImageModel.Any(s => s.Slider.Name == "Sidebar1" && s.Slider.IsActive == true))
+            {
+                <div class="swiper-container swiper-introIndex2">
+                    <div class="swiper-wrapper">
+
+                        @if (Model.SliderImageModel.Where(s => s.Slider.Name == "Sidebar1").Count() > 0)
+                        {
+                            @foreach (var sliderone in Model.SliderImageModel.Where(s => s.Slider.Name == "Sidebar1"))
+                            {
+                                <div class="swiper-slide">
+                                    <a href="@sliderone.Link" title="@sliderone.TitleImage"><img alt="@sliderone.AltImage" src="~/site/img/sliders/sidebar-slider/sidebar-upload/@sliderone.ImageName" /></a>
+                                </div>
+                            }
+
+                        }
+                        else
+                        {
+                            <div class="swiper-slide">
+                                <a href="#"><img src="~/site/img/sliders/sidebar-slider/default/1.jpg" /></a>
+
+                            </div>
+                            <div class="swiper-slide">
+                                <a href="#"><img src="~/site/img/sliders/sidebar-slider/default/2.jpg" /></a>
+
+                            </div>
+                        }
+
+
+
+
+
+                    </div>
+                    <!-- Add Pagination -->
+                    <div class="swiper-pagination"></div>
+                    <!-- Add Arrows -->
+                    <div class="swiper-button-next"></div>
+                    <div class="swiper-button-prev"></div>
+                </div>
+            }
+            else
+            {
+
+
+                var sideone = Model.BannerImageModel.Single(b => b.Name == "SideBannerOne");
+                <div class="baner-main-slide">
+                    <a href="@sideone.Link"><img alt="@sideone.AltImage" title="@sideone.TitleImage" width="847" height="424" src="~/site/img/banner/side-banner/@sideone.ImageName" /></a>
+
+                </div>
+            }
+
+        </div>
+
+        <div class="col-12 p-0 banner-introIndedx3 pt-3 ">
+            @if (Model.SliderImageModel.Any(s => s.Slider.Name == "Sidebar2" && s.Slider.IsActive == true))
+            {
+                <div class="swiper-container swiper-introIndex3">
+                    <div class="swiper-wrapper">
+
+                        @if (Model.SliderImageModel.Where(s => s.Slider.Name == "Sidebar1").Count() > 0)
+                        {
+                            @foreach (var slidertwo in Model.SliderImageModel.Where(s => s.Slider.Name == "Sidebar2"))
+                            {
+                                <div class="swiper-slide">
+                                    <a href="@slidertwo.Link" title="@slidertwo.TitleImage"><img alt="@slidertwo.AltImage" src="~/site/img/sliders/sidebar-slider/sidebar-upload/@slidertwo.ImageName" /></a>
+                                </div>
+                            }
+                        }
+                        else
+                        {
+                            <div class="swiper-slide">
+                                <a href="#"><img src="~/site/img/sliders/sidebar-slider/default/1.jpg" /></a>
+                            </div>
+                            <div class="swiper-slide">
+                                <a href="#"><img src="~/site/img/sliders/sidebar-slider/default/2.jpg" /></a>
+
+                            </div>                           
+
+                        }
+
+
+
+                    </div>
+                    <!-- Add Pagination -->
+                    <div class="swiper-pagination"></div>
+                    <!-- Add Arrows -->
+                    <div class="swiper-button-next"></div>
+                    <div class="swiper-button-prev"></div>
+                </div>
+            }
+            else
+            {
+                var sidetwo = Model.BannerImageModel.Single(b => b.Name == "SideBannerTwo");
+                <div class="baner-main-slide">
+                    <a href="@sidetwo.Link"><img alt="@sidetwo.AltImage" title="@sidetwo.TitleImage" width="847" height="424" src="~/site/img/banner/side-banner/@sidetwo.ImageName" /></a>
+
+                </div>
+            }
+        </div>
+
+    </div>
+
+</section>

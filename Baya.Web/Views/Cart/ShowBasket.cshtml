@@ -1,0 +1,142 @@
+﻿@model IEnumerable<Baya.Core.ViewModels.ShowCardViewModel>
+@{
+    ViewData["Title"] = "سبد خرید من";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    int rowCount = 1;
+}
+
+
+@section Styles {
+    <link href="@Url.Content("~/site/css/cart.css")" rel="stylesheet" type="text/css" />
+
+}
+<div class="basket-final p-5">
+    <div class="header">
+
+        <div class="container-fluid">
+            <div class="row">
+                <h7 class="d-block alert alert-info text-center">
+                    <strong>لیست سبد من</strong>
+                </h7>
+            </div>
+        </div>
+
+
+
+
+
+    </div>
+    <div class="cart-tabel text-right table-responsive-lg table-responsive-md table-responsive-sm table-responsive-xl">
+        <table class="table">
+            <thead>
+                <tr>
+
+                    <th width="40px">ردیف</th>
+
+                    <th>تصویر</th>
+                    <th>
+                        نام محصول
+                    </th>
+                    <th>
+                        کد محصول
+                    </th>
+                    <th>
+                        تعداد
+                    </th>
+                    <th>قیمت</th>
+                    <th>قیمت مجموع</th>
+
+
+                    <th>عملیات</th>
+                </tr>
+            </thead>
+            <tbody id="tblrole">
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>@rowCount</td>
+                        <td>
+                            <img src="~/site/img/product-img/thumbnail/@item.ImageName" alt="Alternate Text" />
+                        </td>
+                        <td>@item.ProductName</td>
+                        <td>@item.ProductCode</td>
+                        <td>@item.CountProduct</td>
+                        <td>@item.Price.ToString("#,0")</td>
+                        <td>@item.SumPrice.ToString("#,0")</td>
+
+                        <td>
+                            <a class="btn bg-pink btn-circle waves-effect waves-circle waves-float" onclick="myDelete('@item.OrderDetailId')" title="حذف"><i class="fas fa-trash-alt"></i></a>
+                        </td>
+
+
+                    </tr>
+                    rowCount++;
+                }
+            </tbody>
+        </table>
+
+        <div class="total-price">
+            <div class="container">
+                <div class="row justify-content-end">
+                    <div class="col-md-3">
+                        <h4>جمع کل:</h4>
+                        <span id="total-price"> @Model.Sum(m => m.SumPrice).ToString("#,0") تومان</span>
+
+                        @*<form asp-controller="Payment" asp-action="Payment"  method="post">
+
+            <input type="submit" value="ادامه پرداخت" class="btn btn-success d-block mt-10"/>
+        </form>*@
+
+                        @if (Model.Sum(m => m.SumPrice) > 0)
+                        {
+                            <a asp-controller="Cart" asp-action="Shopping" class="btn btn-success d-block mt-10">ادامه پرداخت</a>
+                        }
+
+
+
+                    </div>
+
+                </div>
+            </div>
+            
+           
+        </div>
+    </div>
+</div>
+@section Scripts{
+    <script src="~/site/js/sweet.js"></script>
+
+    <script>
+        function myDelete(id) {
+            swal({
+                title: "تأیید حذف",
+                text: "آیا از حذف  اطمینان دارید؟",
+                icon: "warning",
+                buttons: ['لغو', 'بلی'],
+                dangerMode: true,
+            })
+                .then((willDelete) => {
+                    if (willDelete) {
+                        window.open('/Cart/DeleteFinal/' + id, '_parent');
+                    }
+                });
+        }
+
+        showInPopup = (url, title) => {
+            $.ajax({
+                type: 'GET',
+                url: url,
+                success: function (res) {
+                    $('#largeModal .modal-body').html(res);
+                    $('#largeModal .modal-title').html(title);
+                    $('#largeModal').modal('show');
+                    // to make popup draggable
+                    $('.modal-dialog').draggable({
+                        handle: ".modal-header"
+                    });
+                }
+            })
+        }
+    </script>
+}
+

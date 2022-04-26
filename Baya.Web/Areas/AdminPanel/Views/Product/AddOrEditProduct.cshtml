@@ -1,0 +1,422 @@
+﻿@model Baya.Core.ViewModels.ProductViewModel
+@{
+    Layout = null;
+}
+<link href="~/panel/adminpanel/css/select.css" rel="stylesheet" />
+<div class="row">
+    <div class="col-lg-12 col-md-12 offset-lg-1 offset-md-1">
+        <form id="ProductForm" method="post" enctype="multipart/form-data">
+            <input type="hidden" asp-for="Id" />
+            @if (Model.ProductImgName == null)
+            {
+                <div class="form-group">
+                    <img id="imgproduct" src="~/site/img/img-index.png" alt="تصویری پیدا نشد" width="200" height="200" class="img-responsive" style="margin: auto" />
+                </div>
+            }
+            else
+            {
+                <div class="form-group">
+                    <img id="imgproduct" src="~/site/img/product-img/main/@Model.ProductImgName" alt="تصویری پیدا نشد" width="200" height="200" class="img-responsive" style="margin: auto" />
+                </div>
+            }
+
+
+            <div class="form-group">
+                <input type="file" asp-for="ProductImgName" onchange="readURL(this);" class="form-control">
+                <span class="text text-danger">فرمت های مجاز : jpg , jpeg , png</span>
+            </div>
+
+            @if (Model.Id == Guid.Empty)
+            {
+                <div class="form-group">
+                    <div class="form-check m-l-10">
+                        <label class="form-check-label">
+                            <label class="control-label">گالری تصویر</label>
+                            <input onchange="SelectGallery()" id="choose_gallery" class="choose_gallery form-check-input" type="checkbox">فعال
+                            <span class="form-check-sign">
+                                <span class="check"></span>
+                            </span><small>(اگر کالای شما تصاویر بیشتری دارد تیک گالری تصویر را بزنید و از کادر پایین تصاویر را انتخاب کنید)</small>
+                        </label>
+
+                    </div>
+                </div>
+                <style>
+                    .selector_images {
+                        display: none;
+                    }
+                </style>
+                <div class="selector_images">
+                    <span class="text-success d-block">شما باید 4 تصویر برای گالری خود انتخاب کنید</span><small class="text-danger">در صورتی که کالای شما گالری تصویر ندارد لطفا تیک گالری تصویر را بردارید </small><br />
+
+                    <div>
+                        <div id="coba">
+
+                        </div>
+                    </div>
+
+                </div>
+
+            }
+
+
+            <div class="form-group">
+                <input asp-for="ProductName" class="form-control" placeholder="نام محصول را وارد کنید" />
+            </div>
+            <div class="form-group">
+                <div class="row clearfix">
+                    <div class="col-md-5">
+                        <label class="">انتخاب دسته</label>
+                        <select class="form-control select__category" asp-for="CategoryId" asp-items="ViewBag.Category">
+                        </select>
+                    </div>
+                </div>
+            </div>
+            @if (Model.Color == null)
+            {
+
+
+                <style>
+                    .selectcolor {
+                        display: none;
+                    }
+                </style>
+                <div class="form-group">
+                    <div class="form-check m-l-10">
+                        <label class="form-check-label">
+                            <label class="control-label">انتخاب رنگ</label>
+                            <input onchange="SelectColor()" id="choose_color" class="choose_color form-check-input" type="checkbox">فعال
+                            <span class="form-check-sign">
+                                <span class="check"></span>
+                            </span><small>(اگر کالای شما رنگ بندی دارد تیک انتخاب رنگ را بزنید و از کادر پایین انتخاب کنید)</small>
+                        </label>
+
+                    </div>
+                </div>
+            }
+            <style>
+                .select2-container {
+                    width: 100% !important;
+                }
+            </style>
+
+            <div class="form-group selectcolor">
+                <div class="row clearfix">
+                    <div class="col-md-5">
+                        <label class="">انتخاب رنگ</label>
+                        <select class="select_color form-control" asp-for="Color" asp-items="ViewBag.Color" multiple="multiple">
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+
+
+
+
+            <div class="form-group">
+                <label class="control-label">موجودی</label>
+                <input asp-for="CountProduct" class="form-control" placeholder="موجودی محصول را وارد کنید" />
+            </div>
+            <div class="form-group">
+                <label class="control-label">قیمت محصول به ریال</label>
+                <input asp-for="Price" type="text" class="price_product form-control" placeholder="قیمت محصول را وارد کنید" />
+            </div>
+            @if (Model.Id != Guid.Empty)
+            {
+                <div class="form-group">
+                    <label class="control-label">درصد تخفیف</label>
+                    <input asp-for="Off" type="number" class="form-control" max="100" min="0" placeholder="درصد تخفیف محصول را وارد کنید" />
+                </div>
+            }
+            else
+            {
+                <div class="form-group">
+                    <label class="control-label">درصد تخفیف</label>
+                    <input asp-for="Off" type="number" class="form-control" max="100" min="0" value="0" placeholder="درصد تخفیف محصول را وارد کنید" />
+                </div>
+            }
+
+
+            <div class="form-group">
+                <div class="form-check m-l-10">
+                    <label class="form-check-label">
+                        <label class="control-label">شگفت انگیز</label>
+                        <input class="form-check-input" asp-for="Amazing" type="checkbox">فعال
+                        <span class="form-check-sign">
+                            <span class="check"></span>
+                        </span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label">توضیحات</label>
+                <textarea asp-for="DesProduct" class="form-control"></textarea>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label">ویژگی های محصول</label>
+                <textarea asp-for="Feature" class="form-control"></textarea>
+            </div>
+
+
+            <div class="form-group">
+                <label class="control-label">کلمات کلیدی (سئو)</label>
+                <input asp-for="MetaTag" class="form-control" placeholder="کلمات کلیدی را وارد کنید" />
+            </div>
+            <div class="form-group">
+                <label class="control-label">توضیحات کلید (موتورهای جستجوگر)</label>
+                <input asp-for="MetaDescription" class="form-control" placeholder="توضیحات موتور جستجوگر را وارد کنید" />
+            </div>
+
+
+
+            <div class="modal-footer">
+                <button type="button" onclick="return ValidateForm()" class="btn btn-info waves-effect">ذخیره</button>
+                <button type="button" class="btn btn-danger waves-effect"
+                        data-dismiss="modal">
+                    لغو
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+
+<script src="~/ckeditor/ckeditor.js"></script>
+<script src="~/panel/adminpanel/js/select.js"></script>
+<script src="~/panel/adminpanel/js/multi-image-select.js"></script>
+<script>
+    $(function () {
+
+        $("#coba").spartanMultiImagePicker({
+            fieldName: 'fileUpload[]',
+            maxCount: 4,
+            rowHeight: '100px',
+            groupClassName: 'col-lg-3 col-md-4 col-sm-4 col-xs-6',
+            /*maxFileSize: 40000,*/
+            allowedExt: 'png|jpg|jpeg',
+            placeholderImage: {
+                image: '/panel/adminpanel/img/placeholder.png',
+                width: '100%'
+            },
+
+
+            onExtensionErr: function (index, file) {
+                Alert('فرمت فایل باید png , jpg , jpeg باشد');
+
+            },
+            //onSizeErr: function (index, file) {
+            //    console.log(index, file);
+            //    alert('File size too big');
+            //}
+
+        });
+
+    });
+
+    $('.price_product').keyup(function (event) {
+        // skip for arrow keys
+        if (event.which >= 37 && event.which <= 40) return;
+
+        // format number
+        $(this).val(function (index, value) {
+            return value.replace(/\D/g, "").replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+        });
+    });
+
+
+    $(function () {
+        /*$('#DesProduct').ckeditor();*/
+        CKEDITOR.replace('DesProduct');
+        CKEDITOR.replace('Feature');
+        /*$('#Feature').ckeditor();*/
+    });
+
+    /* $('.select__category').select2();*/
+
+    $(document).ready(function () {
+        $('.select_color').select2();
+    });
+
+    function SelectGallery() {
+        if ($('#choose_gallery').is(":checked"))
+            $(".selector_images").show();
+        else
+            $(".selector_images").hide();
+    }
+
+
+    function SelectColor() {
+        if ($('#choose_color').is(":checked"))
+            $(".selectcolor").show();
+        else
+            $(".selectcolor").hide();
+    }
+
+    function readURL(input) {
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+
+            reader.onload = function (e) {
+                $('#imgproduct')
+                    .attr('src', e.target.result)
+            };
+
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+
+    var Product_Image_Name = document.getElementById('ProductImgName');
+    var Product_Name_Input = document.getElementById('ProductName');
+    var CountProduct_Input = document.getElementById('CountProduct');
+    var Price_Input = document.getElementById('Price');
+    var Off_Input = document.getElementById('Off');
+    var MetaTag_Input = document.getElementById('MetaTag');
+    var MetaDescription_Input = document.getElementById('MetaDescription');
+
+
+
+    function ValidateForm() {
+        let Product_Image = Product_Image_Name.value;
+        let Product_Name = Product_Name_Input.value;
+        let CountProduct = CountProduct_Input.value;
+        let PriceProduct = Price_Input.value;
+        let OffProduct = Off_Input.value;
+        let MateTagProduct = MetaTag_Input.value;
+        let MateDescProduct = MetaDescription_Input.value;
+        /* var descProduct = CKEDITOR.instances['DesProduct'].getData();*/
+        CKEDITOR.instances.DesProduct.updateElement();
+        CKEDITOR.instances.Feature.updateElement();
+        let descProduct = document.getElementById('DesProduct').value;
+        let FeatureProduct = document.getElementById('Feature').value;
+        if (Product_Name == '') {
+            Product_Name_Input.focus();
+            Alert('لطفا نام محصول را وارد نمایید');
+            return false;
+        }
+
+
+
+        if (CountProduct == '') {
+            CountProduct_Input.focus();
+            Alert('لطفا موجودی کالا را وارد نمایید');
+            return false;
+        } else if (CountProduct < 0) {
+            CountProduct_Input.focus();
+            Alert('موجودی کالا نمی تواند منفی یا کوچکتر از 0 باشد');
+            return false;
+        } else if (!Reg_Number.test(CountProduct)) {
+            CountProduct_Input.focus();
+            Alert('فقط عدد وارد کنید');
+            return false;
+        }
+
+
+
+        if (PriceProduct == '') {
+            Price_Input.focus();
+            Alert('لطفا قیمت محصول را وارد نمایید');
+            return false;
+        } else if (!Reg_Number.test(PriceProduct)) {
+            Price_Input.focus();
+            Alert('فقط عدد وارد کنید');
+            return false;
+        }
+
+
+
+        if (OffProduct == '') {
+            Off_Input.focus();
+            Alert('لطفا میزان تخفیف محصول را وارد نمایید');
+            return false;
+        } else if (OffProduct > 100 || OffProduct < 0) {
+            Off_Input.focus();
+            Alert('مقدار تخفیف باید بین عدد 0 و 100 باشد');
+            return false;
+        } else if (!Reg_Number.test(OffProduct)) {
+            Off_Input.focus();
+            Alert('فقط عدد وارد کنید');
+            return false;
+        }
+
+
+
+
+        if (MateTagProduct == '') {
+            MetaTag_Input.focus();
+            Alert('لطفا کلمات کلیدی خود را وارد نمایید');
+            return false;
+        }
+        if (MateDescProduct == '') {
+            MateDescProduct.focus();
+            Alert('لطفا توضیحات جهت نمایش در موتور جستجوگر را وارد نمایید');
+            return false;
+        }
+        let Product_Img = $('input[type=file]');
+
+        let Form = $("#ProductForm")[0];
+        let Form_Data = new FormData(Form);
+
+
+
+        Form_Data.append("ImageProduct", Product_Img[0].files[0]);
+        if ($('#choose_gallery').is(":checked")) {
+            document.getElementsByName("fileUpload[]").forEach((el) => {
+                if ($(el)[0].files[0] != undefined)
+                    Form_Data.append('ImagesGallery', $(el)[0].files[0]);
+            }
+            );
+        }
+
+
+        Form_Data.append("ProductImgName", Product_Image);
+        Form_Data.append("DesProduct", descProduct);
+        Form_Data.append("Feature", FeatureProduct);
+
+
+        $.ajax({
+            url: '/AdminPanel/Product/AddAndUpdateProduct',
+            data: Form_Data,
+            contentType: false,
+            processData: false,
+            type: 'POST',
+            success: function (data) {
+
+                switch (data) {
+                    case 0:
+                        Alert('لطفا نام محصول را وارد نمایید');
+                        return false;
+                    case 1:
+                        Alert('لطفا توضیحات محصول را وارد کنید');
+                        return false;
+                    case 2:
+                        Alert('لطفا ویژگی های محصول را وارد کنید ');
+                        return false;
+                    case 3:
+                        Alert('لطفا یک تصویر برای کالای خود انتخاب کنید ');
+                        return false;
+                    case 4:
+                        Alert('فرمت تصویر انتخابی شما صحیح نیست ');
+                        return false;
+                    case 5:
+                        Alert('فایل انتخابی شما تصویر نیست لطفا فقط تصویر با فرمت های ذکر شده انتخاب کنید');
+                        return false;
+                    case 6:
+                        Alert('محصول با این نام قبلا در سیستم ثبت شده است');
+                        return false;
+                    case 7:
+                        Alert('تصاویر گالری نمی تواند کمتر از 4 تصویر باشد');
+                        return false;
+                    default:
+                        window.location.href = data.redirectToUrl;
+                }
+            }
+        });
+
+    }
+
+
+
+</script>

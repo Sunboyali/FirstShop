@@ -1,0 +1,63 @@
+﻿@model IEnumerable<Baya.DataLayer.Entities.OrderDetail>
+
+@{
+    ViewData["Title"] = "جزئیات فاکتور ";
+    int rowCount = 1;
+}
+
+
+@section Styles {
+    @*<link href="@Url.Content("~/panel/assets/jstree/themes/default/style.css")" rel="stylesheet" type="text/css" />*@
+
+}
+<div class="card">
+    <div class="header">
+        <h2 class="alert alert-info text-center">
+            <strong>جزئیات فاکتور</strong>
+        </h2>
+
+        <a asp-controller="Factor" asp-action="SuccessFactors" class="m-t-5 btn bg-info waves-effect">بازگشت</a>
+
+    </div>
+    <div class="body table-responsive-lg table-responsive-md table-responsive-sm table-responsive-xl">
+        <table class="table">
+            <thead>
+                <tr>
+
+                    <th width="40px">ردیف</th>
+                    <th>
+                       تصویر محصول
+                    </th>
+                    <th>نام محصول</th>
+                    <th>
+                       قیمت محصول
+                    </th>
+                    <th>تعداد سفارش</th>               
+                   
+                </tr>
+            </thead>
+            <tbody id="tblrole">
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>@rowCount</td>
+                        <td>
+                            <img src="~/site/img/product-img/main/thumbnail/@item.Product.ProductImg" alt="@item.Product.ProductName" />
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Product.ProductName)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Price)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Count)
+                        </td>                    
+
+                    </tr>
+                    rowCount++;
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

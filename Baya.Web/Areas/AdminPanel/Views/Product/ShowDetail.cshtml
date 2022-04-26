@@ -1,0 +1,151 @@
+﻿@model Baya.Core.ViewModels.DetailProductViewModel
+
+@{
+    Layout = null;
+}
+<div class="row clearfix">
+    <div class="col-lg-12 col-md-12 offset-lg-1 offset-md-1">
+        <br />
+        <div class="row">
+            <div class="box-img col-md-12 text-center">
+                <img src="~/site/img/product-img/main/@Model.ProductImgName" width="300" height="200" alt="@Model.ProductName" />
+            </div>
+        </div>
+        <br />
+        <div class="row">
+            <div class="box-detail col-md-12">
+                <div class="form-group">
+                    <label class="control-label">کد محصول : </label>
+
+                    <span class="text-primary">@Model.ProductCode</span>
+                </div>
+
+                <div class="form-group">
+                    <label class="control-label">نام محصول : </label>
+
+                    <span class="text-primary">@Model.ProductName</span>
+                </div>
+
+                <div class="form-group">
+                    <label class="control-label">قیمت محصول : </label>
+
+                    <span class="text-primary">@Model.Price.ToString("0,#") ریال</span>
+                </div>
+
+                <div class="form-group">
+                    <label class="control-label">میزان تخفیف : </label>
+                    @if (Model.Off > 0)
+                    {
+                        <span class="text-primary">@Model.CountProduct تخفیف</span>
+                    }
+                    else
+                    {
+                        <span class="text-primary">ندارد</span>
+                    }
+
+                </div>
+                <div class="form-group">
+                    <label class="control-label"> قیمت محصول (با کسر تخفیف): </label>
+
+                    <span class="text-primary">@Model.FinalPrice.ToString("0,#") ریال</span>
+                </div>
+
+
+                <div class="form-group">
+                    <label class="control-label">تعداد موجودی محصول : </label>
+
+                    <span class="text-primary">@Model.CountProduct</span>
+                </div>
+
+
+
+                <div class="form-group">
+                    <label class="control-label">دسته بندی : </label>
+
+                    <span class="text-primary">@Model.Category </span>
+                </div>
+                <div class="form-group">
+                    <label class="control-label">رنگ بندی : </label>
+                    @if (Model.Color == "")
+                    {
+                        <span class="text-primary">ندارد </span>
+                    }
+                    else
+                    {
+                        <span class="text-primary">@Model.Color </span>
+                    }
+
+                </div>
+
+                <div class="form-group">
+                    <label class="control-label">موجودی  : </label>
+
+                    <span class="text-primary">@Model.CountProduct</span>
+                </div>
+
+
+                <div class="form-group">
+                    <label class="control-label">نوع محصول  : </label>
+                    @if (Model.Amazing == false)
+                    {
+                        <span class="label label-danger">عادی</span>
+                    }
+                    else
+                    {
+                        <span class="label label-success">فوق العاده</span>
+                    }
+
+
+                </div>
+
+                <div class="form-group">
+                    <label class="control-label">وضعیت  : </label>
+                    @if (Model.IsShowProduct == false)
+                    {
+                        <span class="label label-danger">عدم نمایش</span>
+                    }
+                    else
+                    {
+                        <span class="label label-success">نمایش</span>
+                    }
+
+
+                </div>
+                <div class="form-group">
+                    <label class="control-label">توضیحات  : </label>
+                    <br />
+                    <span class="text-primary">@Html.Raw(Model.DesProduct)</span>
+                </div>
+                <div class="form-group">
+                    <label class="control-label">ویژگی ها  : </label>
+                    <br />
+                    <span class="text-primary">@Html.Raw(Model.Feature)</span>
+                </div>
+
+
+                <div class="form-group">
+                    <label class="control-label">کلمات کلیدی  : </label>
+                    <br />
+                    <span class="text-primary">@Model.MetaTag</span>
+                </div>
+
+                <div class="form-group">
+                    <label class="control-label">توضیحات سئو  : </label>
+                    <br />
+                    <span class="text-primary">@Model.MetaDescription</span>
+                </div>
+
+
+
+            </div>
+        </div>
+    </div>
+
+
+    <div class="modal-footer">
+        <button type="button" class="btn btn-danger waves-effect"
+                data-dismiss="modal">
+            لغو
+        </button>
+    </div>
+</div>

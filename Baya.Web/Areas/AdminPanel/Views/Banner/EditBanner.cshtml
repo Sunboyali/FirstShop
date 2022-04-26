@@ -1,0 +1,123 @@
+﻿@model Baya.Core.ViewModels.BannerImageViewModel
+@{ Layout = null; }
+
+<form id="Banner-Form" asp-action="AddOrEdit">
+    <input type="hidden" asp-for="Id" />
+    @if (Model.BannerName == "MainBanner")
+    {
+        <div class="form-group">
+            <img id="imgbanner" src="~/site/img/banner/main/@Model.ImageName" alt="تصویری پیدا نشد" width="300" height="200" class="img-responsive" style="margin: auto" />
+        </div>
+    }
+    else
+    {
+        <div class="form-group">
+            <img id="imgbanner" src="~/site/img/banner/side-banner/@Model.ImageName" alt="تصویری پیدا نشد" width="300" height="200" class="img-responsive" style="margin: auto" />
+        </div>
+    }
+
+    <div class="form-group">
+        <label class="control-label"></label>
+        <input asp-for="Image" type="file" onchange="readURL(this);" class="form-control">
+        <span class="text text-danger">فرمت های مجاز : jpg , jpeg , gif </span>
+    </div>
+
+
+
+    <div class="form-group">
+        <label class="control-label">متن جایگزین</label>
+        <input asp-for="AltImage" class="form-control" placeholder="متن جایگزین را وارد نمایید" autocomplete="off" />
+        <small class="text text-info">بدلیل اهمیت در سئو سایت حتما عبارت مناسب وارد شود</small>
+    </div>
+    <div class="form-group">
+        <label class="control-label">عنوان تصویر</label>
+        <input asp-for="TitleImage" class="form-control" placeholder="متن نمایشی زیر موس را وارد نمایید" autocomplete="off" />
+
+    </div>
+    <div class="form-group">
+        <label class="control-label">آدرس لینک تصویر</label>
+        <input asp-for="Link" class="form-control" placeholder="آدرس لینک را وارد نمایید" autocomplete="off" />
+
+    </div>   
+
+    <div class="modal-footer">
+        <button type="button" onclick="return ValidateForm()" class="btn btn-info waves-effect">ذخیره</button>
+        <button type="button" class="btn btn-danger waves-effect"
+                data-dismiss="modal">
+            لغو
+        </button>
+    </div>
+</form>
+
+<script>
+
+    function readURL(input) {
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+
+            reader.onload = function (e) {
+                $('#imgbanner')
+                    .attr('src', e.target.result)
+                //.width(150)
+                //.height(200);
+            };
+
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+
+
+    function ValidateForm() {
+        event.preventDefault();
+        let Img_Choose = $('#imgbanner');
+        let Link = $('#Link');
+        let AltImage = $('#AltImage');     
+
+
+        if (AltImage.val() == '') {
+            AltImage.focus();
+            Alert('لطفا متن جایگزین تصویر را وارد نمایید');
+            return false;
+        } else if (Link.val() != '' && !UrlPattern.test(Link.val())) {
+            Alert('لطفا آدرس لینک  را بصورت کامل و درست وارد نمایید');
+            return false;
+        }
+
+
+
+        let Form_Slide = $("#Banner-Form")[0];
+        let Form_Data = new FormData(Form_Slide);
+        if (Img_Choose.val() != '') {
+            Form_Data.append("ImageSlide", Img_Choose[0].files[0]);
+        }
+       
+
+        $.ajax({
+            url: '/AdminPanel/Banner/UpdateBanner',
+            data: Form_Data,
+            contentType: false,
+            processData: false,
+            type: 'POST',
+            success: function (data) {
+
+                switch (data) {                   
+                    case 1:
+                        Alert('فرمت تصویر انتخابی شما صحیح نیست ');
+                        return false;
+                    case 2:
+                        Alert('فایل انتخابی شما تصویر نیست لطفا فقط تصویر با فرمت های ذکر شده انتخاب کنید');
+                        return false;
+                    case 3:
+                        Alert('تصویر قابل تغییر نمی باشد');
+                        return false;
+                    default:
+                        window.location.href = data.redirectToUrl;
+                }
+            }
+        });
+
+    };
+
+
+
+</script>

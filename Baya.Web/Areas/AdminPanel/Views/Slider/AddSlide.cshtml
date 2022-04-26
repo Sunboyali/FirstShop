@@ -1,0 +1,126 @@
+﻿@model Baya.Core.ViewModels.AddSlideImageViewModel
+
+@{
+    ViewData["Title"] = "ایجاد اسلاید";
+
+    Guid IdSlider = ViewBag.Id;
+}
+
+
+
+@section Styles {
+    @*<link href="@Url.Content("~/persiandatepicker/datepicker.css")" rel="stylesheet" type="text/css" />*@
+}
+<div class="card">
+    <div class="header">
+        <h2 class="alert alert-success text-center">
+            <strong>ایجاد اسلاید جدید</strong>
+        </h2>
+    </div>
+    <div class="body">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12 col-md-12 offset-lg-1 offset-md-1">
+                    <form asp-action="AddSlide" enctype="multipart/form-data">
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+
+                        <input type="hidden" name="Id" value="@IdSlider" />
+                        <div class="form-group">
+                            <img id="imgslide" src="~/site/img/product-img/main/img-index.png" alt="تصویری پیدا نشد" width="300" height="200" class="img-responsive" style="margin: auto" />
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label"></label>
+                            <input asp-for="ImageSlide" type="file" onchange="readURL(this);" class="form-control">
+                            <span class="text text-danger">فرمت های مجاز : jpg , jpeg , gif </span>
+                        </div>
+
+                        <div class="form-group col-md-3">
+                            <label asp-for="DisplaySlide" class="control-label"></label>
+                            <input asp-for="DisplaySlide" class="form-control" min="1" max="10" value="1" />
+                            <span asp-validation-for="DisplaySlide" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group">
+                            <label asp-for="AltImage" class="control-label"></label>
+                            <input asp-for="AltImage" class="form-control" placeholder="متن جایگزین را وارد نمایید" autocomplete="off" />
+                            <span asp-validation-for="AltImage" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="TitleImage" class="control-label"></label>
+                            <input asp-for="TitleImage" class="form-control" placeholder="متن نمایشی زیر موس را وارد نمایید" autocomplete="off" />
+                            <span asp-validation-for="TitleImage" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="Link" class="control-label"></label>
+                            <input asp-for="Link" class="form-control" placeholder="آدرس لینک را وارد نمایید" autocomplete="off" />
+                            <span asp-validation-for="Link" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group">
+                            <input type="submit" value="ذخیره" class="btn bg-indigo waves-effect" />
+                        </div>
+                        <div>
+                            <a class="btn btn-info" asp-controller="Slider" asp-action="SlideImages" asp-route-id="@IdSlider">برگشت</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+<script>
+    function readURL(input) {
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+
+            reader.onload = function (e) {
+                $('#imgslide')
+                    .attr('src', e.target.result)
+                //.width(150)
+                //.height(200);
+            };
+
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+</script>
+
+@section Scripts{
+    <script src="~/site/js/sweet.js"></script>
+    @if (ViewBag.ErrorOne == true)
+    {
+        <script>
+
+            swal("پیغام", "فرمت تصویر وارد شده مناسب نیست", "warning", {
+                button: "متوجه شدم",
+            });
+
+        </script>
+    }
+
+    @if (ViewBag.ErrorTwo == true)
+    {
+        <script>
+
+            swal("پیغام", "فایل انتخابی شما تصویر نیست", "warning", {
+                button: "متوجه شدم",
+            });
+
+        </script>
+    }
+    @if (ViewBag.ErrorThree == true)
+    {
+        <script>
+
+            swal("پیغام", "این شماره ترتیب اسلاید قبلا ثبت شده است شماره دیگری را وارد کنید", "warning", {
+                button: "متوجه شدم",
+            });
+            $('#DisplaySlide').focus();
+
+        </script>
+    }
+
+
+}

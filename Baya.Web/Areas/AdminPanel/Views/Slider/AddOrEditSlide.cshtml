@@ -1,0 +1,187 @@
+﻿@model Baya.Core.ViewModels.SlideImageViewModel
+@{
+    Layout = null;
+}
+
+<form id="SlideImageForm" method="post">
+    <input type="hidden" asp-for="Id" />
+    <input type="hidden" asp-for="SlideId" />
+    <div class="form-group text-center">
+        @if (Model.Id == Guid.Empty)
+        {
+            <img id="imgslide" src="~/site/img/img-index.png" alt="تصویری پیدا نشد" width="300" height="200" />
+        }
+        else
+        {
+
+            @if (ViewBag.NameSlider == "MainSlider")
+            {
+                <img id="imgslide" src="~/site/img/sliders/main-slider/main-upload/@Model.ImageName" alt="تصویری پیدا نشد" class="img-responsive" style="margin: auto" />
+            }
+            else
+            {
+                <img id="imgslide" src="~/site/img/sliders/sidebar-slider/sidebar-upload/@Model.ImageName" alt="تصویری پیدا نشد" class="img-responsive" style="margin: auto" />
+            }
+        }
+
+    </div>
+    <div class="form-group">
+        <label class="control-label">تصویر اسلاید</label>
+        <input asp-for="ImageSlide" type="file" onchange="readURL(this);" class="form-control">
+        <span class="text text-danger">فرمت های مجاز : jpg , jpeg , gif </span>
+    </div>
+
+    @if (Model.Id != Guid.Empty)
+    {
+        
+        <div class="form-group">
+            <div class="row clearfix">
+                <div class="col-md-8">
+                    <label class="">تغییر ترتیب نمایش</label><small class="text text-info">جهت جابجایی اسلاید ها تنها شماره نمایش اسلاید خود را انتخاب کنید اسلاید جاری با اسلاید شماره انتخابی جابجا می شود</small>
+                    <span hidden id="spn__number">@Model.DisplaySlide</span>
+                    <select onchange="ChangeNumSlide()" class="form-control" asp-for="DisplaySlide" asp-items="ViewBag.ListLevel">
+                    </select>
+
+                    <button type="button" id="btn_savenum" hidden onclick="return Update_SlideNumber()" class="btn btn-info waves-effect mt-1">ذخیره</button>
+                </div>
+            </div>
+        </div>
+    }
+
+    <div class="form-group">
+        <label class="control-label">متن جایگزین تصویر</label>
+        <input asp-for="AltImage" class="form-control" placeholder="متن جایگزین را وارد نمایید" autocomplete="off" />
+        <small class="text text-info">بدلیل اهمیت در سئو سایت حتما عبارت مناسب وارد شود</small>
+    </div>
+    <div class="form-group">
+        <label class="control-label">عنوان نمایشی تصویر</label>
+        <input asp-for="TitleImage" class="form-control" placeholder="متن نمایشی زیر موس را وارد نمایید" autocomplete="off" />
+    </div>
+    <div class="form-group">
+        <label class="control-label">لینک تصویر</label>
+        <input asp-for="Link" class="form-control" placeholder="آدرس لینک را وارد نمایید" autocomplete="off" />
+        <small class="text text-info">شکل صحیح آدرس لینک : https://www.google.com یا http://www.google.com</small>
+    </div>
+
+    <div class="modal-footer">
+        <button type="button" onclick="return ValidateForm()" class="btn btn-info waves-effect">ذخیره</button>
+        <button type="button" class="btn btn-danger waves-effect"
+                data-dismiss="modal">
+            لغو
+        </button>
+    </div>
+</form>
+<script>
+    function readURL(input) {
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+
+            reader.onload = function (e) {
+                $('#imgslide')
+                    .attr('src', e.target.result)
+                //.width(150)
+                //.height(200);
+            };
+
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+
+    function ChangeNumSlide() {
+        let SpanText = $('#spn__number').text();
+        let Option_Selected = $('#DisplaySlide').val();
+        if (Option_Selected != SpanText) {
+            $('#btn_savenum').prop("hidden", false);
+        } else {
+            $('#btn_savenum').prop("hidden", true);
+        }
+    }
+    function Update_SlideNumber() {
+        event.preventDefault();
+        let SpanText = $('#spn__number').text();
+        let Id = '@Model.Id';
+        let Option_Selected = $('#DisplaySlide').val();
+        if (Option_Selected == SpanText) {
+            Alert('این شماره از قبل برای این اسلاید ثبت شده است');
+            return false;
+        }
+
+
+        $.ajax({
+            url: '/AdminPanel/Slider/UpdateNumberSlide',
+            data: { Id: Id, numberslide: Option_Selected },
+            type: 'POST',
+            success: function (data) {
+                switch (data) {
+                    default:
+                        $('#spn__number').text(Option_Selected);
+                        $('#btn_savenum').prop("hidden", true);
+                        Alert_Success('شماره ترتیب نمایش تصویر اسلاید تغییر کرد');
+                        return false;
+                }
+            }
+        });
+
+    }
+
+
+
+    function ValidateForm() {
+        event.preventDefault();
+        let Img_Choose = $('#ImageSlide');
+        let Link = $('#Link');
+        let AltImage = $('#AltImage');
+        if ('@Model.Id' == '@Guid.Empty') {
+            if (Img_Choose.val() == '') {
+                Alert('لطفا یک تصویر انتخاب کنید ');
+                return false;
+            }
+        }
+
+        if (AltImage.val() == '') {
+            AltImage.focus();
+            Alert('لطفا متن جایگزین تصویر را وارد نمایید');
+            return false;
+        } else if (Link.val() != '' && !UrlPattern.test(Link.val())) {
+            Alert('لطفا آدرس لینک  را بصورت کامل و درست وارد نمایید');
+            return false;
+        }
+
+
+
+        let Form_Slide = $("#SlideImageForm")[0];
+        let Form_Data = new FormData(Form_Slide);
+        Form_Data.append("ImageSlide", Img_Choose[0].files[0]);
+
+        $.ajax({
+            url: '/AdminPanel/Slider/AddAndUpdateSlideImg',
+            data: Form_Data,
+            contentType: false,
+            processData: false,
+            type: 'POST',
+            success: function (data) {
+
+                switch (data) {
+                    case 0:
+                        Alert('لطفا یک تصویر انتخاب کنید ');
+                        return false;
+                    case 1:
+                        Alert('فرمت تصویر انتخابی شما صحیح نیست ');
+                        return false;
+                    case 2:
+                        Alert('فایل انتخابی شما تصویر نیست لطفا فقط تصویر با فرمت های ذکر شده انتخاب کنید');
+                        return false;
+                    case 3:
+                        Alert('تصویر قابل تغییر نمی باشد');
+                        return false;
+                    default:
+                        window.location.href = data.redirectToUrl;
+                }
+            }
+        });
+
+    };
+
+
+
+</script>

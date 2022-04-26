@@ -1,0 +1,337 @@
+﻿@model Baya.Core.ViewModels.ProductGalleryViewModel
+@{
+    Layout = null;
+
+    int countinput = 0;
+}
+
+<style>
+    .main_imgproduct, .gallery_imgproduct {
+        width: 100%;
+    }
+
+    .box_galleryimg {
+        float: right;
+    }
+
+
+    .loading_Image {
+        position: absolute;
+        top: 30%;
+        right: 39%;
+        z-index: 4;
+    }
+
+    .loading_ImageMain {
+        position: absolute;
+        top: 18%;
+        right: 15%;
+        z-index: 4;
+    }
+    /*.removeselectedimg {
+        position: absolute;
+        top: 2px;
+        z-index: 2;
+        right: 20px;
+        cursor:pointer;
+    }*/
+</style>
+<div class="row">
+    <form id="Form_ImageProduct" method="post" enctype="multipart/form-data">
+        <input type="hidden" asp-for="Id" />
+        <div class="main_imgproduct text-center">
+            <img class="loading_ImageMain" id="loading_Image" src="~/panel/adminpanel/img/ajax_loader.gif" hidden />
+            <img class="position-relative" id="main_img" width="250" src="~/site/img/product-img/main/@scope.GetProductImgById(Model.Id)" />
+            <div class="form-group">
+                <input id="mainimageproduct" name="mainimageproduct" type="file" onchange="MainImageUrl(this);" class="form-control" />
+                <span class="text text-danger">فرمت های مجاز : jpg , jpeg , png</span>
+            </div>
+            <button id="btn__main" onclick="return MainImageProduct()" type="button" class="btn btn-info waves-effect" disabled>ثبت تصویر اصلی</button>
+        </div>
+    </form>
+
+</div>
+
+<div class="row mt-5">
+    <div class="gallery_imgproduct">
+        
+
+        @if (Model.GalleryImagesName != null)
+        {
+            <span class="d-block alert alert-info text-center">از طریق باکس زیر می توانید تصاویر گالری این محصول را ویرایش کنید</span>
+            foreach (var item in Model.GalleryImagesName)
+            {
+                <form id="Form__EditImgGallery" method="post">
+                    <div class="box_galleryimg col-lg-3 col-md-3 col-sm-6 col-xs-12">
+                        <div class="form-group">
+                            <input id="image__Id" type="hidden" value="@item.Id" />
+                            @*<img onclick="ClearImage(this,'gallery_image_product_' + @countinput,'gallery__image_'+ @countinput)" class="removeselectedimg" id="btn_removeselectedimg_@countinput" src="~/panel/adminpanel/img/close.png" hidden />*@
+                            <img class="loading_Image" id="loading_Image_@countinput" src="~/panel/adminpanel/img/ajax_loader.gif" hidden />
+                            <img class="position-relative" width="250" height="250" id="gallery_image_product_@countinput" src="~/site/img/product-img/gallery/@item.ImageName" />
+                            <input type="file" id="gallery__image_@countinput" onchange="GalleryImageURL(this, 'gallery_image_product_' + @countinput,
+                            'btn__UpdateImg_' + @countinput,'btn_removeselectedimg_'+@countinput);" class="form-control">
+                            <span class="text text-danger">فرمت های مجاز : jpg , jpeg , png</span>
+                        </div>
+
+                        <div class="form-group">
+                            <button id="btn__UpdateImg_@countinput" onclick="return SingleImageGallery('gallery__image_'+ @countinput,'btn__UpdateImg_'+ @countinput,'loading_Image_' + @countinput)" class="btn btn-outline-success" type="button" hidden>بروزرسانی تصویر</button>
+                        </div>
+                    </div>
+                </form>
+
+                countinput++;
+            }
+            <div class="modal-footer">
+
+                <button type="button" class="btn btn-danger waves-effect"
+                        data-dismiss="modal">
+                    لغو
+                </button>
+            </div>
+        }
+        else
+        {
+            <form id="Form_GalleryProduct" method="post" enctype="multipart/form-data">
+                <div class="selector_images">
+                    <span class="d-block alert alert-info text-center">از طریق  باکس زیر می توانید تصاویر گالری به این محصول را اضافه کنید</span>
+                    <input type="hidden" asp-for="Id" />
+                    <span class="text-success d-block">شما باید 4 تصویر برای گالری خود انتخاب کنید</span><br />
+
+                    <div>
+                        <div id="coba">
+
+                        </div>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="btn_Gallery" onclick="return GalleryImage()" class="btn btn-info waves-effect">ثبت تصاویر گالری</button>
+                    <button type="button" class="btn btn-danger waves-effect"
+                            data-dismiss="modal">
+                        لغو
+                    </button>
+                </div>
+            </form>
+
+        }
+
+
+
+
+    </div>
+</div>
+
+<script src="~/panel/adminpanel/js/multi-image-select.js"></script>
+<script>
+
+    $(function () {
+
+        $("#coba").spartanMultiImagePicker({
+            fieldName: 'fileUpload[]',
+            maxCount: 4,
+            rowHeight: '100px',
+            groupClassName: 'col-lg-3 col-md-4 col-sm-4 col-xs-6',
+            /*maxFileSize: 40000,*/
+            allowedExt: 'png|jpg|jpeg',
+            placeholderImage: {
+                image: '/panel/adminpanel/img/placeholder.png',
+                width: '100%'
+            },
+            onExtensionErr: function (index, file) {
+                Alert('فرمت فایل باید png , jpg , jpeg باشد');
+            },
+            //onSizeErr: function (index, file) {
+            //    console.log(index, file);
+            //    alert('File size too big');
+            //}
+            
+        });
+        
+    });
+
+    
+
+    function MainImageUrl(input) {
+        if (input.files && input.files[0]) {
+
+
+            var reader = new FileReader();
+
+            reader.onload = function (e) {
+                $('#main_img')
+                    .attr('src', e.target.result);
+                $('#btn__main').prop("disabled", false);
+            };
+
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+    function GalleryImageURL(input, imgId, btnId, btnClear) {
+
+        let Btn_Id = $('#' + btnId);
+        let Img_Id = $('#' + imgId);
+        let BtnClear_Id = $('#' + btnClear);
+
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+            reader.onload = function (e) {
+
+                Img_Id.attr('src', e.target.result);
+                $('#btn_Gallery').prop("disabled", false);
+                Btn_Id.prop("hidden", false);
+                BtnClear_Id.prop("hidden", false);
+            };
+            reader.readAsDataURL(input.files[0]);
+
+        }
+
+    };
+
+
+    //$(function () {
+    //    var n = $(':input').length;
+    //    document.writeln(n);
+    //});
+
+
+
+    function SingleImageGallery(InputImg, btnId, btnLoading) {
+        let Img_Choose = $('#' + InputImg).val();
+        let Btn_Loading = $('#' + btnLoading);
+        Btn_Loading.prop("hidden", false);
+
+        if (Img_Choose == '') {
+            Alert('لطفا ابتدا تصویر را انخاب کنید بعد بروزرسانی را کلیک نمایید');
+        }
+        let Gallery_Img = $('#' + InputImg);
+        let Form_Edit = $("#Form__EditImgGallery")[0];
+        let Form_Data = new FormData(Form_Edit);
+        Form_Data.append("SingleImageProduct", Gallery_Img[0].files[0]);
+        Form_Data.append("Id", $("#image__Id").val());
+
+        $.ajax({
+            url: '/AdminPanel/Product/UpdateImageGallery',
+            data: Form_Data,
+            contentType: false,
+            processData: false,
+            type: 'POST',
+            success: function (data) {
+
+                switch (data) {
+                    case 0:
+                        Alert('لطفا یک تصویر برای کالای خود انتخاب کنید ');
+                        Btn_Loading.prop("hidden", true);
+                        return false;
+                    case 1:
+                        Alert('فرمت تصویر انتخابی شما صحیح نیست ');
+                        Btn_Loading.prop("hidden", true);
+                        return false;
+                    case 2:
+                        Alert('فایل انتخابی شما تصویر نیست لطفا فقط تصویر با فرمت های ذکر شده انتخاب کنید');
+                        Btn_Loading.prop("hidden", true);
+                        return false;
+                    case 3:
+                        Alert('تصویر قابل تغییر نمی باشد');
+                        Btn_Loading.prop("hidden", true);
+                        return false;                    
+                    default:
+                        Alert_Success('تصویر با موفقیت تغییر کرد');
+                        Gallery_Img.val('');
+                        $('#' + btnId).prop("hidden", true);
+                        Btn_Loading.prop("hidden", true);
+                        return false;
+                }
+            }
+        });
+
+    };
+    function MainImageProduct() {
+        let Btn_sabt = $('#btn__main');
+        let Img_Loading = $('#loading_Image');
+        Img_Loading.prop("hidden", false);
+        Btn_sabt.prop("disabled", false);
+        let InputImageProduct = $('#mainimageproduct');
+        if (InputImageProduct.val() == '') {
+            Alert('لطفا یک تصویر برای کالای خود انتخاب کنید ');
+            Img_Loading.prop("hidden", true);
+            return false;
+        }
+        let Form_Edit_single = $("#Form_ImageProduct")[0];
+
+        let Form_DataSingle = new FormData(Form_Edit_single);
+        console.log(Form_DataSingle);
+        Form_DataSingle.append("SingleImageProduct", InputImageProduct[0].files[0]);
+        $.ajax({
+            url: '/AdminPanel/Product/UpdateImageProduct',
+            data: Form_DataSingle,
+            contentType: false,
+            processData: false,
+            type: 'POST',
+            success: function (data) {
+
+                switch (data) {
+                    case 0:
+                        Alert('لطفا یک تصویر برای کالای خود انتخاب کنید ');
+                        Img_Loading.prop("hidden", true);
+                        return false;
+                    case 1:
+                        Alert('فرمت تصویر انتخابی شما صحیح نیست ');
+                        Img_Loading.prop("hidden", true);
+                        return false;
+                    case 2:
+                        Alert('فایل انتخابی شما تصویر نیست لطفا فقط تصویر با فرمت های ذکر شده انتخاب کنید');
+                        Img_Loading.prop("hidden", true);
+                        return false;
+                    case 3:
+                        Alert('تصویر قابل تغییر نمی باشد');
+                        Img_Loading.prop("hidden", true);
+                        return false;
+                    default:
+                        window.location.href = data.redirectToUrl;
+                }              
+            }
+        });
+    };
+
+    function GalleryImage() {
+        
+        let Form = $("#Form_GalleryProduct")[0];
+        let Form_Data = new FormData(Form);
+        document.getElementsByName("fileUpload[]").forEach((el) => {
+            if ($(el)[0].files[0] != undefined)
+                Form_Data.append('GalleryImages', $(el)[0].files[0]);
+        }
+        );
+
+        $.ajax({
+            url: '/AdminPanel/Product/AddGalleryProduct',
+            data: Form_Data,
+            contentType: false,
+            processData: false,
+            type: 'POST',
+            success: function (data) {
+
+                switch (data) {
+                    case 1:
+                        Alert('لطفا 4 تصویر  برای گالری محصول انتخاب کنید');
+                        return false;
+                    case 2:
+                        Alert('فرمت  تصاویر انتخابی شما صحیح نیست ');
+                        return false;
+                    case 3:
+                        Alert('فایل انتخابی شما تصویر نیست لطفا فقط تصویر با فرمت های ذکر شده انتخاب کنید');
+                        return false;
+                    case 4:
+                        Alert('محصول یافت نشد');
+                        return false;
+                    default:
+                        Alert_Success('تصاویر گالری با موفقیت در سیستم ثبت گردید');
+                        return false;
+                }    
+            }
+        });
+    };
+
+
+
+</script>

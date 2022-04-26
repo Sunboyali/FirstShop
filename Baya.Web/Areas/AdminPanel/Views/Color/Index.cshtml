@@ -1,0 +1,128 @@
+﻿@model IEnumerable<Baya.DataLayer.Entities.Color>
+
+@{
+    ViewData["Title"] = "نمایش رنگ ها";
+    int rowCount = 1;
+}
+
+
+@section Styles {
+    @*<link href="@Url.Content("~/panel/assets/jstree/themes/default/style.css")" rel="stylesheet" type="text/css" />*@
+    <style>
+        .colorcode {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            display: inline-block;
+            margin-right:20px;
+        }
+    </style>
+}
+<div class="card">
+    <div class="header">
+        <h2 class="alert alert-info text-center">
+            <strong>لیست رنگ ها</strong>
+        </h2>
+        <a onclick="showInPopup('@Url.Action("AddOrEditColor","Color",null,Context.Request.Scheme)','ایجاد رنگ جدید')" class="sabt mt-3 btn bg-teal waves-effect">ثبت نقش جدید</a>
+
+        <div id="DataTables_Table_0_filter" class="dataTables_filter">
+
+            <input type="search" id="search" class="form-control form-control-sm" placeholder="جستجو ..." aria-controls="DataTables_Table_0">
+
+        </div>
+    </div>
+    <div class="body table-responsive-lg table-responsive-md table-responsive-sm table-responsive-xl">
+        <table class="table">
+            <thead>
+                <tr>
+
+                    <th width="40px">ردیف</th>
+                    <th>
+                       کد رنگ
+                    </th>
+                    <th>
+                       نام رنگ
+                    </th>
+                    <th>عملیات</th>
+                </tr>
+            </thead>
+            <tbody id="tblcolor">
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>@rowCount</td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.ColorCode)
+                            <span class="colorcode" style="background-color:@item.ColorCode"></span>
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.ColorName)
+                        </td>
+                      
+                            <td>
+                                <a class="btn bg-blue btn-circle waves-effect waves-circle waves-float" onclick="showInPopup('@Url.Action("AddOrEditColor","Color",new {Id = item.ColorId },Context.Request.Scheme)','ویرایش رنگ')" title="ویرایش"><i class="material-icons">edit</i></a>
+                                <a class="btn bg-pink btn-circle waves-effect waves-circle waves-float" onclick="myDelete('@item.ColorId', '@item.ColorName')" title="حذف"><i class="material-icons">delete_forever</i></a>
+                            </td>
+                        
+
+                    </tr>
+                    rowCount++;
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+@section Scripts{
+
+    <script>
+        showInPopup = (url, title) => {
+            $.ajax({
+                type: 'GET',
+                url: url,
+                success: function (res) {
+                    $('#adminModal .modal-body').html(res);
+                    $('#adminModal .modal-title').html(title);
+                    $('#adminModal').modal('show');
+                    // to make popup draggable
+                    $('.modal-dialog').draggable({
+                        handle: ".modal-header"
+                    });
+                }
+            })
+        }
+
+        $(document).ready(function () {
+            $("#search").on("keyup", function () {
+                var value = $(this).val().toLowerCase();
+                $("#tblcolor tr").filter(function () {
+                    $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+                });
+            });
+        });
+   
+        function myDelete(id,name) {
+            swal({
+                title: "تأیید حذف",
+                text: "آیا از حذف رنگ " + name +"  اطمینان دارید؟",
+                icon: "warning",
+                buttons: ['لغو', 'بلی'],
+                dangerMode: true,
+            })
+                .then((willDelete) => {
+                    if (willDelete) {
+                        window.open('/AdminPanel/Color/Delete/' + id, '_parent');
+                    }
+                });
+        }
+    </script>
+}
+
+
+
+
+
+
+
+
+
+

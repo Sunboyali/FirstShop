@@ -1,0 +1,71 @@
+﻿@model Baya.Core.ViewModels.ShowFastProductViewModel
+
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-sm-12 col-md-6">
+            <div class="product-popup-image">
+                <img src="~/site/img/product-img/main/@Model.ProductImg" alt="@Model.ProductName" />
+            </div>
+
+        </div>
+        <div class="col-sm-12 col-md-6">
+            <div class="product-popup-content product-details-content">
+                @if (Model.CountProduct > 0)
+                {
+                    <div class="availability-badge product-details-item">
+                        <span style="background-color: #008b38">موجود</span>
+                    </div>
+                }
+                else
+                {
+                    <div class="availability-badge product-details-item">
+                        <span style="background-color: #901d1d">عدم موجود</span>
+                    </div>
+                }
+
+
+                <h5 class="product-details-item"><span class="spn__title">نام کالا :</span> @Model.ProductName</h5>
+                <h6 class="product-details-item"> <span class="spn__title">کد کالا :</span> @Model.ProductCode</h6>
+                <h6 class="product-details-item"> <span class="spn__title">تعداد بازدید :</span> @Model.VisitCount</h6>
+                <h6 class="product-details-item"> <span class="spn__title">تعداد موجودی کالا :</span> @Model.CountProduct</h6>
+
+                @if (Model.Off > 0 && Model.Off <= 100)
+                {
+                    decimal p1 = Math.Ceiling((decimal)Model.Price * Model.Off / 100);
+
+                    decimal p2 = (decimal)Model.Price - p1;
+
+                    decimal FinalPrice = (Math.Ceiling(p2 / 100) * 100);
+
+
+                    <h6 class="product-details-item"> <span>تخفیف :</span> @Model.Off درصد</h6>
+                    <h6 class="product-details-item"> <span>قیمت کالا با تخفیف :</span> @FinalPrice.ToString("#,0 تومان")</h6>
+                }
+                else
+                {
+                    <h6 class="product-details-item"> <span>قیمت کالا :</span> @Model.Price.ToString("#,0 تومان")</h6>
+                }
+
+                @*<div class="review-star product-details-item"></div>*@
+
+            </div>
+        </div>
+
+    </div>
+
+
+    @if (Model.CountProduct > 0)
+    {
+        <a onclick="addBasket('@Model.Id')" class="btn btn-success btn-sm waves-effect mb-2"
+           data-dismiss="modal">
+            افزودن به سبد خرید
+        </a>
+    }
+
+    <div class="mt-20">
+        <a  class="btn btn-info btn-sm" href="/Product/@Model.Id/@Model.ProductName.Replace(" ","-").ToString()">مشاهده جزئیات بیشتر</a>
+    </div>
+
+
+</div>

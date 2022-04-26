@@ -1,0 +1,140 @@
+﻿<aside id="leftsidebar" class="sidebar">
+    <!-- Menu -->
+    <div class="menu">
+        <ul class="list">
+            <li>
+                <div class="sidebar-profile clearfix">
+                    <div class="profile-img">
+                        <img src="~/panel/adminpanel/img/adminimg.jpg" alt="profile">
+                    </div>
+                    <div class="profile-info">
+                        <h3>مدیر فروشگاه</h3>
+                        <p>خوش آمدید !</p>
+                    </div>
+                </div>
+            </li>
+
+            <li class="header">-- داشبورد</li>
+            <li>
+                <a href="#" onClick="return false;" class="menu-toggle">
+                    <i class="material-icons">insert_chart</i>
+                    <span>فروشگاه</span>
+                </a>
+                <ul class="ml-menu">
+                    <li>
+                        <a asp-controller="Category" asp-action="Index">دسته بندی سایت</a>
+                    </li>
+                    <li>
+                        <a asp-controller="Product" asp-action="Index">محصولات</a>
+                    </li>
+
+                    <li>
+
+                        <a asp-controller="Product" asp-action="Amazing"> محصولات شگفت انگیز</a>
+                    </li>
+
+                    <li>
+
+                        <a asp-controller="Product" asp-action="UnShowProduct"> محصولات(بایگانی)</a>
+                    </li>
+
+                    <li>
+                        <a asp-controller="Brand" asp-action="Index">برند ها</a>
+                    </li>
+
+                    <li>
+                        <a asp-controller="Color" asp-action="Index">مدیریت رنگ ها</a>
+                    </li>
+                    <li>
+                        <a asp-controller="City" asp-action="Index">شهر ها</a>
+                    </li>
+
+
+                </ul>
+
+                <a href="#" onClick="return false;" class="menu-toggle">
+                    <i class="material-icons">monetization_on</i>
+                    <span>واریزی ها</span>
+                </a>
+                <ul class="ml-menu">
+                    <li>
+
+                        <a asp-controller="Factor" asp-action="SuccessFactors">تراکنش های موفق خرید</a>
+                    </li>
+                    <li>
+
+                        <a asp-controller="" asp-action="">تراکنش های کیف پول</a>
+                    </li>
+
+                </ul>
+
+
+                <a href="#" onClick="return false;" class="menu-toggle">
+                    <i class="material-icons">group</i>
+                    <span>مدیریت نقش و کاربران</span>
+                </a>
+                <ul class="ml-menu">
+                    <li>
+                        <a asp-controller="Role" asp-action="Index">نقش کاربران سایت</a>
+                        <a asp-controller="User" asp-action="Index">کاربران فعال</a>
+                        <a asp-controller="User" asp-action="Deactive">کاربران غیرفعال</a>
+                        <a asp-controller="User" asp-action="Blocked">کاربران مسدود شده</a>
+
+                    </li>
+                </ul>
+
+
+                <a href="#" onClick="return false;" class="menu-toggle">
+                    <i class="material-icons">chrome_reader_mode</i>
+                    <span>مدیریت قالب</span>
+                </a>
+                <ul class="ml-menu">
+                    <li>
+                        <a asp-controller="Slider" asp-action="Index">مدیریت اسلایدر</a>
+                    </li>
+                    <li>
+                        <a asp-controller="Banner" asp-action="Index">مدیریت بنر</a>
+                    </li>
+                    <li>
+                        <a asp-controller="Theme" asp-action="Index">مدیریت قالب اصلی</a>
+                    </li>
+
+                </ul>
+
+
+                <a asp-controller="Poll" asp-action="Index"><i class="material-icons">poll</i><span>نظرسنجی</span></a>
+
+                @*<a href="#" onClick="return false;" class="menu-toggle">
+                        <i class="material-icons">group</i>
+                        <span>نظرسنجی ها</span>
+                    </a>
+                    <ul class="ml-menu">
+                        <li>
+                            <a asp-controller="Poll" asp-action="Index">نظرسنجی</a>
+                            <a asp-controller="Poll" asp-action="Charts">نتایج نظرسنجی ها</a>
+
+                        </li>
+                    </ul>*@
+
+                <a href="#" onClick="return false;" class="menu-toggle">
+                    <i class="material-icons">settings_applications</i>
+                    <span>تنظیمات</span>
+                </a>
+                <ul class="ml-menu">
+                    <li>
+
+                        <a asp-controller="Setting" asp-action="SiteSetting">تنظیمات اصلی سایت</a>
+                    </li>
+
+
+                </ul>
+
+            </li>
+
+
+
+
+        </ul>
+    </div>
+    <!-- #Menu -->
+</aside>

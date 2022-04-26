@@ -1,0 +1,104 @@
+﻿@model IEnumerable<Baya.DataLayer.Entities.Banner>
+
+@{
+    ViewData["Title"] = "نمایش بنرها";
+    int rowCount = 1;
+}
+
+
+@section Styles {
+    @*<link href="@Url.Content("~/panel/assets/jstree/themes/default/style.css")" rel="stylesheet" type="text/css" />*@
+   
+}
+<div class="card">
+    <div class="header">
+        <h2 class="alert alert-info text-center">
+            <strong>لیست بنر های سایت</strong>
+        </h2>
+      
+
+       
+    </div>
+    <div class="body table-responsive-lg table-responsive-md table-responsive-sm table-responsive-xl">
+        <table class="table">
+            <thead>
+                <tr>
+
+                    <th width="40px">ردیف</th>
+
+
+                    <th class="text-center">
+                       تصویر
+                    </th>
+                    <th class="text-center">
+                        نام بنر
+                    </th>
+
+
+
+                    <th class="text-center">عملیات</th>
+                </tr>
+            </thead>
+            <tbody id="tblrole">
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>@rowCount</td>
+                        <td class="text-center">
+                            @if (item.Name == "MainBanner")
+                            {
+                                <img src="~/site/img/banner/main/@item.ImageName" width="300" height="150" />
+                            }
+                            else 
+                            {
+                                <img src="~/site/img/banner/side-banner/@item.ImageName" width="300" height="150" />
+                            }
+                           
+                        </td>
+                        <td class="text-center">
+                            <span class="badge col-green">@Html.DisplayFor(modelItem => item.Name)</span>
+                        </td>
+                       
+                            <td class="text-center">
+                                <a class="btn bg-blue btn-circle waves-effect waves-circle waves-float" onclick="showInPopup('@Url.Action("EditBanner","Banner",new {Id = item.Id },Context.Request.Scheme)','ویرایش بنر')" title="ویرایش"><i class="material-icons">edit</i></a>
+                                
+                            </td>
+                        
+
+                    </tr>
+                    rowCount++;
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+@section Scripts{
+
+    <script>
+        showInPopup = (url, title) => {
+            $.ajax({
+                type: 'GET',
+                url: url,
+                success: function (res) {
+                    $('#adminModal .modal-body').html(res);
+                    $('#adminModal .modal-title').html(title);
+                    $('#adminModal').modal('show');
+                    // to make popup draggable
+                    $('.modal-dialog').draggable({
+                        handle: ".modal-header"
+                    });
+                }
+            })
+        }
+    </script>
+}
+
+
+
+
+
+
+
+
+
+

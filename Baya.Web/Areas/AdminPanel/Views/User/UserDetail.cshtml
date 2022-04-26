@@ -1,0 +1,128 @@
+﻿@model Baya.Core.ViewModels.UserDetailViewModel
+
+@{
+    Layout = null;
+}
+
+
+
+@section Styles {
+
+}
+<div class="col-md-11">
+
+
+    <div class="form-group">
+        <label class="control-label">شماره موبایل : </label>
+        <label class="control-label text text-info">@Model.Mobile</label>
+
+    </div>
+    <div class="form-group">
+        <label class="control-label">تاریخ ثبت نام : </label>
+        <label class="control-label text text-info">@Model.Date</label>
+
+    </div>
+    <div class="form-group">
+        <label class="control-label">ساعت ثبت نام : </label>
+        <label class="control-label text text-info">@Model.Time</label>
+
+    </div>
+    <div class="form-group">
+        <label class="control-label">نام : </label>
+
+
+        @if (Model.Name == null)
+        {
+            <label class="control-label text text-info">ثبت نشده</label>
+        }
+        else
+        {
+            <label class="control-label text text-info">@Model.Name</label>
+        }
+
+
+    </div>
+
+    <div class="form-group">
+        <label class="control-label">نام خانوادگی : </label>
+
+
+        @if (Model.Family == null)
+        {
+            <label class="control-label text text-info">ثبت نشده</label>
+        }
+        else
+        {
+            <label class="control-label text text-info">@Model.Family</label>
+        }
+
+
+    </div>
+
+
+    <div class="form-group">
+        <label class="control-label">ایمیل کاربر : </label>
+        @if (Model.EmailUser == null)
+        {
+            <label class="control-label text text-info">ثبت نشده</label>
+        }
+        else
+        {
+            <label class="control-label text text-info">@Model.EmailUser</label>
+        }
+
+
+    </div>
+
+    <div class="form-group">
+        <label class="control-label">کد ملی کاربر :</label>
+        @if (Model.NationalCode == null)
+        {
+            <label class="control-label text text-info">ثبت نشده</label>
+        }
+        else
+        {
+            <label class="control-label text text-info">@Model.NationalCode</label>
+        }
+
+
+    </div>
+    <div class="form-group">
+        <label class="control-label">کد پستی کاربر : </label>
+        @if (Model.PostCode == null)
+        {
+            <label class="control-label text text-info">ثبت نشده</label>
+        }
+        else
+        {
+            <label class="control-label text text-info">@Model.PostCode</label>
+        }
+
+    </div>
+
+    <div class="form-group">
+        <label class="control-label">آدرس کاربر :</label>
+        @if (Model.Address == null)
+        {
+            <label class="control-label text text-info">ثبت نشده</label>
+        }
+        else
+        {
+            <label class="control-label text text-info">@Model.Address</label>
+        }
+
+
+    </div>
+
+</div>
+
+
+<div class="modal-footer">   
+    <button type="button" class="btn btn-danger waves-effect"
+            data-dismiss="modal">
+        لغو
+    </button>
+</div>
+
+
+

@@ -1,0 +1,117 @@
+﻿@{
+    ViewData["Title"] = "صفحه اصلی";
+}
+
+
+
+<!--slider area start-->
+
+@await Component.InvokeAsync("SlidersComponent")
+
+
+<style>
+
+</style>
+<!--shipping area start-->
+<partial name="_ShopingBanner" />
+
+<!--shipping area end-->
+
+<!-- product tab start -->
+<section class="product-tab pt-50">
+    <div class="container-fluid">
+        <div class="product-tab-nav mb-35">
+            <div class="row align-items-center">
+                <div class="col-12">
+                    <div class="section-title text-center p-5 mb-30">
+                        <h2 class="title text-dark text-capitalize">محصولات</h2>
+                        <p class="text mt-10">برترین محصولات را از ما بخواهید</p>
+                    </div>
+                </div>
+                <div class="row col-12 justify-content-center">
+                    <nav class="product-tab-menu">
+                        <ul class="nav nav-pills" id="pills-tab" role="tablist">
+                            <li class="nav-item">
+                                <a class="nav-link active" id="pills-home-tab" data-toggle="pill" href="#pills-mostsell"
+                                   role="tab" aria-controls="pills-home" aria-selected="true">پرفروش ترین </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" id="pills-profile-tab" data-toggle="pill" href="#pills-newest"
+                                   role="tab" aria-controls="pills-profile" aria-selected="false">جدید ترین</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" id="pills-contact-tab" data-toggle="pill" href="#pills-off"
+                                   role="tab" aria-controls="pills-contact" aria-selected="false">تخفیف ویژه</a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        </div>
+        <!-- product-tab-nav end -->
+
+        <div class="row">
+
+            <div class="col-12 p-0">
+                <div class="tab-content" id="pills-tabContent">
+                    <!-- first tab-pane -->
+                    <div class="tab-pane fade show active" id="pills-mostsell" role="tabpanel"
+                         aria-labelledby="pills-home-tab">
+
+                        <!--Most Sell - Product area start-->
+
+
+                        @await Component.InvokeAsync("MostSellProductComponent")
+
+                    </div>
+
+
+
+
+                    <!-- second tab-pane -->
+                    <div class="tab-pane fade" id="pills-newest" role="tabpanel"
+                         aria-labelledby="pills-profile-tab">
+                        @await Component.InvokeAsync("NewestProductComponent")
+                    </div>
+
+                    <!-- third tab-pane -->
+                    <div class="tab-pane fade" id="pills-off" role="tabpanel"
+                         aria-labelledby="pills-contact-tab">
+                        @await Component.InvokeAsync("OffProductComponent")
+                    </div>
+
+
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+</section>
+
+
+<div class="modal fade product-popup" id="productModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalGrid"
+     aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                @*<h5 class="modal-title" id="exampleModalGrid">عنوان مودال</h5>*@
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" id="bodyModal">
+
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+

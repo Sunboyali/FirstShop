@@ -1,0 +1,42 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Content Remove="bundleconfig.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="EPPlus" Version="5.8.4" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="5.0.8" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="5.0.8" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="5.0.8">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.1.5" />
+    <PackageReference Include="ZarinpalSandbox" Version="2.0.4" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Baya.Core\Baya.Core.csproj" />
+    <ProjectReference Include="..\Baya.DataLayer\Baya.DataLayer.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="wwwroot\panel\adminpanel\panel-assets\" />
+    <Folder Include="wwwroot\panel\shoppanel\" />
+    <Folder Include="wwwroot\site\img\product-img\gallery\" />
+    <Folder Include="wwwroot\site\img\product-img\main\" />
+    <Folder Include="wwwroot\site\img\product-img\thumbnail\" />
+    <Folder Include="wwwroot\site\img\sliders\main-slider\main-upload\" />
+    <Folder Include="wwwroot\site\img\sliders\sidebar-slider\sidebar-upload\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="bundleconfig.json" />
+  </ItemGroup>
+
+</Project>

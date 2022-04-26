@@ -1,0 +1,100 @@
+﻿
+@model Baya.Core.ViewModels.SubCategoryViewModel
+@{
+    Layout = null;
+}
+<form id="CategorySubForm" method="post">
+    <input type="hidden" asp-for="Id" />
+    <div class="form-group">
+        <div class="form-line">
+            <input asp-for="CategoryName" id="categoryname" maxlength="20" class="form-control"
+                   autocomplete="off" placeholder="نام زیر دسته را وارد کنید" required>
+        </div>
+    </div>
+
+
+    @if (Model.ParentId != null)
+    {
+        <div class="form-group">
+            <div class="row clearfix">
+                <div class="col-md-5">
+                    <label class="">انتخاب دسته</label>
+                    <select class="form-control" id="maincat" asp-for="ParentId" asp-items="ViewBag.MainCategory">
+                    </select>
+
+
+                </div>
+            </div>
+        </div>
+    }
+
+
+    <div class="modal-footer">
+        <button type="button" onclick="return ValidateFormFirstSub()" class="btn btn-info waves-effect">ذخیره</button>
+        <button type="button" class="btn btn-danger waves-effect"
+                data-dismiss="modal">
+            لغو
+        </button>
+    </div>
+</form>
+
+
+<script>
+
+
+
+
+    var Category_Input_Name = document.getElementById('categoryname');
+
+
+    function ValidateFormFirstSub() {
+        let Category_Name = Category_Input_Name.value;
+
+        if (Category_Name != '' && !Reg_Persian.test(Category_Name)) {
+            Alert('لطفا فقط حروف فارسی وارد کنید');
+            return false;
+        } else if (Category_Name.length > 20) {
+            Alert('نام دسته بندی نمی تواند بیشتر از 15 کاراکتر باشد');
+            return false;
+        }
+        let Form = $("#CategorySubForm")[0];
+        let Form_Data = new FormData(Form);
+        $.ajax({
+            url: '/AdminPanel/Category/AddAndUpdateFirstSub',
+            data: Form_Data,
+            contentType: false,
+            processData: false,
+            type: 'POST',
+            success: function (data) {
+
+                switch (data) {
+                    case 0:
+                        Alert('لطفا نام دسته بندی را وارد نمایید');
+                        return false;
+                    case 1:
+                        Alert('نام دسته بندی وارد شده قبلا در سیستم ثبت شده است نام دیگری را وارد نمایید');
+                        return false;
+                    default:
+                        window.location.href = data.redirectToUrl;
+                }
+
+
+                //if (data == 0) {
+                //    Alert('لطفا نام دسته بندی را وارد نمایید');
+                //    return false;
+                //} else if (data == 1) {
+                //    Alert('نام دسته بندی وارد شده قبلا در سیستم ثبت شده است نام دیگری را وارد نمایید');
+                //    return false;
+                //} else {
+                //    window.location.href = data.redirectToUrl;
+                //}
+
+
+            }
+        });
+
+    }
+
+</script>
+
+

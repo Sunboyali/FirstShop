@@ -1,0 +1,193 @@
+﻿@model IEnumerable<Baya.DataLayer.Entities.Brand>
+
+@{
+    ViewData["Title"] = "نمایش برند ها";
+    int rowCount = 1;
+}
+
+
+@section Styles {
+    @*<link href="@Url.Content("~/panel/assets/jstree/themes/default/style.css")" rel="stylesheet" type="text/css" />*@
+    <style>
+        .sabt {
+            margin-top: 10px;
+        }
+    </style>
+}
+<div class="card">
+    <div class="header">
+        <h2 class="alert alert-info text-center">
+            <strong>لیست برندها</strong>
+        </h2>
+        <a  onclick="showInPopup('@Url.Action("AddOrEdit","Brand",null,Context.Request.Scheme)','ایجاد برند جدید')" class="sabt btn bg-teal waves-effect">ثبت برند جدید</a>
+
+
+        <div id="DataTables_Table_0_filter" class="dataTables_filter">
+
+            <input type="search" id="search" class="form-control form-control-sm" placeholder="جستجو ..." aria-controls="DataTables_Table_0">
+
+        </div>
+    </div>
+    <div class="body table-responsive-lg table-responsive-md table-responsive-sm table-responsive-xl">
+        <table class="table">
+            <thead>
+                <tr>
+
+                    <th width="40px">ردیف</th>
+
+
+                    <th>
+                        نام برند
+                    </th>
+                    <th>
+                        دسته بندی
+                    </th>
+
+
+
+                    <th>عملیات</th>
+                </tr>
+            </thead>
+            <tbody id="tblbrand">
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>@rowCount</td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.BrandName)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Category.CategoryName)
+                        </td>
+
+                        <td>
+                            <a onclick="showInPopup('@Url.Action("AddOrEdit","Brand",new {id=item.Id},Context.Request.Scheme)', 'ویرایش برند @item.BrandName')" class="btn bg-blue btn-circle waves-effect waves-circle waves-float"  title="ویرایش"><i class="material-icons">edit</i></a>
+
+                            <a class="btn bg-pink btn-circle waves-effect waves-circle waves-float" onclick="myDelete('@item.Id')" title="حذف"><i class="material-icons">delete_forever</i></a>
+                        </td>
+
+
+                    </tr>
+                    rowCount++;
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+<div class="modal fade" id="brandModal" tabindex="-1" role="dialog"
+     aria-labelledby="formModal" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="formModal"></h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                
+            </div>
+           
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+
+
+    <script src="~/site/js/sweet.js"></script>
+    <script>
+
+
+        function Alert(content) {
+            $.alert({
+                title: 'خطا',
+                content: content,
+                rtl: true,
+                closeIcon: true,
+                type: 'red',
+                typeAnimated: true,
+                buttons: {
+                    confirm: {
+                        text: 'تایید',
+                        btnClass: 'btn-red',
+                    }
+                },
+            });
+        };
+
+
+        function Alert_Success(content) {
+            $.alert({
+                title: 'توجه',
+                content: content,
+                rtl: true,
+                closeIcon: true,
+                type: 'green',
+                typeAnimated: true,
+                buttons: {
+                    confirm: {
+                        text: 'تایید',
+                        btnClass: 'btn-success',
+                    }
+                },
+            });
+        };
+
+        showInPopup = (url, title) => {
+            $.ajax({
+                type: 'GET',
+                url: url,
+                success: function (res) {
+                    $('#brandModal .modal-body').html(res);
+                    $('#brandModal .modal-title').html(title);
+                    $('#brandModal').modal('show');
+                    // to make popup draggable
+                    $('.modal-dialog').draggable({
+                        handle: ".modal-header"
+                    });
+                }
+            })
+        }
+
+       
+
+
+        $(document).ready(function () {
+            $("#search").on("keyup", function () {
+                var value = $(this).val().toLowerCase();
+                $("#tblbrand tr").filter(function () {
+                    $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+                });
+            });
+        });
+
+
+
+
+        function myDelete(id) {
+            swal({
+                title: "تأیید حذف",
+                text: "آیا از حذف  اطمینان دارید؟",
+                icon: "warning",
+                buttons: ['لغو', 'بلی'],
+                dangerMode: true,
+            })
+                .then((willDelete) => {
+                    if (willDelete) {
+                        window.open('/AdminPanel/Role/Delete/' + id, '_parent');
+                    }
+                });
+        }
+    </script>
+}
+
+
+
+
+
+
+
+
+
+

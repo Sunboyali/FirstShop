@@ -1,0 +1,115 @@
+﻿@model Baya.Core.ViewModels.MainCategoryViewModel
+@{
+    Layout = null;
+}
+
+<form id="CategoryForm" method="post" enctype="multipart/form-data">
+    <input type="hidden" asp-for="Id" />
+    <div class="form-group">
+        <div class="form-line">
+            <input asp-for="CategoryName" id="categoryname" maxlength="40" class="form-control"
+                   autocomplete="off" placeholder="نام دسته اصلی را وارد کنید" required>
+        </div>
+    </div>
+
+    <div class="form-group">
+        @if (Model.CategoryImageName == null)
+        {
+            <img id="imgcat" src="~/site/img/category/icon/cat_icon.png" alt="تصویری پیدا نشد" width="40" height="40" class="img-responsive" style="margin: auto" /> }
+        else
+        {
+            <img id="imgcat" src="~/site/img/category/icon/@Model.CategoryImageName" alt="تصویری پیدا نشد" width="40" height="40" class="img-responsive" style="margin: auto" />
+        }
+
+    </div>
+    <div class="form-group">
+        <label class="control-label">انتخاب تصویر</label>
+        <input type="file" asp-for="CategoryImageName" id="img-maincategory" onchange="readURL(this);" class="form-control">
+        <span class="text text-danger">فرمت های مجاز : jpg , jpeg , png</span>
+    </div>
+
+    <div class="modal-footer">
+        <button type="button" onclick="return ValidateForm()" class="btn btn-info waves-effect">ذخیره</button>
+        <button type="button" class="btn btn-danger waves-effect"
+                data-dismiss="modal">
+            لغو
+        </button>
+    </div>
+</form>
+
+
+<script>
+
+
+    function readURL(input) {
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+
+            reader.onload = function (e) {
+                $('#imgcat')
+                    .attr('src', e.target.result)
+            };
+
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+
+    var Category_Input_Name = document.getElementById('categoryname');
+    //var Category_Input_Image = document.getElementById('img-maincategory');
+
+    function ValidateForm() {
+        let Category_Name = Category_Input_Name.value;
+        /*let Category_Image = Category_Input_Image.value;*/
+        
+        if (Category_Name != '' && !Reg_Persian.test(Category_Name)) {
+            Category_Input_Name.focus();
+            Alert('لطفا فقط حروف فارسی وارد کنید');
+            return false;
+        } else if (Category_Name.length > 40) {
+            Alert('نام دسته بندی نمی تواند بیشتر از 40 کاراکتر باشد');
+            return false;
+        }
+        let Cat_Img = $('input[type=file]');
+        let Form = $("#CategoryForm")[0];
+        let Form_Data = new FormData(Form);
+        Form_Data.append("MainCatImg", Cat_Img[0].files[0]);
+       /* Form_Data.append("CategoryImgName", Category_Image);*/
+        $.ajax({
+            url: '/AdminPanel/Category/AddAndUpdateMain',
+            data: Form_Data,
+            contentType: false,
+            processData: false,
+            type: 'POST',
+            success: function (data) {
+
+                switch (data) {
+                    case 0:
+                        Category_Input_Name.focus();
+                        Alert('لطفا نام دسته بندی را وارد نمایید');
+                        return false;
+                    case 1 :
+                        Alert('لطفا یک تصویر را انتخاب کنید');
+                        return false;
+                    case 2:
+                        Alert('فرمت تصویر انتخابی شما صحیح نیست ');
+                        return false;
+                    case 3:
+                        Alert('فایل انتخابی شما تصویر نیست لطفا فقط تصویر با فرمت های ذکر شده انتخاب کنید');
+                        return false;
+                    case 4:
+                        Alert('نام وارد شده قبلا در سیستم ثبت شده لطفا نام دیگری را وارد کنید');
+                        return false;
+                    case 5:
+                        Alert('دسته بندی مورد نظر در سیستم ثبت نشده است');
+                        return false;
+                    default:
+                        window.location.href = data.redirectToUrl;
+                }              
+
+            }
+        });
+    }
+
+</script>
+
+

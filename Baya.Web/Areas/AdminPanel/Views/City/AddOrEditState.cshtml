@@ -1,0 +1,80 @@
+﻿
+@model Baya.Core.ViewModels.CityViewModel
+@{
+    Layout = null;
+}
+<form id="StateForm" method="post">
+    <input type="hidden" asp-for="Id" />
+    <div class="form-group">
+        <div class="form-line">
+            <input asp-for="Name"  maxlength="30" class="form-control"
+                   autocomplete="off" placeholder="نام استان را وارد کنید" required>
+
+            <span id="charaters-count"></span>
+
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" onclick="return ValidateForm()" class="btn btn-info waves-effect">ذخیره</button>
+        <button type="button" class="btn btn-danger waves-effect"
+                data-dismiss="modal">
+            لغو
+        </button>
+    </div>
+</form>
+
+
+
+
+<script>
+
+    var Input_Name = document.getElementById('Name');
+    window.onload = InputLengthCheck();
+    function InputLengthCheck() {
+        var Name_Length = Input_Name.value.length;
+        var Name_Chars = 30 - Name_Length;
+        var Name_Count = document.getElementById('charaters-count');
+        Name_Count.innerHTML = "تعداد حروف: " + Name_Chars;
+    }
+    Input_Name.addEventListener('keyup', InputLengthCheck, false);
+    Input_Name.addEventListener('keydown', InputLengthCheck, false);
+    function ValidateForm() {
+        let StateName = Input_Name.value;
+        if (StateName == '') {
+            Input_Name.focus();
+            Alert('لطفا نام استان را وارد کنید');
+            return false;
+        } else if (StateName.length > 30) {
+            Color_Input_Name.focus();
+            Alert('نام استان نمی تواند بیشتر از 30 کاراکتر باشد');
+            return false;
+        }
+        else if (!Reg_Persian.test(StateName)) {
+            Color_Input_Name.focus();
+            Alert('لطفا فقط حروف فارسی وارد کنید');
+            return false;
+        }
+
+        let Form = $("#StateForm")[0];
+        let Form_Data = new FormData(Form);
+        $.ajax({
+            url: '/AdminPanel/City/AddAndUpdateState',
+            data: Form_Data,
+            contentType: false,
+            processData: false,
+            type: 'POST',
+            success: function (data) {
+                switch (data) {                   
+                    case 0:
+                        Alert('نام استان وارد شده قبلا در سیستم ثبت شده است نام دیگری را وارد کنید');
+                        return false;
+                    default:
+                        window.location.href = data.redirectToUrl;
+                }
+            }
+        });
+    }
+
+
+
+</script>
